@@ -43,7 +43,7 @@ class WebController extends Controller
     {
         $artigos = Post::orderBy('created_at', 'DESC')->postson()->limit(3)->get();
         $slides = Slide::orderBy('created_at', 'DESC')->available()->where('expira', '>=', Carbon::now())->get();
-        $empresas = Empresa::orderBy('created_at', 'DESC')->available()->get();
+        //$empresas = Empresa::orderBy('created_at', 'DESC')->available()->get();
         
         $head = $this->seo->render($this->configService->getConfig()->nomedosite ?? 'Informática Livre',
             $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
@@ -54,7 +54,7 @@ class WebController extends Controller
 		return view('web.home',[
             'head' => $head,
             'artigos' => $artigos,
-            'empresas' => $empresas,
+            //'empresas' => $empresas,
             'slides' => $slides
 		]);
     }

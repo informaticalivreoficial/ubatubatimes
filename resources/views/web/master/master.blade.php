@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="pt-br">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-    <meta name="language" content="pt-br" />  
-    <meta name="copyright" content="{{$configuracoes->ano_de_inicio}} - {{$configuracoes->nomedosite}}"> 
-    <meta name="msvalidate.01" content="AB238289F13C246C5E386B6770D9F10E" />   
-    
+<!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="pt-br"><!--<![endif]-->
+<head>
+	<!-- Basic Page Needs -->
+	<meta charset="utf-8">
+	<!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->	
+    <!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="copyright" content="{{$configuracoes->ano_de_inicio}} - {{$configuracoes->nomedosite}}">
+    <meta name="language" content="pt-br" /> 
     <meta name="author" content="{{env('DESENVOLVEDOR')}}"/>
     <meta name="designer" content="Renato Montanari">
     <meta name="publisher" content="Renato Montanari">
@@ -20,215 +22,346 @@
     {!! $head ?? '' !!}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <!-- CSS -->
-    <link rel="icon" href="{{$configuracoes->getfaveicon()}}" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7CLato:300,300italic,400,400italic,700,900%7CPlayfair+Display:700italic,900">
-    <link rel="stylesheet" href="{{url(asset('frontend/assets/css/bootstrap.css'))}}">
-    <link rel="stylesheet" href="{{url(asset('frontend/assets/css/fonts.css'))}}">
-    <link rel="stylesheet" href="{{url(asset('frontend/assets/css/style.css'))}}">
 
-    <!--[if lt IE 9]>
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" >
+
+	<!-- Theme Style -->
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+	<!-- Colors -->
+	<link rel="stylesheet" type="text/css" href="assets/css/colors/color1.css" id="colors">
+   
+	<!-- Animation Style -->
+	<link rel="stylesheet" type="text/css" href="assets/css/animate.css">
+
+	<!-- Google Fonts 
+	<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>-->
+
+	<!-- Favicon and touch icons  -->
+	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="144x144">
+	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="114x114">
+	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="72x72">
+	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed">
+	<link href="{{$configuracoes->getfaveicon()}}" rel="shortcut icon">
+
+	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
     @hasSection('css')
         @yield('css')
-    @endif 
-    
-  </head>
-  <body>    
-    <div class="page">
-        <header class="page-head">
-            <div class="rd-navbar-wrap">
-                <nav class="rd-navbar rd-navbar-corporate-dark" data-layout="rd-navbar-fixed" 
-                    data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" 
-                    data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" 
-                    data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" 
-                    data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" 
-                    data-xxl-device-layout="rd-navbar-static" data-lg-stick-up="true" 
-                    data-xl-stick-up="true" data-xxl-stick-up="true" data-lg-stick-up-offset="53px" 
-                    data-xl-stick-up-offset="53px" data-xxl-stick-up-offset="53px">
-                    <div class="rd-navbar-inner">
-                        <div class="rd-navbar-aside">
-                        <div class="rd-navbar-aside-toggle" data-custom-toggle=".rd-navbar-aside" data-custom-toggle-disable-on-blur="true"><span></span></div>
-                        <div class="rd-navbar-aside-content context-dark">
-                            <ul class="rd-navbar-aside-group list-units">
-                                <li>
-                                    <div class="unit unit-horizontal unit-spacing-xs">                                        
-                                        @if ($configuracoes->email)
-                                            <div class="unit-left">
-                                                <span class="novi-icon icon icon-xxs icon-primary fa-envelope-o"></span>
-                                            </div>
-                                            <div class="unit-body">
-                                                <a class="link-light-2 d-inline" href="mailto:{{$configuracoes->email}}">{{$configuracoes->email}}</a>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="unit unit-horizontal unit-spacing-xs">
-                                        @if ($configuracoes->whatsapp)
-                                            <div class="unit-left">
-                                                <span class="novi-icon icon icon-xxs icon-primary fa-whatsapp"></span>
-                                            </div>
-                                            <div class="unit-body">
-                                                <a class="link-light-2 d-inline" target="_blank" href="{{getNumZap($configuracoes->whatsapp ,'Atendimento '.$configuracoes->nomedosite)}}">{{$configuracoes->whatsapp}}</a>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </li>                       
-                            </ul>
-                            <div class="rd-navbar-aside-group">
-                                <ul class="list-inline list-inline-reset">
-                                    @if ($configuracoes->facebook)
-                                        <li><a target="_blank" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-facebook" href="{{$configuracoes->facebook}}"></a></li>
-                                    @endif
-                                    @if ($configuracoes->twitter)
-                                        <li><a target="_blank" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-twitter" href="{{$configuracoes->twitter}}"></a></li>
-                                    @endif
-                                    @if ($configuracoes->instagram)
-                                        <li><a target="_blank" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-instagram" href="{{$configuracoes->instagram}}"></a></li>
-                                    @endif
-                                    @if ($configuracoes->linkedin)
-                                        <li><a target="_blank" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-linkedin" href="{{$configuracoes->linkedin}}"></a></li>
-                                    @endif
-                                    @if ($configuracoes->youtube)
-                                        <li><a target="_blank" class="icon icon-round icon-gray-dark-filled icon-xxs-smallest fa fa-youtube" href="{{$configuracoes->youtube}}"></a></li>
-                                    @endif
-                                </ul>
-                            </div>
-                        </div>
-                        </div>
-                        <div class="rd-navbar-group rd-navbar-search-wrap">
-                        <div class="rd-navbar-panel">
-                            <button class="rd-navbar-toggle" data-custom-toggle=".rd-navbar-nav-wrap" data-custom-toggle-disable-on-blur="true"><span></span></button>
-                            <a class="rd-navbar-brand brand" href="{{route('web.home')}}">
-                                <img src="{{$configuracoes->getLogomarca()}}" alt="{{$configuracoes->nomedosite}}" width="139" height="22"/>
-                            </a>
-                        </div>
-                        <div class="rd-navbar-nav-wrap">
-                            <div class="rd-navbar-nav-inner">
-                                <div class="rd-navbar-search">
-                                    <form class="rd-search" action="{{ route('web.pesquisa') }}" method="post" autocomplete="off">
-                                    @csrf
-                                    <div class="form-wrap">
-                                        <label class="form-label" for="rd-search-form-input">Pesquisar...</label>
-                                        <input class="form-input" id="rd-search-form-input" type="text" name="search" value="{{$search ?? ''}}">
-                                        <div class="rd-search-results-live" id="rd-search-results-live"></div>
-                                    </div>
-                                    <button class="rd-search-submit" type="submit"></button>
-                                    </form>
-                                    <button class="rd-navbar-search-toggle" data-rd-navbar-toggle=".rd-navbar-search, .rd-navbar-search-wrap"></button>
-                                </div>
-                                <ul class="rd-navbar-nav">
-                                    <li class="rd-nav-item">
-                                        <a class="rd-nav-link" href="{{route('web.quemsomos')}}" title="Informática Livre">Informática Livre</a>
-                                    </li>
+    @endif
+</head>
 
-                                    @if (!empty($menu_servicos) && $menu_servicos->count() > 0)
-                                        <li class="rd-nav-item active"><a class="rd-nav-link" href="#">Serviços</a>
-                                            <ul class="rd-menu rd-navbar-dropdown">
-                                                @foreach ($menu_servicos as $servico)
-                                                <li class="rd-dropdown-item">
-                                                    <a class="rd-dropdown-link" href="{{route('web.pagina',['slug' => $servico->slug])}}">{{$servico->titulo}}</a>
-                                                </li>
-                                                @endforeach
-                                            </ul>
-                                        </li> 
-                                    @endif
-                                     
-                                    <li class="rd-nav-item">
-                                        <a class="rd-nav-link" href="{{route('web.portifolio')}}" title="Portifólio">Portifólio</a>
-                                    </li>                          
-                                    <li class="rd-nav-item">
-                                        <a class="rd-nav-link" href="{{route('web.blog.artigos')}}" title="Dicas">Dicas</a>
-                                    </li>
-                                    <li class="rd-nav-item">
-                                        <a class="rd-nav-link" href="{{route('web.atendimento')}}" title="Atendimento">Atendimento</a>
-                                    </li>                        
-                                </ul>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </nav>
+<body>
+   	<!-- Header -->
+   	<header id="header" class="header">
+	   	<div class="top-wrap">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+		              	<div id="logo" class="logo">
+							<a href="./" rel="home" title="home">
+								<img src="images/logo.svg" alt="Good News" />
+							</a>
+		            	</div>
+		            	<div class="follow-us">
+			            	<div class="follow-title">
+			            		Follow Us
+			            	</div>
+			            	<ul class="social-links">
+			            		<li class="facebook"><a href="#">Follow us on Facebook</a></li>
+			            		<li class="twitter"><a href="#">Follow us on Twitter</a></li>
+			            		<li class="google"><a href="#">Follow us on Google</a></li>
+			            		<li class="linkedin"><a href="#">Follow us on Linkedin</a></li>
+			            		<li class="pinterest"><a href="#">Follow us on Pinterest</a></li>
+			            	</ul>
+		            	</div>
+		            </div><!-- /.col-md-6 -->
+		            <div class="col-md-6">
+		            	<div class="btn-menu"></div><!-- //mobile menu button -->
+		            	<div class="member-area">
+		            		<span class="login-popup"><a href="#login-modal">Login</a></span>
+		            		<span class="signup-popup"><a href="#signup-modal">Become a member</a></span>
+		            	</div>
+		            </div><!-- /.col-md-6 -->
+	            </div><!-- /.row -->
+	         </div><!-- /.container -->
+	   	</div><!-- /.top-wrap -->
+		<div class="header-wrap">
+		 <div class="container">
+		    <div class="row">
+				<div class="col-md-9">
+					<nav id="mainnav" class="mainnav">
+						<ul class="menu">
+							<li class="has-children"><a class="active" href="index.html">Home</a>
+								<ul class="sub-menu">
+									<li><a href="index-banner.html">Home with Banner</a></li>
+									<li><a href="index-custom.html">Home Customize</a></li>
+									<li class="has-children"><a href="#">Third Level Item</a>
+										<ul class="sub-menu">
+											<li><a href="#">Sublevel 1</a></li>
+											<li><a href="#">Sublevel 2</a></li>
+											<li><a href="#">Sublevel 3</a></li>
+											<li><a href="#">Sublevel 4</a></li>
+											<li><a href="#">Sublevel 5</a></li>
+										</ul><!-- /.submenu -->
+									</li>
+								</ul><!-- /.submenu -->
+							</li>
+							<li class="has-children"><a href="#">Pages</a>
+								<ul class="sub-menu">
+									<li><a href="article-endless.html">Articles</a></li>
+									<li><a href="article-detail.html">Articles Detail</a></li>
+									<li><a href="category-hide-navigation.html">Category Page</a></li>
+									<li><a href="contact.html">Contact Page</a></li>
+									<li><a href="about.html">About Page</a></li>
+									<li><a href="login.html">Login Page</a></li>
+									<li><a href="404.html">404 Page</a></li>
+								</ul><!-- /.submenu -->
+							</li>
+							<li class="gn-mega-menu"><a href="category.html">Mega-Menu</a>
+								<div class="sub-menu">
+									<div class="container">
+									<div class="row">
+									<div class="col-md-12">
+										<div class="mega-item-wrap">
+											<div class="mega-item">
+												<img src="images/thumbs/11.jpg" alt="image">	
+												<h5><a href="#">Usability Testing for Mobile Is Easy</a></h5>
+											</div>
+											<div class="mega-item">
+												<img src="images/thumbs/11-2.jpg" alt="image">	
+												<h5><a href="#">Infinite Scrolling Is Not for Every Website</a></h5>
+											</div>
+											<div class="mega-item">
+												<img src="images/thumbs/11-3.jpg" alt="image">	
+												<h5><a href="#">Infinite Scrolling Is Not for Every Website</a></h5>
+											</div>
+											<div class="mega-item">
+												<img src="images/thumbs/11-4.jpg" alt="image">	
+												<h5><a href="#">Ecommerce UX: 3 Design Trends to Follow and 3 to Avoid</a></h5>
+											</div>
+											<div class="mega-item">
+												<img src="images/thumbs/11-5.jpg" alt="image">	
+												<h5><a href="#">University Websites: Top 10 Design Guidelines</a></h5>
+											</div>
+											<div class="mega-item">
+												<img src="images/thumbs/11-6.jpg" alt="image">	
+												<h5><a href="#">University Websites: Top 10 Design Guidelines</a></h5>
+											</div>
+										</div>
+										<div class="nav-mega-item">
+											In this category:
+											<a href="#">All</a>
+											<a href="#">Tech</a>
+											<a href="#">Apps</a>
+											<a href="#">Dev&amp;Design</a>
+											<a href="#">Dev&amp;Design</a>
+											<a href="#">Gadget</a>
+											<a href="#">Mobile</a>
+										</div>
+									</div>
+									</div>
+									</div>
+								</div><!-- /.submenu -->
+							</li>
+							<li class="has-children"><a href="category.html">Category</a>
+								<ul class="sub-menu">
+									<li><a href="category.html">Normal</a></li>
+									<li><a href="category-hide-navigation.html">Hide Navigation</a></li>
+								</ul><!-- /.submenu -->
+							</li>
+							<li><a href="ui-elements.html">UI-Elements</a></li>
+						</ul><!-- /.menu -->
+					</nav><!-- /nav -->
+				</div><!-- /.col-md-9 -->
+				<div class="col-md-3">
+					<div class="search-wrap">
+						<div class="search-icon"></div><!-- //mobile search button -->
+						<form action="#" id="searchform" class="search-form" method="get" role="search">
+							<input type="text" id="s" placeholder="Search" class="search-field">
+							<input type="submit" value="&#xf002;" id="searchsubmit" class="search-submit">
+							<a class="search-close" href="#"><i class="fa fa-times-circle"></i></a>
+						</form>
+					</div><!-- /.search-wrap -->
+				</div><!-- /.col-md-3 -->
+		    </div><!-- /.row -->
+		 </div><!-- /.container -->
+		</div><!-- /.header-wrap -->
+	</header>
+
+	@yield('content')
+
+	<!-- Footer -->
+	<footer id="footer">
+		<div class="footer-widgets">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
+						<div class="widget widget-brand">
+							<div class="logo logo-footer">
+								<a href="#"><img src="images/logo-footer.svg" alt="Good News"></a>
+							</div>
+							<p>This pays especially well in technology, where you earn a premium for working fast.</p>
+						</div><!-- /.widget-brand -->
+						<div class="widget widget-social">
+							<h5 class="widget-title">Follow Us</h5>
+							<div class="social-list">
+								<a href="#"><img src="images/facebook.svg" alt="image"></a>
+								<a href="#"><img src="images/twitter.svg" alt="image"></a>
+								<a href="#"><img src="images/youtube.svg" alt="image"></a>
+								<a href="#"><img src="images/dribbble.svg" alt="image"></a>
+							</div>
+							<a class="email" href="#">hello@youraddress.com</a>
+						</div><!-- /.widget-social -->
+					</div><!-- /.col-md-4 -->
+					<div class="col-md-4 gn-animation" data-animation="fadeInUp" data-animation-delay="0.2s" data-animation-offset="75%">
+						<div class="widget widget-twitter">
+							<h5 class="widget-title">Twitter</h5>
+							<div class="latest-tweets" data-number="3" data-username="envato" data-modpath="./twitter/index.php"></div>
+						</div><!-- /.widget-twitter -->
+					</div><!-- /.col-md-4 -->
+					<div class="col-md-2 gn-animation" data-animation="fadeInUp" data-animation-delay="0.4s" data-animation-offset="75%">
+						<div class="widget widget-list">
+							<h5 class="widget-title">Main</h5>
+							<ul class="links-list">
+								<li><a href="#">Mustreads</a></li>
+								<li><a href="#">Tech</a></li>
+								<li><a href="#">Business</a></li>
+								<li><a href="#">Entertainment</a></li>
+								<li><a href="#">Social Media</a></li>
+							</ul>
+						</div><!-- /.widget-list -->
+					</div><!-- /.col-md-2 -->
+					<div class="col-md-2 gn-animation" data-animation="fadeInUp" data-animation-delay="0.6s" data-animation-offset="75%">
+						<div class="widget widget-list">
+							<h5 class="widget-title">About Us</h5>
+							<ul class="links-list">
+								<li><a href="#">About Us</a></li>
+								<li><a href="#">Our Team</a></li>
+								<li><a href="#">Careers </a></li>
+								<li><a href="#">Advertise</a></li>
+								<li><a href="#">Copyright</a></li>
+							</ul>
+						</div><!-- /.widget-list -->
+					</div><!-- /.col-md-2 -->
+				</div><!-- /.row -->
+			</div><!-- /.container -->
+		</div><!-- /.footer-widgets -->
+		<div class="footer-copyright">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						&copy; 2014 Good News, Inc.
+					</div><!-- /.col-md-12 -->
+				</div><!-- /.row -->
+			</div><!-- /.container -->
+		</div>
+	</footer>
+
+	<!-- Login and Signup Form -->
+    <div id="login-modal" class="login popup" style="display: none;">
+        <a class="close-modal" href="#"></a>
+        <div class="form-title">
+            <h4>Login</h4>
+            <div class="signup">
+                No account yet? <a href="#">Sign Up</a>
             </div>
-        </header>
-        
-        @yield('content')  
-       
-        <section class="section section-40 section-md-top-75 section-md-bottom-60 bg-cod-gray novi-background">
-            <div class="container text-center text-md-start">
-                <div class="row row-30 align-items-md-center justify-content-lg-center justify-content-xl-start">
-                    <div class="col-sm-12 col-md-3 col-lg-2 col-xl-2 text-sm-center">
-                        <a class="brand" href="{{route('web.home')}}">
-                            <img src="{{$configuracoes->getLogomarca()}}" alt="{{$configuracoes->nomedosite}}" width="139" height="22"/>
-                        </a>
-                    </div>
-                    <div class="col-sm-12 col-md-9 col-lg-7 col-xl-6">
-                        <div class="wrap-justify">
-                            <address class="contact-info text-start">
-                                <div class="unit unit-horizontal unit-spacing-xs align-items-center justify-content-center unit-sm-left">
-                                    <div class="unit-left">
-                                        <span class="novi-icon icon icon-md-custom icon-gunsmoke material-icons-place"></span>
-                                    </div>
-                                    <div class="unit-body fw-light">
-                                        <a class="link-light-03 d-inline" href="javascript:void(0)">Rua Primavera, 120<br>Jardim Carolina - Ubatuba/SP</a>
-                                    </div>
-                                </div>
-                            </address>
-                            <address class="contact-info text-start">
-                                <div class="unit unit-horizontal unit-spacing-xs align-items-center justify-content-center unit-sm-left">
-                                    <div class="unit-left">
-                                        <span class="novi-icon icon icon-md-custom icon-gunsmoke material-icons-phone"></span>
-                                    </div>
-                                    <div class="unit-body fw-light">
-                                        <div class="link-wrap"><a class="link-light-03" href="tel:12991385030">(12) 99138-5030</a></div>
-                                        <div class="link-wrap"><a class="link-light-03" href="mailto:suporte@informaticalivre.com">suporte@informaticalivre.com</a></div>
-                                    </div>
-                                </div>
-                            </address>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-4 text-lg-center">
-                        <ul class="list-inline list-inline-xs">
-                            @if ($configuracoes->facebook)
-                                <li><a target="_blank" class="novi-icon icon icon-sm-custom link-tundora fa-facebook" href="{{$configuracoes->facebook}}"></a></li>
-                            @endif
-                            @if ($configuracoes->twitter)
-                                <li><a target="_blank" class="novi-icon icon icon-sm-custom link-tundora fa-twitter" href="{{$configuracoes->twitter}}"></a></li>
-                            @endif
-                            @if ($configuracoes->instagram)
-                                <li><a target="_blank" class="novi-icon icon icon-sm-custom link-tundora fa-instagram" href="{{$configuracoes->instagram}}"></a></li>
-                            @endif
-                            @if ($configuracoes->linkedin)
-                                <li><a target="_blank" class="novi-icon icon icon-sm-custom link-tundora fa-linkedin" href="{{$configuracoes->linkedin}}"></a></li>
-                            @endif
-                            @if ($configuracoes->youtube)
-                                <li><a target="_blank" class="novi-icon icon icon-sm-custom link-tundora fa-youtube" href="{{$configuracoes->youtube}}"></a></li>
-                            @endif
-                        </ul>
-                    </div>
+        </div>
+        <div class="login-by">
+            <div class="log-face-w">
+                <a class="log-facebook" href="#">Login with Facebook</a>
+            </div>
+            <div class="log-twit-w">
+                <a class="log-twitter" href="#">Login with Twitter</a>
+            </div>
+        </div>
+        <form id="loginform" name="loginform" method="post">
+            <div class="email-wrap">
+                <input type="text" size="30" value="" class="input" id="user-email" name="log" placeholder="Email">
+            </div>     
+            <div class="pass-wrap">
+                <input type="password" size="30" value="" class="input" id="user-pass" name="password" placeholder="Password">
+            </div>
+            <div class="option-login">
+                <div class="remember">
+                    <input type="checkbox" name="check3" id="check3" class="css-checkbox" checked="checked"/><label for="check3" class="css-label">Remember me</label>
+                </div>
+                <div class="forgot">
+                    <a href="#">I forgot my password</a>
                 </div>
             </div>
-        </section>
-        <footer class="page-foot page-foot-default section-35 bg-black novi-background text-center">
-            <div class="container">
-                <p class="rights small">
-                    <span>{{$configuracoes->nomedosite}}</span><span>&nbsp;&#169;&nbsp;</span>
-                    <span class="copyright-year"></span>
-                    <span>Todos os direitos reservados</span><br class="d-md-none">
-                    <a class="link-primary" href="{{route('web.politica')}}">Política de Privacidade</a>
-                </p>
+            <div class="submit-login">
+                <input type="submit" value="Log In" class="submit" id="submit" name="submit">
             </div>
-        </footer>
+        </form>
+    </div>
+    <div id="signup-modal" class="popup" style="display: none;">
+        <a class="close-modal" href="#"></a>
+        <div class="form-title">
+            <h4>Sign Up</h4>
+            <div class="signup">
+                Already a member? <a href="#">Login</a>
+            </div>
+        </div>
+        <div class="login-by">
+            <div class="log-face-w">
+                <a class="log-facebook" href="#">Login with Facebook</a>
+            </div>
+            <div class="log-twit-w">
+                <a class="log-twitter" href="#">Login with Twitter</a>
+            </div>
+        </div>
+        <form id="signupform" name="signupform" method="post">
+            <div class="name-wrap">
+                <input type="text" size="30" value="" class="input" id="user-name" name="name" placeholder="Name">
+            </div> 
+            <div class="email-wrap">
+                <input type="text" size="30" value="" class="input" id="user-email2" name="log" placeholder="Email">
+            </div>     
+            <div class="pass-wrap">
+                <input type="password" size="30" value="" class="input" id="user-pass2" name="password" placeholder="Password">
+            </div>
 
+            <div class="option-login">
+                <div class="remember">
+                    <input type="checkbox" name="check4" id="check4" class="css-checkbox" checked="checked"/><label for="check4" class="css-label">Remember me</label>
+                </div>
+                <div class="forgot">
+                    <a href="#">I forgot my password</a>
+                </div>
+            </div>
+
+            <div class="submit-login">
+                <input type="submit" value="Sign Up" class="submit" id="submit2" name="submit">
+            </div>
+        </form>
     </div>
 
-    <script src="{{url(asset('frontend/assets/js/core.min.js'))}}"></script>
-    <script src="{{url(asset('frontend/assets/js/script.js'))}}"></script> 
+	<!-- Go Top -->
+	<a class="go-top">
+		<i class="fa fa-chevron-up"></i>
+	</a>
+
+	<!-- Javascript -->
+	<script type="text/javascript" src="javascript/jquery.min.js"></script>
+	<script type="text/javascript" src="javascript/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascript/jquery.easing.js"></script>
+	<script type="text/javascript" src="javascript/matchMedia.js"></script>
+	<script type="text/javascript" src="javascript/jquery-waypoints.js"></script>
+	<script type="text/javascript" src="javascript/jquery.flexslider.js"></script>
+	<script type="text/javascript" src="javascript/jquery.transit.js"></script>
+	<script type="text/javascript" src="javascript/jquery.leanModal.min.js"></script>
+	<script type="text/javascript" src="javascript/jquery.tweet.min.js"></script>
+	<script type="text/javascript" src="javascript/jquery.cookie.js"></script>
+	<script type="text/javascript" src="javascript/switcher.js"></script>
+	<script type="text/javascript" src="javascript/jquery.doubletaptogo.js"></script>
+	<script type="text/javascript" src="javascript/smoothscroll.js"></script>
+	<script type="text/javascript" src="javascript/main.js"></script>
 
     @hasSection('js')
         @yield('js')
@@ -241,6 +374,6 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-N886VV2RRF');
-    </script>    
+    </script>
 </body>
 </html>
