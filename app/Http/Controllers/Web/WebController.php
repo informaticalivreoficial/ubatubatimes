@@ -14,16 +14,12 @@ use App\Models\{
     CatPortifolio,
     Post,
     CatPost,
-    Empresa,
     Estados,
     Newsletter,
-    Orcamento,
-    Pedido,
-    Portifolio,
-    Produto,
     Slide,
     User
 };
+use Goutte\Client;
 use App\Services\ConfigService;
 use App\Support\Seo;
 use Carbon\Carbon;
@@ -32,6 +28,7 @@ class WebController extends Controller
 {
     protected $configService;
     protected $seo;
+    private $results = [];
 
     public function __construct(ConfigService $configService)
     {
@@ -41,9 +38,19 @@ class WebController extends Controller
 
     public function home()
     {
-        $artigos = Post::orderBy('created_at', 'DESC')->postson()->limit(3)->get();
-        $slides = Slide::orderBy('created_at', 'DESC')->available()->where('expira', '>=', Carbon::now())->get();
-        //$empresas = Empresa::orderBy('created_at', 'DESC')->available()->get();
+        $client = new Client();
+        $url = 'https://www.ubatuba.sp.gov.br/noticias/';
+        $page = $client->request('GET', $url);
+
+        $page->filter('.blog-items li')->each( function ($item){
+            $this->results[] = [
+                'titulo' => $item->filter('h4')->text(),
+                'content' => $item->filter('.excerpt')->text(),
+                'url' => $item->filter('a')->attr('href'),
+                'img' => $item->filter('img')->attr('src'),
+                'local' => 'ubatuba'
+            ];           
+        });
         
         $head = $this->seo->render($this->configService->getConfig()->nomedosite ?? 'Informática Livre',
             $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
@@ -53,10 +60,35 @@ class WebController extends Controller
 
 		return view('web.home',[
             'head' => $head,
-            'artigos' => $artigos,
-            //'empresas' => $empresas,
-            'slides' => $slides
+            'noticiasubatuba' => $this->results
 		]);
+    }
+
+    public function noticia($local, $categoria, $slug)
+    {
+        if(!empty($local)){
+            if($local == 'ubatuba'){
+                $client = new Client();
+                $url = "https://www.ubatuba.sp.gov.br/{$categoria}/{$slug}";
+                $page = $client->request('GET', $url);
+
+                $post = [
+                    'titulo' => $page->filter('.heading-text h1')->text(),
+                    'data' => $page->filter('.date')->text(),
+                    'img' => $page->filter('.page-content figure img')->attr('src'),
+                    'content' => $page->filter('.article-body-wrap .body-text')->text(),
+                    'fonte' => 'Prefeitura Municipal de Ubatuba',
+                    'fontelink' => 'https://www.ubatuba.sp.gov.br'
+                ];                
+            }
+
+            return view('web.noticia',[
+                //'head' => $head,
+                'post' => $post
+            ]);
+        }else{
+            return redirect()->back();
+        }
     }
 
     public function quemsomos()

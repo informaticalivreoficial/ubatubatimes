@@ -1,3 +1,3 @@
-# laravel-multitenant
+# laravel-portal-de-notícias
 
-Projeto de estudos, uma aplicação multi tenant utilizando padrões de projetos
+Projeto de estudos, uma aplicação portal de notícias

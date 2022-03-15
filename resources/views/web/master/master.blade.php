@@ -24,16 +24,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- Bootstrap  -->
-	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" >
+	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/bootstrap.css'))}}" >
 
 	<!-- Theme Style -->
-	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/style.css'))}}">
 
 	<!-- Colors -->
-	<link rel="stylesheet" type="text/css" href="assets/css/colors/color1.css" id="colors">
+	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/colors/color1.css'))}}" id="colors">
    
 	<!-- Animation Style -->
-	<link rel="stylesheet" type="text/css" href="assets/css/animate.css">
+	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/animate.css'))}}">
 
 	<!-- Google Fonts 
 	<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
@@ -194,7 +194,11 @@
 		</div><!-- /.header-wrap -->
 	</header>
 
-	@yield('content')
+	<section id="main">
+		<div class="container">
+			@yield('content')
+		</div>
+	</div>
 
 	<!-- Footer -->
 	<footer id="footer">
@@ -347,21 +351,12 @@
 		<i class="fa fa-chevron-up"></i>
 	</a>
 
-	<!-- Javascript -->
-	<script type="text/javascript" src="javascript/jquery.min.js"></script>
-	<script type="text/javascript" src="javascript/bootstrap.min.js"></script>
-	<script type="text/javascript" src="javascript/jquery.easing.js"></script>
-	<script type="text/javascript" src="javascript/matchMedia.js"></script>
-	<script type="text/javascript" src="javascript/jquery-waypoints.js"></script>
-	<script type="text/javascript" src="javascript/jquery.flexslider.js"></script>
-	<script type="text/javascript" src="javascript/jquery.transit.js"></script>
-	<script type="text/javascript" src="javascript/jquery.leanModal.min.js"></script>
-	<script type="text/javascript" src="javascript/jquery.tweet.min.js"></script>
-	<script type="text/javascript" src="javascript/jquery.cookie.js"></script>
-	<script type="text/javascript" src="javascript/switcher.js"></script>
-	<script type="text/javascript" src="javascript/jquery.doubletaptogo.js"></script>
-	<script type="text/javascript" src="javascript/smoothscroll.js"></script>
-	<script type="text/javascript" src="javascript/main.js"></script>
+	<script type="text/javascript" src="{{url(mix('frontend/assets/js/jquery.min.js'))}}"></script>
+	<script type="text/javascript" src="{{url(mix('frontend/assets/js/jquery.easing.js'))}}"></script>
+	<script type="text/javascript" src="{{url(mix('frontend/assets/js/matchMedia.js'))}}"></script>
+	<script type="text/javascript" src="{{url(mix('frontend/assets/js/bootstrap.min.js'))}}"></script>	
+	<script type="text/javascript" src="{{url(mix('frontend/assets/js/libs.js'))}}"></script>	
+	<script type="text/javascript" src="{{url(mix('frontend/assets/js/main.js'))}}"></script>
 
     @hasSection('js')
         @yield('js')
