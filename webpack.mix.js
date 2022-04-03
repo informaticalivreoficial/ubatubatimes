@@ -43,7 +43,6 @@ mix
         'resources/views/web/assets/js/jquery.leanModal.min.js',
         'resources/views/web/assets/js/jquery.tweet.min.js',
         'resources/views/web/assets/js/jquery.cookie.js',
-        'resources/views/web/assets/js/switcher.js',
         'resources/views/web/assets/js/jquery.doubletaptogo.js',
         'resources/views/web/assets/js/smoothscroll.js'
     ], 'public/frontend/assets/js/libs.js')

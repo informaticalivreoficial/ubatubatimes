@@ -16,21 +16,15 @@
                         "><img src="{{ $noticiasubatuba[0]['img'] }}" alt="{{ $noticiasubatuba[0]['titulo'] }}"></a>
                     </div>
                     <div class="cat">
-                        <a href="">Mustreads</a>
+                        <a href="javascript:void(0)">Ubatuba</a>
                     </div>
                     <h3><a href="noticia/{{ $noticiasubatuba[0]['local'] }}/@php
                         $link = explode('/', $noticiasubatuba[0]['url']);
                         echo $link[3].'/'.$link[4];
                     @endphp
                     ">{{ $noticiasubatuba[0]['titulo'] }}</a></h3>
-                    <p class="excerpt-entry">{{ $noticiasubatuba[0]['content'] }}</p>
-                    <div class="post-meta">
-                        <span class="author">By <a href="#">Paul Graham</a></span>
-                        <div class="activity">
-                            <span class="views">345</span><span class="comment"><a href="#">15</a></span>
-                        </div>
-                    </div>
-                </article><!--  /.post -->
+                    <p class="excerpt-entry">{{ $noticiasubatuba[0]['content'] }}</p>                    
+                </article>
             </div>
             
             <div class="content-right">
@@ -43,16 +37,13 @@
                     "><img src="{{ $noticiasubatuba[1]['img'] }}" alt="img"></a>
                     </div>
                     <div class="cat">
-                        <a href="">Tech</a>
+                        <a href="javascript:void(0)">Ubatuba</a>
                     </div>
                     <h3><a href="noticia/{{ $noticiasubatuba[1]['local'] }}/@php
                         $link = explode('/', $noticiasubatuba[1]['url']);
                         echo $link[3].'/'.$link[4];
                     @endphp
-                    ">{{ $noticiasubatuba[1]['titulo'] }}</a></h3>
-                    <div class="activity">
-                        <span class="views">12</span><span class="comment"><a href="#">15</a></span>
-                    </div>
+                    ">{{ $noticiasubatuba[1]['titulo'] }}</a></h3>                    
                 </article>
                 <article class="post">
                     <div class="thumb">
@@ -63,19 +54,15 @@
                     "><img src="{{ $noticiasubatuba[2]['img'] }}" alt="img"></a>
                     </div>
                     <div class="cat">
-                        <a href="">Social media</a>
+                        <a href="javascript:void(0)">Ubatuba</a>
                     </div>
                     <h3><a href="noticia/{{ $noticiasubatuba[2]['local'] }}/@php
                         $link = explode('/', $noticiasubatuba[2]['url']);
                         echo $link[3].'/'.$link[4];
                     @endphp
-                    ">{{ $noticiasubatuba[2]['titulo'] }}</a></h3>
-                    <div class="activity">
-                        <span class="views">12</span><span class="comment"><a href="#">15</a></span>
-                    </div>
+                    ">{{ $noticiasubatuba[2]['titulo'] }}</a></h3>                    
                 </article>
-            </div>
-            
+            </div>            
         </div>
         @endif
         
@@ -84,54 +71,69 @@
             <div class="section-title">
                 <h4><a href="#">Região</a></h4>
             </div>
-            <article class="post">
-                <div class="thumb">
-                    <a href="#"><img src="images/thumbs/7.jpg" alt="img"></a>
-                </div>
-                <div class="cat">
-                    <a href="">Social media</a>
-                </div>
-                <h3><a href="#">Like all back-of-the-envelope calculations, this one has a lot of wiggle room.</a></h3>
-                <div class="activity">
-                    <span class="views">12</span><span class="comment"><a href="#">0</a></span>
-                </div>
-            </article><!--  /.post -->
-            <article class="post last">
-                <div class="thumb">
-                    <a href="#"><img src="images/thumbs/7-3.jpg" alt="img"></a>
-                </div>
-                <div class="cat">
-                    <a href="">Social media</a>
-                </div>
-                <h3><a href="#">I'm not claiming the multiplier is precisely 36, but it is certainly more than 10...</a></h3>
-                <div class="activity">
-                    <span class="views">12</span><span class="comment"><a href="#">0</a></span>
-                </div>
-            </article><!--  /.post -->
-            <article class="post">
-                <div class="thumb">
-                    <a href="#"><img src="images/thumbs/7-2.jpg" alt="img"></a>
-                </div>
-                <div class="cat">
-                    <a href="">Social media</a>
-                </div>
-                <h3><a href="#">Like all back-of-the-envelope calculations, this one has a lot of wiggle room.</a></h3>
-                <div class="activity">
-                    <span class="views">12</span><span class="comment"><a href="#">0</a></span>
-                </div>
-            </article><!--  /.post -->
-            <article class="post margin-b0 last">
-                <div class="thumb">
-                    <a href="#"><img src="images/thumbs/7-4.jpg" alt="img"></a>
-                </div>
-                <div class="cat">
-                    <a href="">Social media</a>
-                </div>
-                <h3><a href="#">I'm not claiming the multiplier is precisely 36, but it is certainly more than 10...</a></h3>
-                <div class="activity">
-                    <span class="views">12</span><span class="comment"><a href="#">0</a></span>
-                </div>
-            </article><!--  /.post -->
+            @if (!empty($noticiascaragua && count($noticiascaragua) > 0))
+                <article class="post">
+                    <div class="thumb">
+                        @php $link = explode('/', $noticiascaragua[0]['url']); @endphp
+                        <a href="{{route('web.noticiaCaragua',[
+                            'local' => $noticiascaragua[0]['local'],
+                            'categoria' => 'pmc',
+                            'ano' => $link[4],
+                            'mes' => $link[5],
+                            'slug' => $link[6]
+                        ])}}"><img src="{{ $noticiascaragua[0]['img'] }}" alt="img"></a>
+                    </div>
+                    <div class="cat">
+                        <a href="javascript:void(0)">Caraguatatuba</a>
+                    </div>
+                    <h3><a href="{{route('web.noticiaCaragua',[
+                            'local' => $noticiascaragua[0]['local'],
+                            'categoria' => 'pmc',
+                            'ano' => $link[4],
+                            'mes' => $link[5],
+                            'slug' => $link[6]
+                        ])}}">{{ $noticiascaragua[0]['titulo'] }}</a></h3>                    
+                </article>
+                <article class="post last">
+                    <div class="thumb">
+                        @php $link1 = explode('/', $noticiascaragua[1]['url']); @endphp
+                        <a href="{{route('web.noticiaCaragua',[
+                                'local' => $noticiascaragua[1]['local'],
+                                'categoria' => 'pmc',
+                                'ano' => $link1[4],
+                                'mes' => $link1[5],
+                                'slug' => $link1[6]
+                            ])}}"><img src="{{ $noticiascaragua[1]['img'] }}" alt="img"></a>
+                    </div>
+                    <div class="cat">
+                        <a href="javascript:void(0)">Caraguatatuba</a>
+                    </div>
+                    <h3><a href="{{route('web.noticiaCaragua',[
+                            'local' => $noticiascaragua[1]['local'],
+                            'categoria' => 'pmc',
+                            'ano' => $link1[4],
+                            'mes' => $link1[5],
+                            'slug' => $link1[6]
+                        ])}}">{{ $noticiascaragua[1]['titulo'] }}</a></h3>                    
+                </article>
+            @endif
+            
+            @if (!empty($noticiassaoseba && count($noticiassaoseba) > 0))
+                @foreach ($noticiassaoseba as $nssb)
+                    <article class="post">
+                        <div class="thumb">
+                            <a href="#"><img src="images/thumbs/7-2.jpg" alt="img"></a>
+                        </div>
+                        <div class="cat">
+                            <a href="">São Sebastião</a>
+                        </div>
+                        <h3><a href="#">{{ $nssb->titulo }}</a></h3>
+                        <div class="activity">
+                            <span class="views">12</span><span class="comment"><a href="#">0</a></span>
+                        </div>
+                    </article>
+                @endforeach
+            @endif
         </div><!-- /.highlights-posts -->
         <div class="editors-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
             <div class="gn-line"></div>

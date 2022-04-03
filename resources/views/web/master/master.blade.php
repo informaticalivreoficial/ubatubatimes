@@ -30,7 +30,7 @@
 	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/style.css'))}}">
 
 	<!-- Colors -->
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/colors/color1.css'))}}" id="colors">
+	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/colors/color1.css'))}}">
    
 	<!-- Animation Style -->
 	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/animate.css'))}}">
@@ -64,22 +64,10 @@
 				<div class="row">
 					<div class="col-md-6">
 		              	<div id="logo" class="logo">
-							<a href="./" rel="home" title="home">
-								<img src="images/logo.svg" alt="Good News" />
+							<a href="{{route('web.home')}}" rel="home" title="{{$configuracoes->nomedosite}}">
+								<img src="{{$configuracoes->getLogomarca()}}" alt="{{$configuracoes->nomedosite}}" />
 							</a>
-		            	</div>
-		            	<div class="follow-us">
-			            	<div class="follow-title">
-			            		Follow Us
-			            	</div>
-			            	<ul class="social-links">
-			            		<li class="facebook"><a href="#">Follow us on Facebook</a></li>
-			            		<li class="twitter"><a href="#">Follow us on Twitter</a></li>
-			            		<li class="google"><a href="#">Follow us on Google</a></li>
-			            		<li class="linkedin"><a href="#">Follow us on Linkedin</a></li>
-			            		<li class="pinterest"><a href="#">Follow us on Pinterest</a></li>
-			            	</ul>
-		            	</div>
+		            	</div>		            	
 		            </div><!-- /.col-md-6 -->
 		            <div class="col-md-6">
 		            	<div class="btn-menu"></div><!-- //mobile menu button -->
@@ -97,85 +85,22 @@
 				<div class="col-md-9">
 					<nav id="mainnav" class="mainnav">
 						<ul class="menu">
-							<li class="has-children"><a class="active" href="index.html">Home</a>
+							<li><a class="active" href="{{route('web.home')}}">Guia</a></li>
+							<li class="has-children"><a href="">Colunas</a>
 								<ul class="sub-menu">
 									<li><a href="index-banner.html">Home with Banner</a></li>
-									<li><a href="index-custom.html">Home Customize</a></li>
-									<li class="has-children"><a href="#">Third Level Item</a>
-										<ul class="sub-menu">
-											<li><a href="#">Sublevel 1</a></li>
-											<li><a href="#">Sublevel 2</a></li>
-											<li><a href="#">Sublevel 3</a></li>
-											<li><a href="#">Sublevel 4</a></li>
-											<li><a href="#">Sublevel 5</a></li>
-										</ul><!-- /.submenu -->
-									</li>
-								</ul><!-- /.submenu -->
+									<li><a href="index-custom.html">Home Customize</a></li>									
+								</ul>
 							</li>
-							<li class="has-children"><a href="#">Pages</a>
+							<li><a class="active" href="{{route('web.home')}}">Praias de Ubatuba</a></li>
+							<li class="has-children"><a href="">Região</a>
 								<ul class="sub-menu">
-									<li><a href="article-endless.html">Articles</a></li>
-									<li><a href="article-detail.html">Articles Detail</a></li>
-									<li><a href="category-hide-navigation.html">Category Page</a></li>
-									<li><a href="contact.html">Contact Page</a></li>
-									<li><a href="about.html">About Page</a></li>
-									<li><a href="login.html">Login Page</a></li>
-									<li><a href="404.html">404 Page</a></li>
-								</ul><!-- /.submenu -->
-							</li>
-							<li class="gn-mega-menu"><a href="category.html">Mega-Menu</a>
-								<div class="sub-menu">
-									<div class="container">
-									<div class="row">
-									<div class="col-md-12">
-										<div class="mega-item-wrap">
-											<div class="mega-item">
-												<img src="images/thumbs/11.jpg" alt="image">	
-												<h5><a href="#">Usability Testing for Mobile Is Easy</a></h5>
-											</div>
-											<div class="mega-item">
-												<img src="images/thumbs/11-2.jpg" alt="image">	
-												<h5><a href="#">Infinite Scrolling Is Not for Every Website</a></h5>
-											</div>
-											<div class="mega-item">
-												<img src="images/thumbs/11-3.jpg" alt="image">	
-												<h5><a href="#">Infinite Scrolling Is Not for Every Website</a></h5>
-											</div>
-											<div class="mega-item">
-												<img src="images/thumbs/11-4.jpg" alt="image">	
-												<h5><a href="#">Ecommerce UX: 3 Design Trends to Follow and 3 to Avoid</a></h5>
-											</div>
-											<div class="mega-item">
-												<img src="images/thumbs/11-5.jpg" alt="image">	
-												<h5><a href="#">University Websites: Top 10 Design Guidelines</a></h5>
-											</div>
-											<div class="mega-item">
-												<img src="images/thumbs/11-6.jpg" alt="image">	
-												<h5><a href="#">University Websites: Top 10 Design Guidelines</a></h5>
-											</div>
-										</div>
-										<div class="nav-mega-item">
-											In this category:
-											<a href="#">All</a>
-											<a href="#">Tech</a>
-											<a href="#">Apps</a>
-											<a href="#">Dev&amp;Design</a>
-											<a href="#">Dev&amp;Design</a>
-											<a href="#">Gadget</a>
-											<a href="#">Mobile</a>
-										</div>
-									</div>
-									</div>
-									</div>
-								</div><!-- /.submenu -->
-							</li>
-							<li class="has-children"><a href="category.html">Category</a>
-								<ul class="sub-menu">
-									<li><a href="category.html">Normal</a></li>
-									<li><a href="category-hide-navigation.html">Hide Navigation</a></li>
-								</ul><!-- /.submenu -->
-							</li>
-							<li><a href="ui-elements.html">UI-Elements</a></li>
+									<li><a href="index-banner.html">Home with Banner</a></li>
+									<li><a href="index-custom.html">Home Customize</a></li>									
+								</ul>
+							</li>												
+							
+							<li><a href="ui-elements.html">Wiki Ubatuba</a></li>
 						</ul><!-- /.menu -->
 					</nav><!-- /nav -->
 				</div><!-- /.col-md-9 -->

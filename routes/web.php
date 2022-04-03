@@ -72,7 +72,8 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
     //*************************************** Páginas *******************************************/
     Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
-    Route::get('/noticia/{local}/{categoris}/{slug}', [WebController::class, 'noticia'])->name('noticia');
+    Route::get('/noticia/{local}/{categoria}/{slug}', [WebController::class, 'noticia'])->name('noticia');
+    Route::get('/noticia/{local}/{categoria}/{ano}/{mes}/{slug}', [WebController::class, 'noticiaCaragua'])->name('noticiaCaragua');
 
     //** Pesquisa */
     Route::match(['post', 'get'], '/pesquisa', [WebController::class, 'pesquisa'])->name('pesquisa');

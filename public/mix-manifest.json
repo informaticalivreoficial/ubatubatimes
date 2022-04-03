@@ -1,16 +1,16 @@
 {
     "/frontend/assets/css/bootstrap.css": "/frontend/assets/css/bootstrap.css?id=0c8d8b7930a6c6d4c46254759125ee7a",
     "/frontend/assets/css/style.css": "/frontend/assets/css/style.css?id=6d7efe537979f3c00782a52d74f666c1",
-    "/frontend/assets/css/colors/color1.css": "/frontend/assets/css/colors/color1.css?id=605db66f94890d97ee65e6ed3bb8f8c5",
+    "/frontend/assets/css/colors/color1.css": "/frontend/assets/css/colors/color1.css?id=113581f9d2f010da6a69570ad85f5863",
     "/frontend/assets/css/animate.css": "/frontend/assets/css/animate.css?id=1da8ecf18cc02092ea0687a50cb687ae",
+    "/frontend/assets/font/fontawesome-webfont.eot": "/frontend/assets/font/fontawesome-webfont.eot?id=0ad6ae93cf0e82e93168c42d8a52d4ab",
+    "/frontend/assets/font/fontawesome-webfont.svg": "/frontend/assets/font/fontawesome-webfont.svg?id=776d58f453c8fe5d6a89e9c31ee223ff",
+    "/frontend/assets/font/fontawesome-webfont.ttf": "/frontend/assets/font/fontawesome-webfont.ttf?id=85dabb5bfbe19679aa224b5fd2bd91bd",
+    "/frontend/assets/font/fontawesome-webfont.woff": "/frontend/assets/font/fontawesome-webfont.woff?id=9060dc768dc5229158919e3c09092f25",
     "/frontend/assets/js/jquery.min.js": "/frontend/assets/js/jquery.min.js?id=0b6ecf17e30037994d3ffee51b525914",
     "/frontend/assets/js/jquery.easing.js": "/frontend/assets/js/jquery.easing.js?id=4861e620d8861245bbabc5953fb7aa49",
     "/frontend/assets/js/matchMedia.js": "/frontend/assets/js/matchMedia.js?id=89f369588d629240d6a8d4f8788490c8",
     "/frontend/assets/js/bootstrap.min.js": "/frontend/assets/js/bootstrap.min.js?id=4d2217e6ef811750ef429614897722f7",
-    "/frontend/assets/js/libs.js": "/frontend/assets/js/libs.js?id=ce5cc8d23e8f8b2444b1e6275e6ffba4",
-    "/frontend/assets/js/main.js": "/frontend/assets/js/main.js?id=faa276ec30513ba37478bd1dfc026e69",
-    "/frontend/assets/font/fontawesome-webfont.eot": "/frontend/assets/font/fontawesome-webfont.eot?id=0ad6ae93cf0e82e93168c42d8a52d4ab",
-    "/frontend/assets/font/fontawesome-webfont.svg": "/frontend/assets/font/fontawesome-webfont.svg?id=776d58f453c8fe5d6a89e9c31ee223ff",
-    "/frontend/assets/font/fontawesome-webfont.ttf": "/frontend/assets/font/fontawesome-webfont.ttf?id=85dabb5bfbe19679aa224b5fd2bd91bd",
-    "/frontend/assets/font/fontawesome-webfont.woff": "/frontend/assets/font/fontawesome-webfont.woff?id=9060dc768dc5229158919e3c09092f25"
+    "/frontend/assets/js/libs.js": "/frontend/assets/js/libs.js?id=5b5e5d9b660e1644dd04479e5d74c73b",
+    "/frontend/assets/js/main.js": "/frontend/assets/js/main.js?id=faa276ec30513ba37478bd1dfc026e69"
 }

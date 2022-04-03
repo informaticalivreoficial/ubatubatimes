@@ -34,16 +34,21 @@ class WebController extends Controller
     {
         $this->configService = $configService;
         $this->seo = new Seo();
+        $this->crowler = new Client();
     }
 
     public function home()
     {
         $client = new Client();
-        $url = 'https://www.ubatuba.sp.gov.br/noticias/';
-        $page = $client->request('GET', $url);
+        //URLS
+        $urlUbatuba = 'https://www.ubatuba.sp.gov.br/noticias/';
+        $urlCaragua = 'https://www.caraguatatuba.sp.gov.br/pmc/';
+        $urlSaoSeba = 'http://www.saosebastiao.sp.gov.br/noticia-lista.asp';
 
-        $page->filter('.blog-items li')->each( function ($item){
-            $this->results[] = [
+        //Pegar as Notícias de Ubatuba
+        $pageUbatuba = $client->request('GET', $urlUbatuba);
+        $pageUbatuba->filter('.blog-items li')->each( function ($item){
+            $this->resultsUbatuba[] = [
                 'titulo' => $item->filter('h4')->text(),
                 'content' => $item->filter('.excerpt')->text(),
                 'url' => $item->filter('a')->attr('href'),
@@ -51,41 +56,160 @@ class WebController extends Controller
                 'local' => 'ubatuba'
             ];           
         });
-        
+
+        //Pegar as Notícias de Caraguatatuba
+        $pageCaragua = $client->request('GET', $urlCaragua);
+        $pageCaragua->filter('.card-deck .card')->each( function ($item){
+            $this->resultsCaragua[] = [
+                'titulo' => $item->filter('h5')->text(),
+                'content' => $item->filter('p')->text(),
+                'url' => $item->filter('a')->attr('href'),
+                'img' => $item->filter('img')->attr('src'),
+                'local' => 'caraguatatuba'
+            ];           
+        });
+
+        //Pegar as Notícias de São Sebastião
+        $pageSaoSeba = $client->request('GET', $urlSaoSeba);        
+        $pageSaoSeba->filter('.notice-list-page .notice')->each( function ($item){            
+            $this->resultsSaoSeba[] = [
+                'titulo' => $item->filter('.notice-core h2')->text(),
+                //'content' => $item->filter('.notice-content p')->text(),
+                'url' => $item->filter('a')->attr('href'),
+                //'img' => $item->filter('img')->attr('src'),
+                //'local' => 'sao-sebastiao'
+            ];   
+        });
+
+        //Noticia 1
+        $pegaThumb1 = explode('/', $urlSaoSeba);
+        $pegaThumbb1 = $pegaThumb1[0].'//'.$pegaThumb1[2].'/'.$this->resultsSaoSeba[0]['url'];
+        $pegaThumbUrl1 = $client->request('GET', $pegaThumbb1);
+        $img1 = explode("'", $pegaThumbUrl1->filter('.slide')->attr("style"));
+        $img1 = $pegaThumb1[0].'//'.$pegaThumb1[2].'/'.$img1[1];
+        //Noticia 2
+        $pegaThumb = explode('/', $urlSaoSeba);
+        $pegaThumbb = $pegaThumb[0].'//'.$pegaThumb[2].'/'.$this->resultsSaoSeba[1]['url'];
+        $pegaThumbUrl = $client->request('GET', $pegaThumbb);
+        $img = explode("'", $pegaThumbUrl->filter('.slide')->attr("style"));
+        $img = $pegaThumb[0].'//'.$pegaThumb[2].'/'.$img[1];
+
+        $responseSSB = [
+            [
+                'titulo' => $this->resultsSaoSeba[0]['titulo'],
+                'img' => $img1,
+                'local' => 'sao-sebastiao'
+            ],
+            // [
+            //     'titulo' => $this->resultsSaoSeba[1]['titulo'],
+            //     'img' => $img,
+            //     'local' => 'sao-sebastiao'
+            // ]
+        ];
+
+         dd($responseSSB);
         $head = $this->seo->render($this->configService->getConfig()->nomedosite ?? 'Informática Livre',
             $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.home'),
             $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
         ); 
-
+        
 		return view('web.home',[
             'head' => $head,
-            'noticiasubatuba' => $this->results
+            'noticiasubatuba' => $this->resultsUbatuba,
+            'noticiascaragua' => $this->resultsCaragua,
+            'noticiassaoseba' => $responseSSB
 		]);
     }
 
     public function noticia($local, $categoria, $slug)
-    {
+    {        
         if(!empty($local)){
-            if($local == 'ubatuba'){
-                $client = new Client();
-                $url = "https://www.ubatuba.sp.gov.br/{$categoria}/{$slug}";
-                $page = $client->request('GET', $url);
 
+            if($local == 'ubatuba'){                
+                $url = "https://www.ubatuba.sp.gov.br/{$categoria}/{$slug}";
+                $page = $this->crowler->request('GET', $url);
                 $post = [
                     'titulo' => $page->filter('.heading-text h1')->text(),
                     'data' => $page->filter('.date')->text(),
                     'img' => $page->filter('.page-content figure img')->attr('src'),
-                    'content' => $page->filter('.article-body-wrap .body-text')->text(),
+                    'content' => $page->filter('.article-body-wrap .body-text')->html(),
                     'fonte' => 'Prefeitura Municipal de Ubatuba',
                     'fontelink' => 'https://www.ubatuba.sp.gov.br'
-                ];                
+                ];     
+                
+                $postMais = 'https://www.ubatuba.sp.gov.br/noticias/';
+                $pageMais = $this->crowler->request('GET', $postMais);
+                $pageMais->filter('.blog-items li')->each( function ($item){
+                    $this->resultsUbatuba[] = [
+                        'titulo' => $item->filter('h4')->text(),
+                        'content' => $item->filter('.excerpt')->text(),
+                        'url' => $item->filter('a')->attr('href'),
+                        'img' => $item->filter('img')->attr('src'),
+                        'local' => 'ubatuba'
+                        
+                    ];           
+                });
             }
-
+            
             return view('web.noticia',[
                 //'head' => $head,
-                'post' => $post
+                'post' => $post,
+                'pageMais' => $this->resultsUbatuba,
+                'cidade' => 'ubatuba'
             ]);
+        }else{
+            //return redirect()->back();
+        }
+    }
+
+    public function noticiaCaragua($local, $categoria, $ano, $mes, $slug)
+    {
+        if(!empty($local)){
+            $url = "https://www.caraguatatuba.sp.gov.br/{$categoria}/{$ano}/{$mes}/{$slug}";
+            $page = $this->crowler->request('GET', $url);
+
+            $post = [
+                'titulo' => $page->filter('.card-body h5')->text(),
+                'data' => $page->filter('.created-at small')->text(),
+                'img' => $page->filter('.card-deck img')->attr('src'),
+                'content' => $page->filter('.card-text')->html(),
+                'fonte' => 'Prefeitura Municipal de Caraguatatuba',
+                'fontelink' => 'https://www.caraguatatuba.sp.gov.br'
+            ];  
+            
+            $postMais = 'https://www.caraguatatuba.sp.gov.br/pmc/category/noticias/';
+            $pageMais = $this->crowler->request('GET', $postMais);
+            $pageMais->filter('#latestNews .row')->each( function ($item){
+                $this->resultsCaragua[] = [
+                    'titulo' => $item->filter('h5')->text(),
+                    'content' => $item->filter('p')->text(),
+                    'url' => $item->filter('a')->attr('href'),
+                    'img' => $item->filter('img')->attr('src'),
+                    'data' => $item->filter('.created-at')->text(),
+                    'local' => 'caraguatatuba'
+                ];           
+            });
+
+            $head = $this->seo->render($post['titulo'] . ' - ' .$this->configService->getConfig()->nomedosite,
+                $post['titulo'] . ' - ' .$this->configService->getConfig()->nomedosite,
+                route('web.noticiaCaragua',[
+                    'local' => 'caraguatatuba',
+                    'categoria' => 'pmc',
+                    'ano' => $ano,
+                    'mes' => $mes,
+                    'slug' => $slug
+                ]),
+                $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+            );
+
+            return view('web.noticia',[
+                'head' => $head,
+                'post' => $post,
+                'pageMais' => $this->resultsCaragua,
+                'cidade' => 'caraguatatuba'
+            ]);
+
         }else{
             return redirect()->back();
         }

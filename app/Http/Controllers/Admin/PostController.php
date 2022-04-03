@@ -46,7 +46,7 @@ class PostController extends Controller
     public function create()
     {
         $categorias = CatPost::orderBy('titulo', 'ASC')->get();
-        $users = User::where('admin', '=', '1')->orWhere('editor', '=', '1')->get();
+        $users = User::where('admin', '=', '1')->orWhere('editor', '=', '1')->orWhere('superadmin', '=', '1')->get();
         return view('admin.posts.create',[
             'users' => $users,
             'categorias' => $categorias
@@ -95,7 +95,7 @@ class PostController extends Controller
     {
         $categorias = CatPost::orderBy('titulo', 'ASC')->where('id_pai', null)->get();
         $editarPost = Post::where('id', $id)->first();
-        $users = User::where('admin', '=', '1')->orWhere('editor', '=', '1')->get();
+        $users = User::where('admin', '=', '1')->orWhere('editor', '=', '1')->orWhere('superadmin', '=', '1')->get();
 
         if($editarPost->tipo == 'artigo'){
             $tipo = 'artigos';
