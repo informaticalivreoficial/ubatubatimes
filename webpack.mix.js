@@ -7,6 +7,22 @@ mix
     ], 'public/frontend/assets/css/bootstrap.css') 
 
     .styles([
+        'resources/views/web/assets/css/font-awesome.css'
+    ], 'public/frontend/assets/css/font-awesome.css') 
+
+    .styles([
+        'resources/views/web/assets/css/flexslider.css'
+    ], 'public/frontend/assets/css/flexslider.css') 
+
+    .styles([
+        'resources/views/web/assets/css/mCustomScrollbar.css'
+    ], 'public/frontend/assets/css/mCustomScrollbar.css') 
+
+    .styles([
+        'resources/views/web/assets/css/shortcodes.css'
+    ], 'public/frontend/assets/css/shortcodes.css') 
+
+    .styles([
         'resources/views/web/assets/css/style.css'
     ], 'public/frontend/assets/css/style.css') 
 
@@ -19,6 +35,7 @@ mix
     ], 'public/frontend/assets/css/animate.css') 
 
     .copyDirectory('resources/views/web/assets/font','public/frontend/assets/font')
+    .copyDirectory('resources/views/web/assets/images','public/frontend/assets/images')
 
     .scripts([
         'resources/views/web/assets/js/jquery.min.js'

@@ -6,12 +6,30 @@
 
         <title>@yield('title')</title>
 
-        <!-- CSS -->
-        <link rel="icon" href="{{$configuracoes->getfaveicon()}}" type="image/x-icon">
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7CLato:300,300italic,400,400italic,700,900%7CPlayfair+Display:700italic,900">
-        <link rel="stylesheet" href="{{url(asset('frontend/assets/css/bootstrap.css'))}}">
-        <link rel="stylesheet" href="{{url(asset('frontend/assets/css/fonts.css'))}}">
-        <link rel="stylesheet" href="{{url(asset('frontend/assets/css/style.css'))}}">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <!-- Bootstrap  -->
+        <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/bootstrap.css'))}}" >
+
+        <!-- Theme Style -->
+        <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/style.css'))}}">
+
+        <!-- Colors -->
+        <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/colors/color1.css'))}}">
+    
+        <!-- Animation Style -->
+        <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/animate.css'))}}">
+
+        <!-- Google Fonts -->
+        <link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+
+        <!-- Favicon and touch icons  -->
+        <link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="144x144">
+        <link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="114x114">
+        <link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="72x72">
+        <link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed">
+        <link href="{{$configuracoes->getfaveicon()}}" rel="shortcut icon">
 
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -20,15 +38,21 @@
         
     </head>
     <body>
-        <div class="page">
-            <header class="section-single-header">
+        <header id="header" class="header">
+            <div class="top-wrap">
                 <div class="container">
-                    <a href="{{route('web.home')}}">
-                        <img src="{{$configuracoes->getLogomarca()}}" alt="{{$configuracoes->nomedosite}}" width="139" height="22"/>
-                    </a>
-                </div>
-            </header>
-            @yield('content-error')
-        </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="logo" class="logo">
+                                <a href="{{route('web.home')}}" title="{{$configuracoes->nomedosite}}">
+                                    <img src="{{$configuracoes->getLogomarca()}}" alt="{{$configuracoes->nomedosite}}" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </header>           
+        @yield('content-error')        
     </body>
 </html>

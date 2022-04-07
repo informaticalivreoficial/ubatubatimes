@@ -32,7 +32,7 @@ a:active,
 .navigation-panel .close-nav:hover,
 .contact-page .contact-social li:hover i,
 .about-page .about-links li a:hover {
-	color: #B03131;
+	color: #e8280b;
 }
 
 button,
@@ -51,15 +51,15 @@ input[type="submit"],
 .tabs.style2 .content-tab.scroll li:hover:before,
 .about-page .about-twitter .follow-us,
 .flex-control-nav li a.flex-active {
-    background-color: #B03131;
+    background-color: #e8280b;
 }
 
 .floatPanel #sidebar2 {
-	border-right: 14px solid #B03131;
+	border-right: 14px solid #e8280b;
 }
 
 .gn-gallery #gn-carousel ul.slides li.flex-active-slide img {
-	border: 2px solid #B03131;
+	border: 2px solid #e8280b;
 }
 
 /* Darker Color */
@@ -78,7 +78,7 @@ input[type="submit"],
 .widget-most-popular li a:hover,
 .most-popular li a:hover,
 .tabs.style2 .content-tab.scroll li:hover:before {
-	color: #B03131;
+	color: #ff0202;
 }
 
 /* Brighter Color */
@@ -109,5 +109,5 @@ input[type="submit"]:active,
 .gn-button.hover,
 .gn-button.press,
 .gn-button.pause {
-	background-color: #B03131;
+	background-color: #db260a;
 }

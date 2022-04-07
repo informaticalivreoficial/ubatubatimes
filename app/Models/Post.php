@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Support\Cropper;
+use Illuminate\Notifications\Notifiable;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $table = 'posts'; 
 

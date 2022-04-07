@@ -3,69 +3,110 @@
 @section('content')
 <div class="row">
     <div class="col-md-8">
-        @if (!empty($noticiasubatuba && count($noticiasubatuba) > 0))
-        <div class="featured-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                                    
-            <div class="content-left">
-                <article class="post">
-                    <div class="thumb">
-                        <a href="noticia/{{ $noticiasubatuba[0]['local'] }}/@php
-                            $link = explode('/', $noticiasubatuba[0]['url']);
-                            echo $link[3].'/'.$link[4];
-                        @endphp
-                        "><img src="{{ $noticiasubatuba[0]['img'] }}" alt="{{ $noticiasubatuba[0]['titulo'] }}"></a>
-                    </div>
-                    <div class="cat">
-                        <a href="javascript:void(0)">Ubatuba</a>
-                    </div>
-                    <h3><a href="noticia/{{ $noticiasubatuba[0]['local'] }}/@php
-                        $link = explode('/', $noticiasubatuba[0]['url']);
-                        echo $link[3].'/'.$link[4];
-                    @endphp
-                    ">{{ $noticiasubatuba[0]['titulo'] }}</a></h3>
-                    <p class="excerpt-entry">{{ $noticiasubatuba[0]['content'] }}</p>                    
-                </article>
+        @if (!empty($noticiasUbatuba && $noticiasUbatuba->count() > 0))
+            <div class="featured-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
+                                        
+                <div class="content-left">
+                    <article class="post">
+                        <div class="thumb">
+                            <a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[0]->slug ])}}">
+                                <img src="{{ $noticiasUbatuba[0]->cover() }}" alt="{{ $noticiasUbatuba[0]['titulo'] }}">
+                            </a>
+                        </div>
+                        <div class="cat">
+                            <a href="javascript:void(0)">{{ $noticiasUbatuba[0]->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiasUbatuba[0]['created_at'])->format('d/m/Y') }}</a>
+                        </div>
+                        <h3><a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[0]->slug ])}}">{{ $noticiasUbatuba[0]['titulo'] }}</a></h3>
+                        <p class="excerpt-entry">{!! $noticiasUbatuba[0]->content_web !!}</p>                    
+                    </article>
+                </div>
+                
+                <div class="content-right">
+                    @if (!empty($noticiasUbatuba[1]))
+                        <article class="post">
+                            <div class="thumb">
+                                <a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[1]->slug ])}}">
+                                    <img src="{{ $noticiasUbatuba[1]->cover() }}" alt="img">
+                                </a>
+                            </div>
+                            <div class="cat">
+                                <a href="javascript:void(0)">{{ $noticiasUbatuba[1]->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiasUbatuba[1]['created_at'])->format('d/m/Y') }}</a>
+                            </div>
+                            <h3><a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[1]->slug ])}}">{{ $noticiasUbatuba[1]['titulo'] }}</a></h3>                    
+                        </article>
+                    @endif
+                    @if (!empty($noticiasUbatuba[2]))
+                        <article class="post">
+                            <div class="thumb">
+                                <a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[2]->slug ])}}">
+                                    <img src="{{ $noticiasUbatuba[2]->cover() }}" alt="img">
+                                </a>
+                            </div>
+                            <div class="cat">
+                                <a href="javascript:void(0)">{{ $noticiasUbatuba[2]->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiasUbatuba[2]['created_at'])->format('d/m/Y') }}</a>
+                            </div>
+                            <h3><a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[2]->slug ])}}">{{ $noticiasUbatuba[2]['titulo'] }}</a></h3>                    
+                        </article>
+                    @endif                    
+                </div>    
+
             </div>
-            
-            <div class="content-right">
-                <article class="post">
-                    <div class="thumb">
-                        <a href="noticia/{{ $noticiasubatuba[1]['local'] }}/@php
-                        $link = explode('/', $noticiasubatuba[1]['url']);
-                        echo $link[3].'/'.$link[4];
-                    @endphp
-                    "><img src="{{ $noticiasubatuba[1]['img'] }}" alt="img"></a>
-                    </div>
-                    <div class="cat">
-                        <a href="javascript:void(0)">Ubatuba</a>
-                    </div>
-                    <h3><a href="noticia/{{ $noticiasubatuba[1]['local'] }}/@php
-                        $link = explode('/', $noticiasubatuba[1]['url']);
-                        echo $link[3].'/'.$link[4];
-                    @endphp
-                    ">{{ $noticiasubatuba[1]['titulo'] }}</a></h3>                    
-                </article>
-                <article class="post">
-                    <div class="thumb">
-                        <a href="noticia/{{ $noticiasubatuba[2]['local'] }}/@php
-                        $link = explode('/', $noticiasubatuba[2]['url']);
-                        echo $link[3].'/'.$link[4];
-                    @endphp
-                    "><img src="{{ $noticiasubatuba[2]['img'] }}" alt="img"></a>
-                    </div>
-                    <div class="cat">
-                        <a href="javascript:void(0)">Ubatuba</a>
-                    </div>
-                    <h3><a href="noticia/{{ $noticiasubatuba[2]['local'] }}/@php
-                        $link = explode('/', $noticiasubatuba[2]['url']);
-                        echo $link[3].'/'.$link[4];
-                    @endphp
-                    ">{{ $noticiasubatuba[2]['titulo'] }}</a></h3>                    
-                </article>
-            </div>            
-        </div>
         @endif
+
         
+        <div class="highlights-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
+            <div class="gn-line"></div>
+            <div class="section-title">
+                <h4><a href="javascript:void(0)">Região</a></h4>
+            </div>
+            @if (!empty($noticiasCaragua && $noticiasCaragua->count() > 0))
+                @foreach ($noticiasCaragua as $key => $noticiaC)
+                    <article class="post{{ ($key > 0 ? ' last' : '') }}">
+                        <div class="thumb"> 
+                            <a href="{{route('web.noticia', ['slug' => $noticiaC->slug ])}}">
+                                <img src="{{ $noticiaC->cover() }}" alt="{{ $noticiaC->titulo }}">
+                            </a>
+                        </div>
+                        <div class="cat">
+                            <a href="javascript:void(0)">{{ $noticiaC->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiaC->created_at)->format('d/m/Y') }}</a>
+                        </div>
+                        <h3><a href="{{route('web.noticia', ['slug' => $noticiaC->slug ])}}">{{ $noticiaC->titulo }}</a></h3>                    
+                    </article>
+                @endforeach
+            @endif
+            @if (!empty($noticiasSaoSebastiao && $noticiasSaoSebastiao->count() > 0))
+                @foreach ($noticiasSaoSebastiao as $key => $noticiaSsb)
+                    <article class="post{{ ($key > 0 ? ' last' : '') }}">
+                        <div class="thumb"> 
+                            <a href="{{route('web.noticia', ['slug' => $noticiaSsb->slug ])}}">
+                                <img src="{{ $noticiaSsb->cover() }}" alt="{{ $noticiaSsb->titulo }}">
+                            </a>
+                        </div>
+                        <div class="cat">
+                            <a href="javascript:void(0)">{{ $noticiaSsb->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiaSsb->created_at)->format('d/m/Y') }}</a>
+                        </div>
+                        <h3><a href="{{route('web.noticia', ['slug' => $noticiaSsb->slug ])}}">{{ $noticiaSsb->titulo }}</a></h3>                    
+                    </article>
+                @endforeach
+            @endif
+            @if (!empty($noticiasIlhabela && $noticiasIlhabela->count() > 0))
+                @foreach ($noticiasIlhabela as $key => $noticiailha)
+                    <article class="post{{ ($key > 0 ? ' last' : '') }}">
+                        <div class="thumb"> 
+                            <a href="{{route('web.noticia', ['slug' => $noticiailha->slug ])}}">
+                                <img src="{{ $noticiailha->cover() }}" alt="{{ $noticiailha->titulo }}">
+                            </a>
+                        </div>
+                        <div class="cat">
+                            <a href="javascript:void(0)">{{ $noticiailha->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiailha->created_at)->format('d/m/Y') }}</a>
+                        </div>
+                        <h3><a href="{{route('web.noticia', ['slug' => $noticiailha->slug ])}}">{{ $noticiailha->titulo }}</a></h3>                    
+                    </article>
+                @endforeach
+            @endif
+        </div>
+        
+        {{--
         <div class="highlights-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
             <div class="gn-line"></div>
             <div class="section-title">
@@ -81,7 +122,7 @@
                             'ano' => $link[4],
                             'mes' => $link[5],
                             'slug' => $link[6]
-                        ])}}"><img src="{{ $noticiascaragua[0]['img'] }}" alt="img"></a>
+                        ])}}"><img style="max-width: 360px;" src="{{ $noticiascaragua[0]['img'] }}" alt="img"></a>
                     </div>
                     <div class="cat">
                         <a href="javascript:void(0)">Caraguatatuba</a>
@@ -103,7 +144,7 @@
                                 'ano' => $link1[4],
                                 'mes' => $link1[5],
                                 'slug' => $link1[6]
-                            ])}}"><img src="{{ $noticiascaragua[1]['img'] }}" alt="img"></a>
+                            ])}}"><img style="max-width: 360px;" src="{{ $noticiascaragua[1]['img'] }}" alt="img"></a>
                     </div>
                     <div class="cat">
                         <a href="javascript:void(0)">Caraguatatuba</a>
@@ -119,22 +160,38 @@
             @endif
             
             @if (!empty($noticiassaoseba && count($noticiassaoseba) > 0))
-                @foreach ($noticiassaoseba as $nssb)
-                    <article class="post">
+                @foreach ($noticiassaoseba as $key => $nssb)
+                    <article class="post {{($key > 0 ? 'last' : '')}}">
                         <div class="thumb">
-                            <a href="#"><img src="images/thumbs/7-2.jpg" alt="img"></a>
+                            <a href="#"><img style="max-width: 360px;" src="{{ $nssb['img'] }}" alt="{{ $nssb['titulo'] }}"></a>
                         </div>
                         <div class="cat">
                             <a href="">São Sebastião</a>
                         </div>
-                        <h3><a href="#">{{ $nssb->titulo }}</a></h3>
-                        <div class="activity">
-                            <span class="views">12</span><span class="comment"><a href="#">0</a></span>
-                        </div>
+                        <h3><a href="#">{{ $nssb['titulo'] }}</a></h3>                        
                     </article>
                 @endforeach
             @endif
-        </div><!-- /.highlights-posts -->
+
+            @if (!empty($noticiasilhabela && count($noticiasilhabela) > 0))
+                @foreach ($noticiasilhabela as $key => $nilhabela)
+                    @if ($key <= 1)
+                        <article class="post {{($key > 0 ? 'last' : '')}}">
+                            <div class="thumb">
+                                <a href="#">
+                                    <img src="{{ $nilhabela['img'] }}" alt="{{ $nilhabela['titulo'] }}">
+                                </a>
+                            </div>
+                            <div class="cat">
+                                <a href="">Ilhabela</a>
+                            </div>
+                            <h3><a href="#">{{ $nilhabela['titulo'] }}</a></h3>                        
+                        </article>
+                    @endif                    
+                @endforeach
+            @endif
+        </div>
+        --}}
         <div class="editors-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
             <div class="gn-line"></div>
             <div class="section-title">

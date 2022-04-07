@@ -35,9 +35,9 @@
 	<!-- Animation Style -->
 	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/animate.css'))}}">
 
-	<!-- Google Fonts 
+	<!-- Google Fonts --> 
 	<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>-->
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
 
 	<!-- Favicon and touch icons  -->
 	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="144x144">

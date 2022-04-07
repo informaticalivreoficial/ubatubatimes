@@ -333,6 +333,10 @@ return [
                     'url'  => 'admin/posts/artigos',
                 ],
                 [
+                    'text' => 'Notícias',
+                    'url'  => 'admin/posts/noticias',
+                ],
+                [
                     'text' => 'Páginas',
                     'url'  => 'admin/posts/paginas',
                 ],

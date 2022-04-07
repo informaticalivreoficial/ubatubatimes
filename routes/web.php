@@ -28,7 +28,9 @@ use App\Http\Controllers\Web\{
 };
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
-    
+
+    Route::get('teste', [PostController::class, 'crowlerNoticiasCaraguatatuba'])->name('teste');
+   
     /** Página Inicial */   
     Route::get('teste-qrcode', [WebController::class, 'qrcode'])->name('qrcode'); 
     Route::get('/', [WebController::class, 'home'])->name('home');     
@@ -72,8 +74,9 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
     //*************************************** Páginas *******************************************/
     Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
-    Route::get('/noticia/{local}/{categoria}/{slug}', [WebController::class, 'noticia'])->name('noticia');
-    Route::get('/noticia/{local}/{categoria}/{ano}/{mes}/{slug}', [WebController::class, 'noticiaCaragua'])->name('noticiaCaragua');
+    Route::get('/noticia/{slug}', [WebController::class, 'noticia'])->name('noticia');
+    //Route::get('/noticia/{local}/{categoria}/{slug}', [WebController::class, 'noticia'])->name('noticia');
+    //Route::get('/noticia/{local}/{categoria}/{ano}/{mes}/{slug}', [WebController::class, 'noticiaCaragua'])->name('noticiaCaragua');
 
     //** Pesquisa */
     Route::match(['post', 'get'], '/pesquisa', [WebController::class, 'pesquisa'])->name('pesquisa');

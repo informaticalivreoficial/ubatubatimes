@@ -14,10 +14,19 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\PostGb;
 use App\Models\CatPost;
+use App\Notifications\PostCreatedUpdated;
 use Illuminate\Support\Facades\Redirect;
+use Goutte\Client;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->crowler = new Client();
+    }
+
     public function index(Request $request)
     {
         if($request->segments()[2] == 'artigos'){
@@ -41,7 +50,181 @@ class PostController extends Controller
             'tituloPagina' => $tituloPagina,
             'linkView' => $linkView
         ]);
-    }    
+    }  
+    
+    public function crowlerNoticiasUbatuba()
+    {
+        $urlUbatuba  = 'https://www.ubatuba.sp.gov.br/noticias/';
+        $pageUbatuba = $this->crowler->request('GET', $urlUbatuba);
+        $pageUbatuba->filter('.blog-items li')->each( function ($item){
+            $this->resultsUbatuba[] = [
+                'tipo' => 'noticia',
+                'autor' => 1,
+                'titulo' => $item->filter('h4')->text(),
+                'slug' => Str::slug($item->filter('h4')->text()),
+                'cat_pai' => 14,
+                'categoria' => 15,
+                'status' => 1,
+                'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de Ubatuba',
+                'url' => $item->filter('a')->attr('href'),
+                'created_at' => now(),
+            ]; 
+            $posts = Post::where('titulo', $this->resultsUbatuba[0]['titulo'])->first();
+            if(empty($posts)){
+                $link = $this->resultsUbatuba[0]['url'];
+                $linkContent = $this->crowler->request('GET', $link);            
+                $this->resultsUbatuba[0]['content'] = $linkContent->filter('.article-body-wrap .body-text')->html() . '<br>Fonte: <a target="_blank" href="https://www.ubatuba.sp.gov.br">Divulgação Prefeitura Municipal de Ubatuba</a>';
+                $this->resultsUbatuba[0]['img'] = $linkContent->filter('.page-content figure img')->attr('src');
+
+                $imgurl = $this->resultsUbatuba[0]['img'];
+                $contents = file_get_contents($imgurl);
+                $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+                
+                unset($this->resultsUbatuba[0]['img']);
+                unset($this->resultsUbatuba[0]['url']);
+                $criarPost = DB::table('posts')->updateOrInsert($this->resultsUbatuba[0]);
+                $id = DB::getPdo()->lastInsertId();
+                Storage::put('noticias/' . $id . '/' . $name, $contents);
+                
+                $postGb = new PostGb();
+                $postGb->post = $id;
+                $postGb->path = 'noticias/' . $id . '/' . $name;
+                $postGb->save();
+                unset($postGb);
+            }
+        });                
+    }
+
+    public function crowlerNoticiasCaraguatatuba()
+    {
+        $urlCaragua  = 'https://www.caraguatatuba.sp.gov.br/pmc/';
+        $pageCaragua = $this->crowler->request('GET', $urlCaragua);
+        $result = [
+            'tipo' => 'noticia',
+            'autor' => 1,
+            'titulo' => $pageCaragua->filter('.card-deck .card h5')->eq(0)->text(),
+            'slug' => Str::slug($pageCaragua->filter('.card-deck .card h5')->eq(0)->text()),
+            'cat_pai' => 14,
+            'categoria' => 16,
+            'status' => 1,
+            'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de Caraguatatuba',
+            'created_at' => now(),
+            'publish_at' => now(),
+        ];
+        
+        $posts = Post::where('titulo', $result['titulo'])->first();
+        if(!empty($posts)){     
+            $link = $pageCaragua->filter('.card-deck .card a')->eq(0)->attr('href');
+            $linkContent = $this->crowler->request('GET', $link);   
+            $content = ['content' => $linkContent->filter('.card-text')->html() . '<br>Fonte: <a target="_blank" href="https://www.caraguatatuba.sp.gov.br/">Divulgação Prefeitura Municipal de Caraguatatuba</a>'];     
+            $result = array_merge($result, $content);
+
+            $imgurl = $linkContent->filter('.card-deck img')->attr('src');
+            $contents = file_get_contents($imgurl);
+            $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+            
+            $criarPost = DB::table('posts')->updateOrInsert($result);
+            $id = DB::getPdo()->lastInsertId();
+            Storage::put('noticias/' . $id . '/' . $name, $contents);
+                
+            $postGb = new PostGb();
+            $postGb->post = $id;
+            $postGb->path = 'noticias/' . $id . '/' . $name;
+            $postGb->save();
+            unset($postGb);
+
+            $post = Post::find($id);
+            $autor = User::find($post->autor);
+            $autor->notify(new PostCreatedUpdated($post));
+        }
+    }
+
+    public function crowlerNoticiasSaoSebastiao()
+    {
+        $urlSaoSebastiao  = 'http://www.saosebastiao.sp.gov.br/noticia-lista.asp';
+        $pageSaoSebastiao = $this->crowler->request('GET', $urlSaoSebastiao);
+        $result = [
+            'tipo' => 'noticia',
+            'autor' => 1,
+            'titulo' => $pageSaoSebastiao->filter('.notice-list-page .notice h2')->eq(0)->text(),
+            'slug' => Str::slug($pageSaoSebastiao->filter('.notice-list-page .notice h2')->eq(0)->text()),
+            'cat_pai' => 14,
+            'categoria' => 17,
+            'status' => 1,
+            'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
+            'created_at' => now(),
+            'publish_at' => now(),
+        ];
+        
+        $posts = Post::where('titulo', $result['titulo'])->first();
+        if(empty($posts)){     
+            $link = 'http://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.notice-list-page .notice a')->eq(0)->attr('href');
+            $linkContent = $this->crowler->request('GET', $link);   
+            
+            $content = ['content' => $linkContent->filter('.post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>'];     
+            $result = array_merge($result, $content);
+            
+            if(count($linkContent->filter('.slide')) > 0){
+                $imgurl = explode("'", $linkContent->filter('.slide')->attr("style"));   
+                $imgurl = 'http://www.saosebastiao.sp.gov.br/' . $imgurl[1]; 
+            }else{
+                $imgurl = 'http://www.saosebastiao.sp.gov.br/' . $linkContent->filter('.post-image img')->eq(0)->attr('src');
+            }
+            
+            $contents = file_get_contents($imgurl);
+            $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+
+            $criarPost = DB::table('posts')->updateOrInsert($result);
+            $id = DB::getPdo()->lastInsertId();
+            Storage::put('noticias/' . $id . '/' . $name, $contents);
+                
+            $postGb = new PostGb();
+            $postGb->post = $id;
+            $postGb->path = 'noticias/' . $id . '/' . $name;
+            $postGb->save();
+            unset($postGb);
+        }
+    }
+
+    public function crowlerNoticiasIlhabela()
+    {
+        $urlIlhabela  = 'https://www.ilhabela.sp.gov.br/noticias/';
+        $pageIlhabela = $this->crowler->request('GET', $urlIlhabela);
+        $result = [
+            'tipo' => 'noticia',
+            'autor' => 1,
+            'titulo' => $pageIlhabela->filter('#content article .entry-header h2')->eq(0)->text(),
+            'slug' => Str::slug($pageIlhabela->filter('#content article .entry-header h2')->eq(0)->text()),
+            'cat_pai' => 14,
+            'categoria' => 18,
+            'status' => 1,
+            'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de Ilhabela',
+            'created_at' => now(),
+            'publish_at' => now(),
+        ];
+        
+        $posts = Post::where('titulo', $result['titulo'])->first();
+        if(empty($posts)){     
+            $link = $pageIlhabela->filter('#content article .entry-header h2 a')->eq(0)->attr('href');
+            $linkContent = $this->crowler->request('GET', $link);   
+            $content = ['content' => $linkContent->filter('#content .entry-content-text')->html() . '<br>Fonte: <a target="_blank" href="https://www.ilhabela.sp.gov.br">Divulgação Prefeitura Municipal de Ilhabela</a>'];     
+            $result = array_merge($result, $content);
+            
+            $imgurl = $linkContent->filter('#content .entry-thumbnail img')->attr('src');
+            $contents = file_get_contents($imgurl);
+            $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+
+            $criarPost = DB::table('posts')->updateOrInsert($result);
+            $id = DB::getPdo()->lastInsertId();
+            Storage::put('noticias/' . $id . '/' . $name, $contents);
+                
+            $postGb = new PostGb();
+            $postGb->post = $id;
+            $postGb->path = 'noticias/' . $id . '/' . $name;
+            $postGb->save();
+            unset($postGb);
+        }
+    }
 
     public function create()
     {
@@ -241,7 +424,7 @@ class PostController extends Controller
         $secao = ($postdelete->tipo == 'artigo' ? 'artigos' : 
                  ($postdelete->tipo == 'noticia' ? 'noticias' : 
                  ($postdelete->tipo == 'pagina' ? 'paginas' : 'posts')));
-
+        
         if(!empty($postdelete)){
             if(!empty($imageDelete)){
                 Storage::delete($imageDelete->path);

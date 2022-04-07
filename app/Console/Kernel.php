@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        //Commands\NoticiaUbatubaCreate::class,
     ];
 
     /**
@@ -24,7 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('noticiaubatuba:create')->everyMinute()->withoutOverlapping();                
+        $schedule->command('noticiacaragua:create')->everyMinute()->withoutOverlapping();                
+        $schedule->command('noticiasaosebastiao:create')->everyMinute()->withoutOverlapping();                
+        $schedule->command('noticiailhabela:create')->everyMinute()->withoutOverlapping();                
     }
 
     /**

@@ -6,18 +6,17 @@
         <div class="posts">
             <article class="post">
                 <div class="head-post">
-                    <h2>{{$post['titulo']}}</h2>
+                    <h2>{{$post->titulo}}</h2>
                     <div class="meta">
-                        <span class="author">Fonte: <a target="_blank" href="{{$post['fontelink']}}">{{$post['fonte']}}</a></span>
-                        <span class="time"> {{$post['data']}}.</span>
+                        <span class="time"> {{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</span>
                     </div>
                 </div>
                 <div class="body-post">
                     
                     <div class="main-post">
                         <div class="entry-post">
-                            <img src="{{$post['img']}}" alt="image">
-                            <p>{!!$post['content']!!}</p>
+                            <img src="{{$post->nocover()}}" alt="{{$post->titulo}}">
+                            <p>{!!$post->content!!}</p>
                         </div>
                            
                         <div class="relate-posts">
@@ -25,28 +24,19 @@
                                 <h4><a href="javascript:void(0)">Leia Também</a></h4>
                             </div>
                             <div class="post-wrap">
-                                @if (!empty($pageMais) && count($pageMais) > 0)
-                                    @foreach($pageMais as $postmais)
-                                        <article class="post" style="min-height: 200px;">
+                                @if (!empty($postsMais) && $postsMais->count() > 0)
+                                    @foreach($postsMais as $postmais)
+                                        <article class="post" style="min-height: 120px;">
                                             <div class="thumb">
-                                                @php                                                     
-                                                    if($cidade == 'caraguatatuba'){
-                                                        $link = explode('/', $postmais['url']); 
-                                                        $link = $link[3].'/'.$link[4].'/'.$link[5].'/'.$link[6];
-                                                        $link = env('APP_URL').'/noticia/caraguatatuba/'.$link;
-                                                    }elseif($cidade == 'ubatuba'){
-                                                        $link = explode('/', $postmais['url']); 
-                                                        $link = $link[3].'/'.$link[4].'/'.$link[5];
-                                                        $link = env('APP_URL').'/noticia/ubatuba/'.$link;
-                                                    }                                                   
-                                                @endphp                                                
-                                                <a href="{{$link}}"><img src="{{$postmais['img']}}" alt="{{$postmais['titulo']}}"></a>
+                                                <a href="{{route('web.noticia', ['slug' => $postmais->slug])}}">
+                                                    <img src="{{$postmais->cover()}}" alt="{{$postmais->titulo}}">
+                                                </a>
                                             </div>
                                             <div class="content">
-                                                <h3><a href="{{$link}}">{{$postmais['titulo']}}</a></h3>
-                                                <p class="excerpt-entry">{{$postmais['content']}}</p>
+                                                <h3><a href="{{route('web.noticia', ['slug' => $postmais->slug])}}">{{$postmais->titulo}}</a></h3>
+                                                <p class="excerpt-entry">{!! $postmais->content_web !!}</p>
                                                 <div class="post-meta">
-                                                    <span class="time">{{$postmais['data'] ?? ''}}</span>
+                                                    <span class="time">{{ Carbon\Carbon::parse($postmais->created_at)->format('d/m/Y') }}</span>
                                                 </div>
                                             </div>
                                         </article>
