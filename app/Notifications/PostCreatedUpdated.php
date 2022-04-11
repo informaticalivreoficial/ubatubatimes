@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PostCreatedUpdated extends Notification
+class PostCreatedUpdated extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -44,8 +44,8 @@ class PostCreatedUpdated extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('#Novo Post cadastrado')
-                    ->line('Tipo:' . $this->post->tipo . '<br>' . $this->post->titulo)
+                    ->subject('🏳️ Novo Post cadastrado')
+                    ->line($this->post->tipo . ' -> ' . $this->post->titulo)
                     ->action('Visualizar', route('web.'.$this->post->tipo, ['slug' => $this->post->slug]))
                     ->line('Obrigado por usar nossa aplicação!');
     }

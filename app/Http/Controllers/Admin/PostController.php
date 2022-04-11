@@ -91,6 +91,10 @@ class PostController extends Controller
                 $postGb->path = 'noticias/' . $id . '/' . $name;
                 $postGb->save();
                 unset($postGb);
+
+                $post = Post::find($id);
+                $autor = User::find($post->autor);
+                $autor->notify(new PostCreatedUpdated($post));
             }
         });                
     }
@@ -113,7 +117,7 @@ class PostController extends Controller
         ];
         
         $posts = Post::where('titulo', $result['titulo'])->first();
-        if(!empty($posts)){     
+        if(empty($posts)){     
             $link = $pageCaragua->filter('.card-deck .card a')->eq(0)->attr('href');
             $linkContent = $this->crowler->request('GET', $link);   
             $content = ['content' => $linkContent->filter('.card-text')->html() . '<br>Fonte: <a target="_blank" href="https://www.caraguatatuba.sp.gov.br/">Divulgação Prefeitura Municipal de Caraguatatuba</a>'];     
@@ -183,6 +187,10 @@ class PostController extends Controller
             $postGb->path = 'noticias/' . $id . '/' . $name;
             $postGb->save();
             unset($postGb);
+
+            $post = Post::find($id);
+            $autor = User::find($post->autor);
+            $autor->notify(new PostCreatedUpdated($post));
         }
     }
 
@@ -223,6 +231,10 @@ class PostController extends Controller
             $postGb->path = 'noticias/' . $id . '/' . $name;
             $postGb->save();
             unset($postGb);
+
+            $post = Post::find($id);
+            $autor = User::find($post->autor);
+            $autor->notify(new PostCreatedUpdated($post));
         }
     }
 

@@ -1,4 +1,23 @@
 <?php
+
+/**
+ * <b>Limita os Palavras:</b> Limita a quantidade de palavras a serem exibidas em uma string!
+ * @param STRING $String = Uma string qualquer
+ * @return INT = $Limite = String limitada pelo $Limite
+ */
+function Words($String, $Limite, $Pointer = null) {
+    $content = strip_tags(trim($String));
+    $Format = (int) $Limite;
+
+    $ArrWords = explode(' ', $content);
+    $NumWords = count($ArrWords);
+    $NewWords = implode(' ', array_slice($ArrWords, 0, $Format));
+
+    $Pointer = (empty($Pointer) ? '...' : ' ' . $Pointer );
+    $Result = ( $Format < $NumWords ? $NewWords . $Pointer : $content );
+    return $Result;
+}
+
 // FUNÇÃO PARA LIMPAR O TELEFONE
 function limpaTelefone($telefone)
 {

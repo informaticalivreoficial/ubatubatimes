@@ -1,737 +1,994 @@
 @extends('web.master.master')
 
 @section('content')
-<div class="row">
-    <div class="col-md-8">
-        @if (!empty($noticiasUbatuba && $noticiasUbatuba->count() > 0))
-            <div class="featured-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                                        
-                <div class="content-left">
-                    <article class="post">
-                        <div class="thumb">
-                            <a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[0]->slug ])}}">
-                                <img src="{{ $noticiasUbatuba[0]->cover() }}" alt="{{ $noticiasUbatuba[0]['titulo'] }}">
-                            </a>
+<section class="utf_featured_post_area pt-4 no-padding">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-8 col-md-12 pad-r">
+                  @if (!empty($noticiasUbatuba && $noticiasUbatuba->count() > 0))
+                      <div class="row">
+                          @foreach ($noticiasUbatuba as $noticiau)
+                              <div class="col-md-6 pb-4">
+                                  <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
+                                        <div class="utf_post_thumb"> 
+                                          <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">
+                                            <img class="img-fluid" src="{{ $noticiau->cover() }}" alt="{{ $noticiau->titulo }}">
+                                          </a> 
+                                        </div>
+                                        <div class="utf_post_content"> 
+                                            <a class="utf_post_cat" href="#">Ubatuba</a>
+                                            <h2 class="utf_post_title title-large"> 
+                                              <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">{{ $noticiau->titulo }}</a> 
+                                            </h2>
+                                            <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $noticiau->views }}</span>	
+                                            <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiau->created_at)->format('d/m/Y') }}</span> 
+                                        </div>
+                                  </div>
+                              </div>
+                          @endforeach
+                      </div>
+                  @endif 
+              </div>
+
+              <div class="col-lg-4 col-md-12 pad-l">
+                  <div class="row">
+                      <div class="col-md-12">
+                          @if(!empty($boletim))
+                              <div class="widget color-blue pl-3 pt-0">
+                                  <h3 class="utf_block_title"><span>Boletim das Ondas - {{ Carbon\Carbon::parse($boletim->getContent()->atualizacao)->format('d/m/Y') }}</span></h3>                      
+                                  <div class="utf_list_post_block">                       
+                                      <h3 class="text-center mb-0">{{$boletim->getContent()->nome}}/{{$boletim->getContent()->uf}}</h3>
+                                      <h4 style="float: left" class="mr-2">Manhã:</h3>
+                                        <img  width="55" src="{{$boletim->ondasAlturaManha()['img']}}" alt="{{$boletim->ondasAlturaManha()['img']}}">    
+                                      <ul class="list-round mr_bottom-20">
+                                          <li>Situação do mar: {{$boletim->getContent()->manha->agitacao}}</li>
+                                          <li>Altura das ondas: {{$boletim->ondasAlturaManha()['altura']}}</li>
+                                          <li>Direção do mar: {{$boletim->getContent()->manha->direcao}}</li>
+                                          <li>Vento: {{$boletim->getContent()->manha->vento}}</li>
+                                          <li>Vento direção: {{$boletim->getContent()->manha->vento_dir}}</li>
+                                      </ul>                                              
+                                      <h4 style="float: left" class="mr-2">Tarde:</h3>
+                                        <img  width="55" src="{{$boletim->ondasAlturaTarde()['img']}}" alt="{{$boletim->ondasAlturaTarde()['img']}}">    
+                                      <ul class="list-round mr_bottom-20">
+                                          <li>Situação do mar: {{$boletim->getContent()->tarde->agitacao}}</li>
+                                          <li>Altura das ondas: {{$boletim->ondasAlturaTarde()['altura']}}</li>
+                                          <li>Direção do mar: {{$boletim->getContent()->tarde->direcao}}</li>
+                                          <li>Vento: {{$boletim->getContent()->tarde->vento}}</li>
+                                          <li>Vento direção: {{$boletim->getContent()->tarde->vento_dir}}</li>
+                                      </ul>                                       
+                                  </div>
+                              </div>
+                          @endif
+                      </div>
+                  </div>
+              </div>        
+          </div>
+      </div>
+  </section>  
+    
+
+    <section class="utf_block_wrapper p-bottom-0">
+        <div class="container">
+            <div class="row">
+                @if (!empty($noticiasCaragua && $noticiasCaragua->count() > 0))
+                    <div class="col-lg-4">
+                        <div class="block color-dark-blue">
+                            <h3 class="utf_block_title"><span>Caraguatatuba</span></h3>
+                            <div class="utf_post_overaly_style clearfix">
+                                <div class="utf_post_thumb"> 
+                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[0]->slug ])}}">
+                                        <img class="img-fluid" src="{{$noticiasCaragua[0]->cover()}}" alt="{{$noticiasCaragua[0]->titulo}}" /> 
+                                    </a> 
+                                </div>
+                                <div class="utf_post_content">
+                                    <h2 class="utf_post_title"> 
+                                      <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[0]->slug ])}}">{{$noticiasCaragua[0]->titulo}}</a> 
+                                    </h2>
+                                    <div class="utf_post_meta"> 
+                                      <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasCaragua[0]->views}}</span> 
+                                      <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasCaragua[0]->created_at)->format('d/m/Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="utf_list_post_block">
+                                <ul class="utf_list_post">
+                                    @if (!empty($noticiasCaragua[1]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[1]->slug ])}}"> 
+                                                    <img class="img-fluid" src="{{$noticiasCaragua[1]->cover()}}" alt="{{$noticiasCaragua[1]['titulo']}}" /> 
+                                                  </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[1]->slug ])}}">{{$noticiasCaragua[1]['titulo']}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                  <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasCaragua[1]->views}}</span> 
+                                                  <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasCaragua[1]->created_at)->format('d/m/Y') }}</span> 
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif                                    
+                                    @if (!empty($noticiasCaragua[2]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[2]->slug ])}}"> 
+                                                    <img class="img-fluid" src="{{$noticiasCaragua[2]->cover()}}" alt="{{$noticiasCaragua[2]['titulo']}}" /> 
+                                                  </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[2]->slug ])}}">{{$noticiasCaragua[2]['titulo']}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                  <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasCaragua[2]->views}}</span> 
+                                                  <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasCaragua[2]->created_at)->format('d/m/Y') }}</span> 
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif                                    
+                                    @if (!empty($noticiasCaragua[3]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[3]->slug ])}}"> 
+                                                    <img class="img-fluid" src="{{$noticiasCaragua[3]->cover()}}" alt="{{$noticiasCaragua[3]['titulo']}}" /> 
+                                                  </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[3]->slug ])}}">{{$noticiasCaragua[3]['titulo']}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                  <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasCaragua[3]->views}}</span> 
+                                                  <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasCaragua[3]->created_at)->format('d/m/Y') }}</span> 
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif                                    
+                                </ul>
+                            </div>
                         </div>
-                        <div class="cat">
-                            <a href="javascript:void(0)">{{ $noticiasUbatuba[0]->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiasUbatuba[0]['created_at'])->format('d/m/Y') }}</a>
+                    </div>
+                @endif
+                @if (!empty($noticiasSaoSebastiao && $noticiasSaoSebastiao->count() > 0)) 
+                    <div class="col-lg-4">
+                        <div class="block color-aqua">
+                            <h3 class="utf_block_title"><span>São Sebastião</span></h3>
+                            <div class="utf_post_overaly_style clearfix">
+                                <div class="utf_post_thumb"> 
+                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[0]->slug ])}}"> 
+                                        <img class="img-fluid" src="{{$noticiasSaoSebastiao[0]->cover()}}" alt="{{$noticiasSaoSebastiao[0]->titulo}}" /> 
+                                    </a> 
+                                </div>
+                                <div class="utf_post_content">
+                                    <h2 class="utf_post_title"> 
+                                      <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[0]->slug ])}}">{{$noticiasSaoSebastiao[0]->titulo}}</a> 
+                                    </h2>
+                                    <div class="utf_post_meta"> 
+                                        <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasSaoSebastiao[0]->views}}</span> 
+                                        <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasSaoSebastiao[0]->created_at)->format('d/m/Y') }}</span> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="utf_list_post_block">
+                                <ul class="utf_list_post">
+                                    @if (!empty($noticiasSaoSebastiao[1]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[1]->slug ])}}"> 
+                                                        <img class="img-fluid" src="{{$noticiasSaoSebastiao[1]->cover()}}" alt="{{$noticiasSaoSebastiao[1]->titulo}}" /> 
+                                                    </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                  <h2 class="utf_post_title title-small"> 
+                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[1]->slug ])}}">{{$noticiasSaoSebastiao[1]->titulo}}</a> 
+                                                  </h2>
+                                                  <div class="utf_post_meta"> 
+                                                      <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasSaoSebastiao[1]->views}}</span> 
+                                                      <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasSaoSebastiao[1]->created_at)->format('d/m/Y') }}</span> 
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if (!empty($noticiasSaoSebastiao[2]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[2]->slug ])}}"> 
+                                                        <img class="img-fluid" src="{{$noticiasSaoSebastiao[2]->cover()}}" alt="{{$noticiasSaoSebastiao[2]->titulo}}" /> 
+                                                    </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[2]->slug ])}}">{{$noticiasSaoSebastiao[2]->titulo}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                    <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasSaoSebastiao[2]->views}}</span> 
+                                                    <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasSaoSebastiao[2]->created_at)->format('d/m/Y') }}</span> </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if (!empty($noticiasSaoSebastiao[3]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[3]->slug ])}}"> 
+                                                        <img class="img-fluid" src="{{$noticiasSaoSebastiao[3]->cover()}}" alt="{{$noticiasSaoSebastiao[3]->titulo}}" /> 
+                                                    </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[3]->slug ])}}">{{$noticiasSaoSebastiao[3]->titulo}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                    <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasSaoSebastiao[3]->views}}</span> 
+                                                    <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasSaoSebastiao[3]->created_at)->format('d/m/Y') }}</span> </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif                                    
+                                </ul>
+                            </div>
                         </div>
-                        <h3><a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[0]->slug ])}}">{{ $noticiasUbatuba[0]['titulo'] }}</a></h3>
-                        <p class="excerpt-entry">{!! $noticiasUbatuba[0]->content_web !!}</p>                    
-                    </article>
+                    </div>
+                @endif
+                @if (!empty($noticiasIlhabela && $noticiasIlhabela->count() > 0)) 
+                    <div class="col-lg-4">
+                        <div class="block color-violet">
+                            <h3 class="utf_block_title"><span>Ilhabela</span></h3>
+                            <div class="utf_post_overaly_style clearfix">
+                                <div class="utf_post_thumb"> 
+                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[0]->slug ])}}"> 
+                                        <img class="img-fluid" src="{{$noticiasIlhabela[0]->cover()}}" alt="{{$noticiasIlhabela[0]->titulo}}" /> 
+                                    </a> 
+                                </div>
+                                <div class="utf_post_content">
+                                    <h2 class="utf_post_title"> 
+                                      <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[0]->slug ])}}">{{$noticiasIlhabela[0]->titulo}}</a> 
+                                    </h2>
+                                    <div class="utf_post_meta"> 
+                                        <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasIlhabela[0]->views}}</span> 
+                                        <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasIlhabela[0]->created_at)->format('d/m/Y') }}</span> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="utf_list_post_block">
+                                <ul class="utf_list_post">
+                                    @if (!empty($noticiasIlhabela[1]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[1]->slug ])}}"> 
+                                                        <img class="img-fluid" src="{{$noticiasIlhabela[1]->cover()}}" alt="{{$noticiasIlhabela[1]->titulo}}" /> 
+                                                    </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[1]->slug ])}}">{{$noticiasIlhabela[1]->titulo}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                  <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasIlhabela[1]->views}}</span> 
+                                                  <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasIlhabela[1]->created_at)->format('d/m/Y') }}</span> </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if (!empty($noticiasIlhabela[2]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[2]->slug ])}}"> 
+                                                        <img class="img-fluid" src="{{$noticiasIlhabela[2]->cover()}}" alt="{{$noticiasIlhabela[2]->titulo}}" /> 
+                                                    </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[2]->slug ])}}">{{$noticiasIlhabela[2]->titulo}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                  <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasIlhabela[2]->views}}</span> 
+                                                  <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasIlhabela[2]->created_at)->format('d/m/Y') }}</span> </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if (!empty($noticiasIlhabela[3]))
+                                        <li class="clearfix" style="min-height: 130px;">
+                                            <div class="utf_post_block_style post-float clearfix">
+                                                <div class="utf_post_thumb"> 
+                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[3]->slug ])}}"> 
+                                                        <img class="img-fluid" src="{{$noticiasIlhabela[3]->cover()}}" alt="{{$noticiasIlhabela[3]->titulo}}" /> 
+                                                    </a> 
+                                                </div>                    
+                                                <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[3]->slug ])}}">{{$noticiasIlhabela[3]->titulo}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                  <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasIlhabela[3]->views}}</span> 
+                                                  <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasIlhabela[3]->created_at)->format('d/m/Y') }}</span> </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
+                    </div>  
+                @endif      
+            </div>
+        </div>
+    </section>
+
+    @if (!empty($artigos) && $artigos->count() > 0)
+        <section class="utf_latest_new_area pb-bottom-20">
+          <div class="container">
+              <div class="utf_latest_news block color-red">
+                  <h3 class="utf_block_title"><span>Blog</span></h3>
+                  <div id="utf_latest_news_slide" class="owl-carousel owl-theme utf_latest_news_slide">
+                      @foreach ($artigos as $artigo)
+                          <div class="item">
+                              <ul class="utf_list_post">                              
+                                  <li class="clearfix">
+                                      <div class="utf_post_block_style clearfix">
+                                            <div class="utf_post_thumb"> 
+                                                <a href="{{route('web.blog.artigo', [ 'slug' => $artigo->slug ])}}">
+                                                    <img class="img-fluid" src="{{$artigo->cover()}}" alt="{{$artigo->titulo}}" />
+                                                </a> 
+                                            </div>
+                                            <a class="utf_post_cat" href="#">{{$artigo->categoriaObject->titulo}}</a>
+                                            <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-medium"> 
+                                                    <a href="{{route('web.blog.artigo', [ 'slug' => $artigo->slug ])}}">{{$artigo->titulo}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                    <span class="utf_post_author"><i class="fa fa-eye"></i> {{$artigo->views}}</span> 
+                                                    <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($artigo->created_at)->format('d/m/Y') }}</span> 
+                                                </div>
+                                            </div>
+                                      </div>
+                                  </li>                     
+                              </ul>			
+                          </div>
+                      @endforeach
+                  </div>
+                </div>
+            </div>		
+        </section>
+    @endif
+      
+  
+  <!-- Ad Content Area Start -->
+  <div class="utf_ad_content_area text-center utf_banner_area no-padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12"> <img class="img-fluid" src="images/banner-ads/ad-content-one.jpg" alt="" /> </div>
+      </div>
+    </div>
+  </div>
+  <!-- Ad Content Area End -->
+  
+  <!-- 1rd Block Wrapper Start -->
+  <section class="utf_block_wrapper p-bottom-0">
+    <div class="container">
+      <div class="row">		
+        <div class="col-lg-8 col-md-12">
+          <div class="utf_featured_tab color-blue">
+            <h3 class="utf_block_title"><span>Technology News</span></h3>
+            <ul class="nav nav-tabs">
+              <li class="nav-item"> <a class="nav-link animated fadeIn active" href="#tab_a" data-toggle="tab"> <span class="tab-head"> <span class="tab-text-title">Lifestyle</span> </span> </a> </li>
+              <li class="nav-item"> <a class="nav-link animated fadeIn" href="#tab_b" data-toggle="tab"> <span class="tab-head"> <span class="tab-text-title">Traveling</span> </span> </a> </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active animated fadeInRight" id="tab_a">
+                <div class="row">
+                  <div class="col-lg-6 col-md-6">
+                    <div class="utf_post_block_style clearfix">
+                      <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/gadget1.jpg" alt="" /> </a> </div>
+                      <a class="utf_post_cat" href="#">Lifestyle</a>
+                      <div class="utf_post_content">
+                        <h2 class="utf_post_title"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                        <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-lg-6 col-md-6">
+                    <div class="utf_list_post_block">
+                      <ul class="utf_list_post">
+                        <li class="clearfix">
+                          <div class="utf_post_block_style post-float clearfix">
+                            <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/gadget2.jpg" alt="" /> </a> </div>                            
+                            <div class="utf_post_content">
+                              <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                              <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                            </div>
+                          </div>
+                        </li>
+                        
+                        <li class="clearfix">
+                          <div class="utf_post_block_style post-float clearfix">
+                            <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/gadget3.jpg" alt="" /> </a> </div>                            
+                            <div class="utf_post_content">
+                              <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                              <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                            </div>
+                          </div>
+                        </li>   
+						
+                        <li class="clearfix">
+                          <div class="utf_post_block_style post-float clearfix">
+                            <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/gadget4.jpg" alt="" /> </a> </div>                           
+                            <div class="utf_post_content">
+                              <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                              <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                            </div>
+                          </div>
+                        </li>
+                        
+                        <li class="clearfix">
+                          <div class="utf_post_block_style post-float clearfix">
+                            <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/gadget5.jpg" alt="" /> </a> </div>                            
+                            <div class="utf_post_content">
+                              <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                              <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="tab-pane animated fadeInLeft" id="tab_b">
+                <div class="row">
+                  <div class="col-lg-6 col-md-6">
+                    <div class="utf_post_block_style clearfix">
+                      <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/robot1.jpg" alt="" /> </a> </div>
+                      <a class="utf_post_cat" href="#">Traveling</a>
+                      <div class="utf_post_content">
+                        <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director nation intelligence Trump ignored...</a> </h2>
+                        <div class="utf_post_meta"> <span class="utf_post_author"><a href="#">John Wick</a></span> <span class="utf_post_date">25 Jan, 2021</span> </div>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-lg-6 col-md-6">
+                    <div class="utf_list_post_block">
+                      <ul class="utf_list_post">
+                        <li class="clearfix">
+                          <div class="utf_post_block_style post-float clearfix">
+                            <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/robot2.jpg" alt="" /> </a> </div>                            
+                            <div class="utf_post_content">
+                              <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                              <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                            </div>
+                          </div>
+                        </li>
+                        
+                        <li class="clearfix">
+                          <div class="utf_post_block_style post-float clearfix">
+                            <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/robot3.jpg" alt="" /> </a> </div>                            
+                            <div class="utf_post_content">
+                              <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                              <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                            </div>
+                          </div>
+                        </li>
+                        
+                        <li class="clearfix">
+                          <div class="utf_post_block_style post-float clearfix">
+                            <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/robot4.jpg" alt="" /> </a> </div>                            
+                            <div class="utf_post_content">
+                              <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                              <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                            </div>
+                          </div>
+                        </li>
+                        
+                        <li class="clearfix">
+                          <div class="utf_post_block_style post-float clearfix">
+                            <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/robot5.jpg" alt="" /> </a> </div>                            
+                            <div class="utf_post_content">
+                              <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                              <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gap-30"></div>
+          <div class="block color-orange">
+            <h3 class="utf_block_title"><span>Lifestyle News</span></h3>
+            <div class="row">
+              <div class="col-lg-6 col-md-6">
+                <div class="utf_post_overaly_style clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/travel1.jpg" alt="" /> </a> </div>
+                  <div class="utf_post_content"> <a class="utf_post_cat" href="#">Travel</a>
+                    <h2 class="utf_post_title"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                  </div>
                 </div>
                 
-                <div class="content-right">
-                    @if (!empty($noticiasUbatuba[1]))
-                        <article class="post">
-                            <div class="thumb">
-                                <a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[1]->slug ])}}">
-                                    <img src="{{ $noticiasUbatuba[1]->cover() }}" alt="img">
-                                </a>
-                            </div>
-                            <div class="cat">
-                                <a href="javascript:void(0)">{{ $noticiasUbatuba[1]->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiasUbatuba[1]['created_at'])->format('d/m/Y') }}</a>
-                            </div>
-                            <h3><a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[1]->slug ])}}">{{ $noticiasUbatuba[1]['titulo'] }}</a></h3>                    
-                        </article>
-                    @endif
-                    @if (!empty($noticiasUbatuba[2]))
-                        <article class="post">
-                            <div class="thumb">
-                                <a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[2]->slug ])}}">
-                                    <img src="{{ $noticiasUbatuba[2]->cover() }}" alt="img">
-                                </a>
-                            </div>
-                            <div class="cat">
-                                <a href="javascript:void(0)">{{ $noticiasUbatuba[2]->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiasUbatuba[2]['created_at'])->format('d/m/Y') }}</a>
-                            </div>
-                            <h3><a href="{{route('web.noticia', ['slug' => $noticiasUbatuba[2]->slug ])}}">{{ $noticiasUbatuba[2]['titulo'] }}</a></h3>                    
-                        </article>
-                    @endif                    
-                </div>    
-
+                <div class="utf_list_post_block">
+                  <ul class="utf_list_post">
+                    <li class="clearfix">
+                      <div class="utf_post_block_style post-float clearfix">
+                        <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/food1.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Food</a> </div>                        
+                        <div class="utf_post_content">
+                          <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent... </a> </h2>
+                          <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        </div>
+                      </div>
+                    </li>
+                    
+                    <li class="clearfix">
+                      <div class="utf_post_block_style post-float clearfix">
+                        <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/health1.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Health</a> </div>                        
+                        <div class="utf_post_content">
+                          <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                          <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        </div>
+                      </div>
+                    </li>
+                    
+                    <li class="clearfix">
+                      <div class="utf_post_block_style post-float clearfix">
+                        <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/travel2.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Travel</a> </div>
+                        <div class="utf_post_content">
+                          <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                          <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        </div>                        
+                      </div>                      
+                    </li>
+                    
+                    <li class="clearfix">
+                      <div class="utf_post_block_style post-float clearfix">
+                        <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/architecture2.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Architecture</a> </div>
+                        <div class="utf_post_content">
+                          <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                          <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        </div>
+                      </div>
+                    </li>                    
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="col-lg-6 col-md-6">
+                <div class="utf_post_overaly_style last clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/architecture3.jpg" alt="" /> </a> </div>
+                  <div class="utf_post_content"> <a class="utf_post_cat" href="#">Architecture</a>
+                    <h2 class="utf_post_title"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                  </div>
+                </div>
+                
+                <div class="utf_list_post_block">
+                  <ul class="utf_list_post">
+                    <li class="clearfix">
+                      <div class="utf_post_block_style post-float clearfix">
+                        <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/health2.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Health</a> </div>
+                        <div class="utf_post_content">
+                          <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                          <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        </div>
+                      </div>
+                    </li>
+                    
+                    <li class="clearfix">
+                      <div class="utf_post_block_style post-float clearfix">
+                        <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/food2.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Food</a> </div>
+                        <div class="utf_post_content">
+                          <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                          <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        </div>
+                      </div>
+                    </li>
+                    
+                    <li class="clearfix">
+                      <div class="utf_post_block_style post-float clearfix">
+                        <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/architecture1.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Architecture</a> </div>
+                        <div class="utf_post_content">
+                          <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                          <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        </div>
+                      </div>
+                    </li>
+                    
+                    <li class="clearfix">
+                      <div class="utf_post_block_style post-float clearfix">
+                        <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/travel5.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Travel</a> </div>
+                        <div class="utf_post_content">
+                          <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                          <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-        @endif
-
-        
-        <div class="highlights-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-            <div class="gn-line"></div>
-            <div class="section-title">
-                <h4><a href="javascript:void(0)">Região</a></h4>
-            </div>
-            @if (!empty($noticiasCaragua && $noticiasCaragua->count() > 0))
-                @foreach ($noticiasCaragua as $key => $noticiaC)
-                    <article class="post{{ ($key > 0 ? ' last' : '') }}">
-                        <div class="thumb"> 
-                            <a href="{{route('web.noticia', ['slug' => $noticiaC->slug ])}}">
-                                <img src="{{ $noticiaC->cover() }}" alt="{{ $noticiaC->titulo }}">
-                            </a>
-                        </div>
-                        <div class="cat">
-                            <a href="javascript:void(0)">{{ $noticiaC->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiaC->created_at)->format('d/m/Y') }}</a>
-                        </div>
-                        <h3><a href="{{route('web.noticia', ['slug' => $noticiaC->slug ])}}">{{ $noticiaC->titulo }}</a></h3>                    
-                    </article>
-                @endforeach
-            @endif
-            @if (!empty($noticiasSaoSebastiao && $noticiasSaoSebastiao->count() > 0))
-                @foreach ($noticiasSaoSebastiao as $key => $noticiaSsb)
-                    <article class="post{{ ($key > 0 ? ' last' : '') }}">
-                        <div class="thumb"> 
-                            <a href="{{route('web.noticia', ['slug' => $noticiaSsb->slug ])}}">
-                                <img src="{{ $noticiaSsb->cover() }}" alt="{{ $noticiaSsb->titulo }}">
-                            </a>
-                        </div>
-                        <div class="cat">
-                            <a href="javascript:void(0)">{{ $noticiaSsb->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiaSsb->created_at)->format('d/m/Y') }}</a>
-                        </div>
-                        <h3><a href="{{route('web.noticia', ['slug' => $noticiaSsb->slug ])}}">{{ $noticiaSsb->titulo }}</a></h3>                    
-                    </article>
-                @endforeach
-            @endif
-            @if (!empty($noticiasIlhabela && $noticiasIlhabela->count() > 0))
-                @foreach ($noticiasIlhabela as $key => $noticiailha)
-                    <article class="post{{ ($key > 0 ? ' last' : '') }}">
-                        <div class="thumb"> 
-                            <a href="{{route('web.noticia', ['slug' => $noticiailha->slug ])}}">
-                                <img src="{{ $noticiailha->cover() }}" alt="{{ $noticiailha->titulo }}">
-                            </a>
-                        </div>
-                        <div class="cat">
-                            <a href="javascript:void(0)">{{ $noticiailha->categoriaObject->titulo }} - {{ Carbon\Carbon::parse($noticiailha->created_at)->format('d/m/Y') }}</a>
-                        </div>
-                        <h3><a href="{{route('web.noticia', ['slug' => $noticiailha->slug ])}}">{{ $noticiailha->titulo }}</a></h3>                    
-                    </article>
-                @endforeach
-            @endif
+          </div>
         </div>
         
-        {{--
-        <div class="highlights-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-            <div class="gn-line"></div>
-            <div class="section-title">
-                <h4><a href="#">Região</a></h4>
+        <div class="col-lg-4 col-md-12">
+          <div class="sidebar utf_sidebar_right">
+            <div class="widget">
+              <h3 class="utf_block_title"><span>Follow Us</span></h3>
+              <ul class="social-icon">
+                <li><a href="#" target="_blank"><i class="fa fa-rss"></i></a></li>
+                <li><a href="#" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+                <li><a href="#" target="_blank"><i class="fa fa-vimeo-square"></i></a></li>
+                <li><a href="#" target="_blank"><i class="fa fa-youtube"></i></a></li>
+              </ul>
             </div>
-            @if (!empty($noticiascaragua && count($noticiascaragua) > 0))
-                <article class="post">
-                    <div class="thumb">
-                        @php $link = explode('/', $noticiascaragua[0]['url']); @endphp
-                        <a href="{{route('web.noticiaCaragua',[
-                            'local' => $noticiascaragua[0]['local'],
-                            'categoria' => 'pmc',
-                            'ano' => $link[4],
-                            'mes' => $link[5],
-                            'slug' => $link[6]
-                        ])}}"><img style="max-width: 360px;" src="{{ $noticiascaragua[0]['img'] }}" alt="img"></a>
-                    </div>
-                    <div class="cat">
-                        <a href="javascript:void(0)">Caraguatatuba</a>
-                    </div>
-                    <h3><a href="{{route('web.noticiaCaragua',[
-                            'local' => $noticiascaragua[0]['local'],
-                            'categoria' => 'pmc',
-                            'ano' => $link[4],
-                            'mes' => $link[5],
-                            'slug' => $link[6]
-                        ])}}">{{ $noticiascaragua[0]['titulo'] }}</a></h3>                    
-                </article>
-                <article class="post last">
-                    <div class="thumb">
-                        @php $link1 = explode('/', $noticiascaragua[1]['url']); @endphp
-                        <a href="{{route('web.noticiaCaragua',[
-                                'local' => $noticiascaragua[1]['local'],
-                                'categoria' => 'pmc',
-                                'ano' => $link1[4],
-                                'mes' => $link1[5],
-                                'slug' => $link1[6]
-                            ])}}"><img style="max-width: 360px;" src="{{ $noticiascaragua[1]['img'] }}" alt="img"></a>
-                    </div>
-                    <div class="cat">
-                        <a href="javascript:void(0)">Caraguatatuba</a>
-                    </div>
-                    <h3><a href="{{route('web.noticiaCaragua',[
-                            'local' => $noticiascaragua[1]['local'],
-                            'categoria' => 'pmc',
-                            'ano' => $link1[4],
-                            'mes' => $link1[5],
-                            'slug' => $link1[6]
-                        ])}}">{{ $noticiascaragua[1]['titulo'] }}</a></h3>                    
-                </article>
-            @endif
             
-            @if (!empty($noticiassaoseba && count($noticiassaoseba) > 0))
-                @foreach ($noticiassaoseba as $key => $nssb)
-                    <article class="post {{($key > 0 ? 'last' : '')}}">
-                        <div class="thumb">
-                            <a href="#"><img style="max-width: 360px;" src="{{ $nssb['img'] }}" alt="{{ $nssb['titulo'] }}"></a>
-                        </div>
-                        <div class="cat">
-                            <a href="">São Sebastião</a>
-                        </div>
-                        <h3><a href="#">{{ $nssb['titulo'] }}</a></h3>                        
-                    </article>
-                @endforeach
-            @endif
-
-            @if (!empty($noticiasilhabela && count($noticiasilhabela) > 0))
-                @foreach ($noticiasilhabela as $key => $nilhabela)
-                    @if ($key <= 1)
-                        <article class="post {{($key > 0 ? 'last' : '')}}">
-                            <div class="thumb">
-                                <a href="#">
-                                    <img src="{{ $nilhabela['img'] }}" alt="{{ $nilhabela['titulo'] }}">
-                                </a>
-                            </div>
-                            <div class="cat">
-                                <a href="">Ilhabela</a>
-                            </div>
-                            <h3><a href="#">{{ $nilhabela['titulo'] }}</a></h3>                        
-                        </article>
-                    @endif                    
-                @endforeach
-            @endif
+            <div class="widget color-default">
+              <h3 class="utf_block_title"><span>Popular News</span></h3>
+              <div class="utf_post_overaly_style clearfix">
+                <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/health4.jpg" alt="" /> </a> </div>
+                <div class="utf_post_content"> <a class="utf_post_cat" href="#">Health</a>
+                  <h2 class="utf_post_title"> <a href="#">Smart packs parking sensor tech and beeps when col…</a> </h2>
+                  <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                </div>
+              </div>
+              
+              <div class="utf_list_post_block">
+                <ul class="utf_list_post">
+                  <li class="clearfix">
+                    <div class="utf_post_block_style post-float clearfix">
+                      <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/gadget3.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Lifestyle</a> </div>                      
+                      <div class="utf_post_content">
+                        <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                        <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                      </div>
+                    </div>
+                  </li>
+                  
+                  <li class="clearfix">
+                    <div class="utf_post_block_style post-float clearfix">
+                      <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/travel5.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Travel</a> </div>
+                      <div class="utf_post_content">
+                        <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                        <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                      </div>
+                    </div>
+                  </li>
+                  
+                  <li class="clearfix">
+                    <div class="utf_post_block_style post-float clearfix">
+                      <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/robot5.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Traveling</a> </div>
+                      <div class="utf_post_content">
+                        <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                        <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                      </div>
+                    </div>
+                  </li>
+                  
+                  <li class="clearfix">
+                    <div class="utf_post_block_style post-float clearfix">
+                      <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/food1.jpg" alt="" /> </a> <a class="utf_post_cat" href="#">Food</a> </div>
+                      <div class="utf_post_content">
+                        <h2 class="utf_post_title title-small"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                        <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="widget color-default m-bottom-0">
+              <h3 class="utf_block_title"><span>Trending News</span></h3>
+              <div id="utf_post_slide" class="owl-carousel owl-theme utf_post_slide">
+                <div class="item">
+                  <div class="utf_post_overaly_style text-center clearfix">
+                    <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/gadget1.jpg" alt="" /> </a> </div>
+                    <div class="utf_post_content"> <a class="utf_post_cat" href="#">Lifestyle</a>
+                      <h2 class="utf_post_title"> <a href="#">The best MacBook Pro alternatives in 2021 for Appl…</a> </h2>
+                      <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="item">
+                  <div class="utf_post_overaly_style text-center clearfix">
+                    <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/health5.jpg" alt="" /> </a> </div>
+                    <div class="utf_post_content"> <a class="utf_post_cat" href="#">Health</a>
+                      <h2 class="utf_post_title"> <a href="#">Netcix cuts out the chill with an integrated perso…</a> </h2>
+                      <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        --}}
-        <div class="editors-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-            <div class="gn-line"></div>
-            <div class="section-title">
-                <h4><a href="#">Editors Picks</a></h4>
+      </div>
+    </div>
+  </section>
+  <!-- 1rd Block Wrapper End -->
+  
+  
+  <!-- 3rd Block Wrapper Start -->
+  <section class="utf_block_wrapper p-bottom-0">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-12">
+          <div class="utf_more_news block color-default">
+            <h3 class="utf_block_title"><span>View More News</span></h3>
+            <div id="utf_more_news_slide" class="owl-carousel owl-theme utf_more_news_slide">
+              <div class="item">
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/video/video1.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Video</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director of intelligence Trump ignored smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/game5.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Health</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director of intelligence Trump ignored smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/game4.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Health</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/robot5.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Traveling</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+				
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/game5.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Health</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director of intelligence Trump ignored smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="item">
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/video/video2.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Video</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director of intelligence Trump ignored smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/video/video3.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Video</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Breeze through 17 locations in Europe in this breathtaking v…</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/architecture1.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Architecture</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Science meets architecture in robotically woven, solar...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/game1.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Traveling</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Historical heroes and robot dinosaurs: New games on our…</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+              </div> 
+
+			  <div class="item">
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/video/video1.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Video</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director of intelligence Trump ignored smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/game5.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Health</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director of intelligence Trump ignored smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/game4.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Health</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/robot5.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Traveling</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Zhang social media pop also known when smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+				
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/game5.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Health</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director of intelligence Trump ignored smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+              </div>
+			  
+			  <div class="item">
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/video/video2.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Video</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Ratcliffe to be Director of intelligence Trump ignored smart innocent...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/video/video3.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Video</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Breeze through 17 locations in Europe in this breathtaking v…</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/architecture1.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Architecture</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Science meets architecture in robotically woven, solar...</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+                
+                <div class="utf_post_block_style utf_post_float_half clearfix">
+                  <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/tech/game1.jpg" alt="" /> </a> </div>
+                  <a class="utf_post_cat" href="#">Traveling</a>
+                  <div class="utf_post_content">
+                    <h2 class="utf_post_title"> <a href="#">Historical heroes and robot dinosaurs: New games on our…</a> </h2>
+                    <div class="utf_post_meta"> <span class="utf_post_author"><i class="fa fa-user"></i> <a href="#">John Wick</a></span> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text since has five...</p>
+                  </div>
+                </div>
+              </div>	
             </div>
-            <div class="post-wrap">
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/3.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <div class="cat">
-                            <a href="">Mustreads</a>
+          </div>
+        </div>
+        
+        <div class="col-lg-4 col-sm-12">
+          <div class="sidebar utf_sidebar_right">
+            <div class="widget color-default">
+              <h3 class="utf_block_title"><span>Latest Reviews</span></h3>
+              <div class="utf_list_post_block">
+                <ul class="utf_list_post review-post-list">
+                  <li class="clearfix">
+                    <div class="utf_post_block_style post-float clearfix">
+                      <div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/review/review1.jpg" alt="" /> </a> </div>                      
+                      <div class="utf_post_content">
+                        <h2 class="utf_post_title"> <a href="#">Zhang social media pop known innocent...</a> </h2>
+                        <div class="utf_post_meta">
+                          <div class="review-stars"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> </div>
                         </div>
-                        <h3><a href="#">If you wanted to get rich, how would you do it?</a></h3>
-                        <p class="excerpt-entry">Economically, you can think of a startup as a way to compress your whole working life into a few years.</p>
-                        <div class="post-meta">
-                            <span class="author">By <a href="#">Anna Chapman</a></span>
-                            <span class="time"> - 16 hours ago</span>
-                        </div>
+                      </div>
                     </div>
-                </article><!--  /.post -->
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/3-2.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <div class="cat">
-                            <a href="">Mustreads</a>
-                        </div>
-                        <h3><a href="#">If you wanted to get rich, how would you do it?</a></h3>
-                        <p class="excerpt-entry">Instead of working at a low intensity for forty years, you work as hard as you possibly can for four.</p>
-                        <div class="post-meta">
-                            <span class="author">By <a href="#">John Doe</a></span>
-                            <span class="time"> - 16 hours ago</span>
-                        </div>
-                    </div>
-                </article><!--  /.post -->
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/3-3.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <div class="cat">
-                            <a href="">Mustreads</a>
-                        </div>
-                        <h3><a href="#">If you wanted to get rich, how would you do it?</a></h3>
-                        <p class="excerpt-entry">I think your best bet would be to start or join a startup. </p>
-                        <div class="post-meta">
-                            <span class="author">By <a href="#">Mike Tyson</a></span>
-                            <span class="time"> - 16 hours ago</span>
-                        </div>
-                    </div>
-                </article><!--  /.post -->
-            </div><!-- /.post-wrap -->
-        </div><!-- /.editors-posts -->
-        <div class="popular-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-            <div class="gn-line"></div>
-            <div class="section-title">
-                <h4><a href="#">Popular Posts</a></h4>
-            </div>	
-            <div class="content-left">
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/8.jpg" alt="img"></a>
-                    </div>
-                    <div class="cat">
-                        <a href="">Mustreads</a>
-                    </div>
-                    <h3><a href="#">If you wanted to get rich</a></h3>
-                    <p class="excerpt-entry">I think your best bet would be to start or join a startup. That's been a reliable way to get rich for hundreds of years.The word "startup" dates from the 1960s, but what happens in one is very similar.</p>
-                    <div class="post-meta">
-                        <span class="author">By <a href="#">John Doe</a></span>
-                        <div class="activity">
-                            <span class="views">345</span><span class="comment"><a href="#">15</a></span>
-                        </div>
-                    </div>
-                </article><!--  /.post -->
-            </div><!-- /.content-left -->
-            <div class="content-right">
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/2.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                        <span class="date">7:00 am on Feb 28</span>
-                    </div>
-                </article><!--  /.post -->
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/2-2.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                        <span class="date">7:00 am on Feb 28</span>
-                    </div>
-                </article><!--  /.post -->
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/2-3.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                        <span class="date">7:00 am on Feb 28</span>
-                    </div>
-                </article><!--  /.post -->
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/2-4.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                        <span class="date">7:00 am on Feb 28</span>
-                    </div>
-                </article><!--  /.post -->
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/2-5.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                        <span class="date">7:00 am on Feb 28</span>
-                    </div>
-                </article><!--  /.post -->
-                <article class="post">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/2-6.jpg" alt="img"></a>
-                    </div>
-                    <div class="content">
-                        <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                        <span class="date">7:00 am on Feb 28</span>
-                    </div>
-                </article><!--  /.post -->
-            </div><!-- /.content-right -->
-        </div><!-- /.popular-posts -->
-    </div><!-- /.col-md-8 -->
-    <div class="col-md-4">
-        <div class="sidebar-widget-1">
-            <div class="widget widget-recent gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                <h5 class="widget-title">Recent Posts</h5>
-                <ul>
-                    <li>
-                        <div class="thumb">
-                            <a href=""><img src="images/thumbs/2.jpg" alt="img"></a>
-                        </div>
-                        <div class="content">
-                            <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                            <div class="date">7:00 am on Feb 28</div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="thumb">
-                            <a href=""><img src="images/thumbs/2-2.jpg" alt="img"></a>
-                        </div>
-                        <div class="content">
-                            <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                            <div class="date">7:00 am on Feb 28</div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="thumb">
-                            <a href=""><img src="images/thumbs/2-3.jpg" alt="img"></a>
-                        </div>
-                        <div class="content">
-                            <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                            <div class="date">7:00 am on Feb 28</div>
-                        </div>
-                    </li>
+                  </li>
+				  
+				 
                 </ul>
-            </div><!-- /.widget-recent -->
-            <div class="widget widget-ads gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                <a href="#"><img src="images/ad.jpg" alt="image"></a>
-                <p class="text-ad">Advertisement</p>
-            </div><!-- /.widget-ads -->
-            <div class="widget widget-most-popular gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                <h5 class="widget-title">5 Most Popular</h5>
-                <ul>
-                    <li>
-                        <div class="order">1</div>
-                        <p><a href="">The World’s Youngest Billionaire is Just 24 and She’s From Hong Kong</a></p>
-                    </li>
-                    <li>
-                        <div class="order">2</div>
-                        <p><a href="">The World’s Youngest Billionaire is Just 24 and She’s From Hong Kong</a></p>
-                    </li>
-                    <li>
-                        <div class="order">3</div>
-                        <p><a href="">The World’s Youngest Billionaire is Just 24 and She’s From Hong Kong</a></p>
-                    </li>
-                    <li>
-                        <div class="order">4</div>
-                        <p><a href="">The World’s Youngest Billionaire is Just 24 and She’s From Hong Kong</a></p>
-                    </li>
-                    <li>
-                        <div class="order">5</div>
-                        <p><a href="">The World’s Youngest Billionaire is Just 24 and She’s From Hong Kong</a></p>
-                    </li>
-                </ul>
-            </div><!-- /.widget-popular -->
-            <div class="widget widget-tabs gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                <div class="tabs">
-                    <ul class="menu-tab">
-                        <li class="active"><a href="#">Comments</a></li>
-                            <li><a href="#">Popular</a></li>
-                            <li><a href="#">Tags</a></li>
-                    </ul><!-- /.menu-tab -->
-                    <div class="content-tab">
-                            <div class="content">
-                            <ul class="comments">
-                                <li>
-                                    <div class="avatar">
-                                        <a href="#"><img src="images/user.jpg" alt="image"></a>
-                                    </div>
-                                    <p><a href="#">Jack</a> on <a href="#">I think your best bet would be to start or join a startup.</a> 2 hours</p>
-                                </li>	
-                                <li>
-                                    <div class="avatar">
-                                        <a href="#"><img src="images/user.jpg" alt="image"></a>
-                                    </div>
-                                    <p><a href="#">Jack</a> on <a href="#">I think your best bet would be to start or join a startup.</a> 2 hours</p>
-                                </li>
-                                <li>
-                                    <div class="avatar">
-                                        <a href="#"><img src="images/user.jpg" alt="image"></a>
-                                    </div>
-                                    <p><a href="#">Jack</a> on <a href="#">I think your best bet would be to start or join a startup.</a> 2 hours</p>
-                                </li>
-                                <li>
-                                    <div class="avatar">
-                                        <a href="#"><img src="images/user.jpg" alt="image"></a>
-                                    </div>
-                                    <p><a href="#">Jack</a> on <a href="#">I think your best bet would be to start or join a startup.</a> 2 hours</p>
-                                </li>
-                                <li>
-                                    <div class="avatar">
-                                        <a href="#"><img src="images/user.jpg" alt="image"></a>
-                                    </div>
-                                    <p><a href="#">Jack</a> on <a href="#">I think your best bet would be to start or join a startup.</a> 2 hours</p>
-                                </li>
-                            </ul>
-                            </div><!-- /.comments -->
-                            <div class="content">
-                            <ul class="pop-posts">
-                                <li>
-                                    <div class="thumb">
-                                        <a href="#"><img alt="" src="images/thumbs/1.jpg"></a>
-                                    </div>
-                                    <div class="text">
-                                        <a href="#">If you wanted to get rich, how would you do it?</a>
-                                        <i>Aug 1, 2014</i>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="thumb">
-                                        <a href="#"><img alt="" src="images/thumbs/1-2.jpg"></a>
-                                    </div>
-                                    <div class="text">
-                                        <a href="#">If you wanted to get rich, how would you do it?</a>
-                                        <i>Aug 1, 2014</i>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="thumb">
-                                        <a href="#"><img alt="" src="images/thumbs/1-3.jpg"></a>
-                                    </div>
-                                    <div class="text">
-                                        <a href="#">If you wanted to get rich, how would you do it?</a>
-                                        <i>Aug 1, 2014</i>
-                                    </div> 
-                                </li>
-                                <li>
-                                    <div class="thumb">
-                                        <a href="#"><img alt="" src="images/thumbs/1-4.jpg"></a>
-                                    </div>
-                                    <div class="text">
-                                        <a href="#">If you wanted to get rich, how would you do it?</a>
-                                        <i>Aug 1, 2014</i>
-                                    </div> 
-                                </li>
-                                <li>
-                                    <div class="thumb">
-                                        <a href="#"><img alt="" src="images/thumbs/1-5.jpg"></a>
-                                    </div>
-                                    <div class="text">
-                                        <a href="#">If you wanted to get rich, how would you do it?</a>
-                                        <i>Aug 1, 2014</i>
-                                    </div>
-                                </li>
-                            </ul>
-                            </div><!-- /.comments -->
-                            <div class="content">
-                            <div class="tags">
-                                <a href="#">business</a>
-                                <a href="#">themeforest</a>
-                                <a href="#">good news</a>
-                                <a href="#">startups</a>
-                                <a href="#">red</a>
-                                <a href="#">politics</a>
-                                <a href="#">europe</a>
-                                <a href="#">asia</a>
-                            </div>
-                            </div><!-- /.comments -->
-                    </div><!-- /.content-tab -->
-                </div><!-- /.tabs -->
-            </div><!-- /.widget-tabs -->
-            <div class="widget widget-follow-us gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                <h5 class="widget-title text-dark">Follow Us</h5>
-                <div class="socials">
-                    <a class="facebook" href="#"><i class="fa fa-facebook"></i></a>
-                    <a class="twitter" href="#"><i class="fa fa-twitter"></i></a>
-                    <a class="google" href="#"><i class="fa fa-google-plus"></i></a>
-                    <a class="youtube" href="#"><i class="fa fa-youtube"></i></a>
-                    <a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a>
-                    <a class="tumblr" href="#"><i class="fa fa-tumblr"></i></a>
-                </div>
-            </div><!-- /.widget-follow-us -->
-            <div class="widget widget-categories gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                <h5 class="widget-title">Archives</h5>
-                <ul class="cat-list">
-                    <li><a href="#">December 2013 <span>(0)</span></a></li>
-                    <li><a href="#">November 2013 <span>(22)</span></a></li>
-                    <li><a href="#">October 2013 <span>(17)</span></a></li>
-                    <li><a href="#">June 2013 <span>(16)</span></a></li>
-                    <li><a href="#">May 2013 <span>(14)</span></a></li>
-                    <li><a href="#">April 2013 <span>(10)</span></a></li>
-                    <li><a href="#">March 2013 <span>(1)</span></a></li>
-                    <li><a href="#">December 2012 <span>(1)</span></a></li>
-                </ul>
-            </div><!-- /.widget-categories -->
-            <div class="widget widget-subscribe gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                <h5 class="widget-title">Good News Newsetter</h5>
-                <p>Subscribe to our email newsletter for good news, sent out every Monday.</p>
-                <form method="post" action="#" id="subscribe-form" data-mailchimp="true">
-                    <div id="subscribe-content">
-                        <div class="input">
-                            <input type="text" id="subscribe-email" name="subscribe-email" placeholder="Email">
-                        </div>
-                        <div class="button">
-                            <button type="button" id="subscribe-button" class="" title="Subscribe now">Subscribe</button>
-                        </div>
-                    </div>
-                    <div id="subscribe-msg"></div>
-                </form>
-            </div><!-- /.widget-subscribe -->
-        </div><!-- /.sidebar -->
-    </div><!-- /.col-md-4 -->
-    <div class="col-md-12">
-        <div class="gnSlider gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-            <div class="flex-container">
-                <div class="flexslider loading">
-                    <ul class="slides">
-                        <li>
-                            <div class="item-wrap">
-                                <img src="images/slider/1.jpg" alt="image">
-                                <p class="item" data-bottomtext="0">Kenneth Cole Challenges You to Do Good Deeds — and Prove it via Google Glass</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-wrap">
-                                <img src="images/slider/2.jpg" alt="image">
-                                <p class="item" data-bottomtext="0">Kenneth Cole Challenges You to Do Good Deeds — and Prove it via Google Glass</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-wrap">
-                                <img src="images/slider/3.jpg" alt="image">
-                                <p class="item" data-bottomtext="0">Kenneth Cole Challenges You to Do Good Deeds — and Prove it via Google Glass</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+              </div>
             </div>
-        </div><!-- /.gnSlider -->
-    </div><!-- /.col-md-12 -->
-    <div class="col-md-12">
-        <div class="trending-posts">
-            <div class="gn-line"></div>
-            <div class="section-title">
-                <h4><a href="#">Trending</a></h4>
+            
+            <div class="widget m-bottom-0">
+              <h3 class="utf_block_title"><span>Newsletter</span></h3>
+              <div class="utf_newsletter_block">
+                <div class="utf_newsletter_introtext">
+				  <h4>Subscribe Newsletter!</h4>
+                  <p>Lorem ipsum dolor sit consectetur adipiscing elit Maecenas in pulvinar neque Nulla finibus lobortis pulvinar.</p>
+                </div>
+                <div class="utf_newsletter_form">
+                  <form action="#" method="post">
+                    <div class="form-group">
+                      <input type="email" name="email" id="utf_newsletter_form-email" class="form-control form-control-lg" placeholder="E-Mail Address" autocomplete="off">
+                      <button class="btn btn-primary">Subscribe</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
-            <div class="one-fourth gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-                <article class="post first">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/5.jpg" alt="img"></a>
-                    </div>
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">This pays especially well in technology, where you earn a premium for working fast.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">Here is a brief sketch of the economic proposition.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">Startups are not magic.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">Like all back-of-the-envelope calculations, this one has a lot of wiggle room.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">Imagine the stress of working for the Post Office for fifty years.</a></h3>
-                </article><!--  /.post -->
-            </div>
-            <div class="one-fourth gn-animation" data-animation="fadeInUp" data-animation-delay="0.2s" data-animation-offset="75%">
-                <article class="post first">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/5-2.jpg" alt="img"></a>
-                    </div>
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">Lots of people get rich knowing nothing more than that.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">If you're a good hacker in your mid twenties, you can get a job paying about $80,000 per year.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">They don't change the laws of wealth creation.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">I wouldn't try to defend the actual numbers. But I stand by the structure of the calculation.</a></h3>
-                </article><!--  /.post -->
-            </div>
-            <div class="one-fourth gn-animation" data-animation="fadeInUp" data-animation-delay="0.4s" data-animation-offset="75%">
-                <article class="post first">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/5-3.jpg" alt="img"></a>
-                    </div>
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">I think your best bet would be to start or join a startup.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">You could probably work twice as many hours as a corporate employee.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">Imagine the stress of working for the Post Office for fifty years. In a startup you compress all this stress into three or four years.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">This pays especially well in technology, where you earn a premium for working fast.</a></h3>
-                </article><!--  /.post -->
-            </div>
-            <div class="one-fourth last gn-animation" data-animation="fadeInUp" data-animation-delay="0.6s" data-animation-offset="75%">
-                <article class="post first">
-                    <div class="thumb">
-                        <a href="#"><img src="images/thumbs/5-4.jpg" alt="img"></a>
-                    </div>
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">That's been a reliable way to get rich for hundreds of years.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">Like all back-of-the-envelope calculations, this one has a lot of wiggle room.</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">Three million? How do I get to be a billionaire, like Bill Gates?</a></h3>
-                </article><!--  /.post -->
-                <article class="post">
-                    <span class="date">October 6, 2013</span>
-                    <h3><a href="#">If $3 million a year seems high to some people, it will seem low to others.</a></h3>
-                </article><!--  /.post -->
-            </div>
-        </div><!-- /.trending-posts -->
-        <div class="gn-line"></div>
-    </div><!-- /.col-md-12 -->
-    <div class="col-md-8">
-        <div class="social-media-posts gn-animation" data-animation="fadeInUp" data-animation-delay="0" data-animation-offset="75%">
-            <div class="section-title">
-                <h4><a href="#">Social Media</a></h4>
-            </div>
-            <article class="post">
-                <div class="thumb">
-                    <a href="#"><img src="images/thumbs/6.jpg" alt="img"></a>
-                </div>
-                <div class="content">
-                    <div class="cat">
-                        <a href="#">Mustreads</a>
-                    </div>
-                    <h3><a href="#">If you wanted to get rich.</a></h3>
-                    <p class="excerpt-entry">I think your best bet would be to start or join a startup. That's been a reliable way to get rich for hundreds of years.</p>
-                    <div class="activity">
-                        <span class="views">345</span><span class="comment"><a href="#">15</a></span>
-                    </div>
-                </div>
-            </article><!--  /.post -->
-            <article class="post">
-                <div class="thumb">
-                    <a href="#"><img src="images/thumbs/6-2.jpg" alt="img"></a>
-                </div>
-                <div class="content">
-                    <div class="cat">
-                        <a href="#">Mustreads</a>
-                    </div>
-                    <h3><a href="#">Startups are not magic.</a></h3>
-                    <p class="excerpt-entry">That's been a reliable way to get rich for hundreds of years.The word "startup" dates from the 1960s, but what happens in one is very similar.</p>
-                    <div class="activity">
-                        <span class="views">345</span><span class="comment"><a href="#">15</a></span>
-                    </div>
-                </div>
-            </article><!--  /.post -->
-            <article class="post">
-                <div class="thumb">
-                    <a href="#"><img src="images/thumbs/6-3.jpg" alt="img"></a>
-                </div>
-                <div class="content">
-                    <div class="cat">
-                        <a href="#">Mustreads</a>
-                    </div>
-                    <h3><a href="#">They don't change the laws of wealth creation.</a></h3>
-                    <p class="excerpt-entry">That's been a reliable way to get rich for hundreds of years.The word "startup" dates from the 1960s.</p>
-                    <div class="activity">
-                        <span class="views">345</span><span class="comment"><a href="#">15</a></span>
-                    </div>
-                </div>
-            </article><!--  /.post -->
-            <article class="post">
-                <div class="thumb">
-                    <a href="#"><img src="images/thumbs/6-4.jpg" alt="img"></a>
-                </div>
-                <div class="content">
-                    <div class="cat">
-                        <a href="#">Mustreads</a>
-                    </div>
-                    <h3><a href="#">They just represent a point at the far end of the curve.</a></h3>
-                    <p class="excerpt-entry">That's been a reliable way to get rich for hundreds of years.The word "startup" dates from the 1960s.</p>
-                    <div class="activity">
-                        <span class="views">345</span><span class="comment"><a href="#">15</a></span>
-                    </div>
-                </div>
-            </article><!--  /.post -->
-        </div><!-- /.social-media-posts -->
-    </div><!-- /.col-md-8 -->
-</div><!-- /.row -->   
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>  
+  <!-- 3rd Block Wrapper End -->
+  
+  <!-- Ad Content Area Start -->
+  <div class="utf_ad_content_area text-center utf_banner_area">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12"> <img class="img-fluid" src="images/banner-ads/ad-content-two.png" alt="" /> </div>
+      </div>
+    </div>
+  </div>
+  <!-- Ad Content Area End -->
+
+  
 @endsection
 
 @section('css')

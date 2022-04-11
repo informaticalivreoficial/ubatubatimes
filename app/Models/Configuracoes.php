@@ -34,13 +34,7 @@ class Configuracoes extends Model
         'smtp_user',
         'smtp_pass',
         //Contato
-        'telefone1',
-        'telefone2',
-        'telefone3',
-        'whatsapp',
-        'skype',
-        'email',
-        'email1',
+        'telefone1', 'telefone2', 'telefone3', 'whatsapp', 'skype', 'email', 'email1',
         //Endereço
         'cep',
         'rua',

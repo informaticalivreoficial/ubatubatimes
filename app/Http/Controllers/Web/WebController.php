@@ -4,19 +4,13 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Web\Atendimento;
-use App\Mail\Web\AtendimentoRetorno;
-use App\Mail\Web\Compra;
-use App\Mail\Web\CompraRetorno;
 use Illuminate\Support\Facades\Storage;
 use App\Models\{
+    BoletimOndas,
     CatPortifolio,
     Post,
     CatPost,
-    Estados,
-    Newsletter,
-    Slide,
+    Estados,   
     User
 };
 use Goutte\Client;
@@ -28,7 +22,7 @@ class WebController extends Controller
 {
     protected $configService;
     protected $seo;
-    private $results = [];
+    //private $results = [];
 
     public function __construct(ConfigService $configService)
     {
@@ -45,39 +39,49 @@ class WebController extends Controller
                     ->where('categoria', '!=', 17)
                     ->where('categoria', '!=', 18)
                     ->postson()
-                    ->limit(3)
+                    ->limit(4)
                     ->get();
         $noticiasCaragua = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
                     ->where('categoria', 16)
                     ->postson()
-                    ->limit(2)
+                    ->limit(4)
                     ->get();
         $noticiasSaoSebastiao = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
                     ->where('categoria', 17)
                     ->postson()
-                    ->limit(2)
+                    ->limit(4)
                     ->get();
         $noticiasIlhabela = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
                     ->where('categoria', 18)
                     ->postson()
-                    ->limit(2)
+                    ->limit(4)
                     ->get();
+        $artigos = Post::orderBy('created_at', 'DESC')
+                    ->where('tipo', 'artigo')
+                    ->postson()
+                    ->limit(4)
+                    ->get();
+
+        //Boletim das Ondas
+        $boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');
 
         $head = $this->seo->render($this->configService->getConfig()->nomedosite ?? 'Informática Livre',
             $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.home'),
             $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
         );
-
+        
     	return view('web.home',[
             'head' => $head,
             'noticiasUbatuba'  => $noticiasUbatuba,
             'noticiasCaragua' => $noticiasCaragua,
             'noticiasSaoSebastiao' => $noticiasSaoSebastiao,
             'noticiasIlhabela' => $noticiasIlhabela,
+            'boletim' => $boletim,
+            'artigos' => $artigos
 		]);
 }
 
@@ -195,6 +199,8 @@ class WebController extends Controller
         
         $categorias = CatPost::orderBy('titulo', 'ASC')
             ->where('tipo', 'noticia')
+            ->available()
+            ->whereNotNull('id_pai')
             ->get();
         $postsMais = Post::orderBy('views', 'DESC')
             ->where('id', '!=', $post->id)
@@ -202,9 +208,19 @@ class WebController extends Controller
             ->limit(4)
             ->postson()
             ->get();
+        $postsTags = Post::orderBy('views', 'DESC')
+            ->where('tipo', 'noticia')
+            ->where('tags', '!=', '')
+            ->where('id', '!=', $post->id)
+            ->postson()
+            ->limit(11)
+            ->get();
         
         $post->views = $post->views + 1;
         $post->save();
+
+        $postprevious = Post::where('id', '<', $post->id)->postson()->where('tipo', 'noticia')->first();
+        $postnext = Post::where('id', '>', $post->id)->postson()->where('tipo', 'noticia')->first();
 
         $head = $this->seo->render($post->titulo ?? 'Informática Livre',
             $post->titulo,
@@ -212,11 +228,14 @@ class WebController extends Controller
             $post->cover() ?? $this->configService->getMetaImg()
         );
 
-        return view('web.noticia', [
+        return view('web.blog.artigo', [
             'head' => $head,
             'post' => $post,
             'postsMais' => $postsMais,
-            'categorias' => $categorias
+            'categorias' => $categorias,
+            'postsTags' => $postsTags,
+            'postprevious' => $postprevious,
+            'postnext' => $postnext,
         ]);
     }
 
@@ -313,23 +332,23 @@ class WebController extends Controller
         }
     }
 
-    public function quemsomos()
-    {
-        $projetosCount = Portifolio::count();
-        $clientesCount = User::where('client', 1)->count();
-        $paginaQuemSomos = Post::where('tipo', 'pagina')->postson()->where('id', 5)->first();
-        $head = $this->seo->render('Quem Somos - ' . $this->configService->getConfig()->nomedosite,
-            $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
-            route('web.quemsomos'),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-        );
-        return view('web.quem-somos',[
-            'head' => $head,
-            'paginaQuemSomos' => $paginaQuemSomos,
-            'projetosCount' => $projetosCount,
-            'clientesCount' => $clientesCount
-        ]);
-    }
+    // public function quemsomos()
+    // {
+    //     $projetosCount = Portifolio::count();
+    //     $clientesCount = User::where('client', 1)->count();
+    //     $paginaQuemSomos = Post::where('tipo', 'pagina')->postson()->where('id', 5)->first();
+    //     $head = $this->seo->render('Quem Somos - ' . $this->configService->getConfig()->nomedosite,
+    //         $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+    //         route('web.quemsomos'),
+    //         $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+    //     );
+    //     return view('web.quem-somos',[
+    //         'head' => $head,
+    //         'paginaQuemSomos' => $paginaQuemSomos,
+    //         'projetosCount' => $projetosCount,
+    //         'clientesCount' => $clientesCount
+    //     ]);
+    // }
 
     public function politica()
     {
@@ -344,99 +363,47 @@ class WebController extends Controller
         ]);
     }
 
-    public function portifolio()
-    {
-        $catProjetos = CatPortifolio::orderBy('created_at', 'DESC')->whereNotNull('id_pai')->available()->get(); 
-        $projetos = Portifolio::orderBy('created_at', 'DESC')->available()->exibir()->get(); 
-        $head = $this->seo->render('Portifólio - ' . $this->configService->getConfig()->nomedosite,
-            'Confira alguns dos projetos desenvolvidos pela Informática Livre',
-            route('web.portifolio'),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-        );
-        return view('web.portifolio',[
-            'head' => $head,
-            'catProjetos' => $catProjetos,
-            'projetos' => $projetos
-        ]);
-    }
-
-    public function projeto($slug)
-    {
-        $projeto = Portifolio::where('slug', $slug)->first();
-        $projeto->views += 1;
-        $projeto->save();
-        $head = $this->seo->render($projeto->name,
-            $projeto->headline ?? 'Projeto desenvolvido pela Informática Livre',
-            route('web.projeto',$projeto->slug),
-            $projeto->cover() ?? $this->configService->getMetaImg()
-        );
-        return view('web.projeto',[
-            'head' => $head,
-            'projeto' => $projeto
-        ]);
-    }
-
-    public function orcamento()
-    {
-        $produtos = Produto::orderBy('valor', 'ASC')
-                            ->where('categoria', 4)
-                            ->exibir()
-                            ->available()
-                            ->get();
-        $head = $this->seo->render('Soluções para sua empresa - ' . $this->configService->getConfig()->nomedosite,
-            'Nossa equipe está pronta para melhor atender as demandas de nossos clientes!',
-            route('web.atendimento'),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-        );        
-
-        return view('web.consultoria.produtos', [
-            'head' => $head,
-            'produtos' => $produtos            
-        ]);
-    }
-
-    public function formorcamento()
-    {        
-        $head = $this->seo->render('Orçamento Perdonalizado - ' . $this->configService->getConfig()->nomedosite,
-            'Nossa equipe está pronta para melhor atender as demandas de nossos clientes!',
-            route('web.atendimento'),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-        );        
-
-        return view('web.consultoria.consultoria', [
-            'head' => $head                       
-        ]);
-    }
-
-    public function formClient($token)
-    {
-        $estados = Estados::orderBy('estado_nome', 'ASC')->get();
-        $orcamento = Orcamento::where('token', $token)->first();
-        $head = $this->seo->render('Formulário de Orçamento Perdonalizado - ' . $this->configService->getConfig()->nomedosite,
-            'Nossa equipe está pronta para melhor atender as demandas de nossos clientes!',
-            route('web.formClient',$token),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-        );
-        return view('web.consultoria.formulario-de-retorno',[
-            'head' => $head ,
-            'orcamento' => $orcamento,
-            'estados' => $estados
-        ]);
-    }
 
     public function artigos()
     {
-        $posts = Post::orderBy('created_at', 'DESC')->where('tipo', '=', 'artigo')->postson()->paginate(10);
+        $posts = Post::orderBy('created_at', 'DESC')->where('tipo', '=', 'artigo')->postson()->paginate(21);
         $categorias = CatPost::orderBy('titulo', 'ASC')->where('tipo', 'artigo')->get();
+        
         $head = $this->seo->render('Blog - ' . $this->configService->getConfig()->nomedosite ?? 'Informática Livre',
             'Blog - ' . $this->configService->getConfig()->nomedosite,
             route('web.blog.artigos'),
             $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
         );
+
         return view('web.blog.artigos', [
             'head' => $head,
             'posts' => $posts,
             'categorias' => $categorias
+        ]);
+    }
+
+    public function categoria($slug)
+    {        
+        $categoria = CatPost::where('slug', '=', $slug)->first();
+        
+        $type = ($categoria->tipo == 'noticia' ? 'Notícias' : 'Artigos');
+
+        $posts = Post::orderBy('created_at', 'DESC')
+                    ->where('categoria', '=', $categoria->id)
+                    ->postson()
+                    ->paginate(21);
+        
+        $head = $this->seo->render($categoria->titulo . ' - '.$type.' - ' . $this->configService->getConfig()->nomedosite ?? 'Informática Livre',
+            $categoria->titulo . ' - '.$type.' - ' . $this->configService->getConfig()->nomedosite,
+            route('web.blog.categoria', ['slug' => $slug ]),
+            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+        
+        return view('web.blog.categoria', [
+            'head' => $head,
+            'posts' => $posts,
+            'categoria' => $categoria,
+            'type' => $type,
         ]);
     }
 
@@ -471,92 +438,72 @@ class WebController extends Controller
         ]);
     }
 
-    public function categoria(Request $request)
-    {
-        $categoria = CatPost::where('slug', '=', $request->slug)->first();
-        $categorias = CatPost::orderBy('titulo', 'ASC')
-                    ->where('tipo', 'artigo')
-                    ->where('id', '!=', $categoria->id)->get();
-        $posts = Post::orderBy('created_at', 'DESC')->where('categoria', '=', $categoria->id)->postson()->paginate(10);
+    
+
+    // public function pesquisa(Request $request)
+    // {
+    //     $search = $request->only('search');
+
+    //     $paginas = Post::where(function($query) use ($request){
+    //         if($request->search){
+    //             $query->orWhere('titulo', 'LIKE', "%{$request->search}%")
+    //                 ->where('tipo', 'pagina')->postson();
+    //             $query->orWhere('content', 'LIKE', "%{$request->search}%")
+    //                 ->where('tipo', 'pagina')->postson();
+    //         }
+    //     })->postson()->limit(10)->get();
+
+    //     $artigos = Post::where(function($query) use ($request){
+    //         if($request->search){
+    //             $query->orWhere('titulo', 'LIKE', "%{$request->search}%")
+    //                 ->where('tipo', 'artigo')->postson();
+    //             $query->orWhere('content', 'LIKE', "%{$request->search}%")
+    //                 ->where('tipo', 'artigo')->postson();
+    //         }
+    //     })->postson()->limit(10)->get();
+
+    //     $projetos = Portifolio::where(function($query) use ($request){
+    //         if($request->search){
+    //             $query->orWhere('name', 'LIKE', "%{$request->search}%");
+    //             $query->orWhere('content', 'LIKE', "%{$request->search}%");
+    //         }
+    //     })->available()->limit(10)->get();
         
-        $head = $this->seo->render($categoria->titulo . ' - Blog - ' . $this->configService->getConfig()->nomedosite ?? 'Informática Livre',
-            $categoria->titulo . ' - Blog - ' . $this->configService->getConfig()->nomedosite,
-            route('web.blog.categoria', ['slug' => $request->slug]),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-        );
+    //     $head = $this->seo->render('Pesquisa por ' . $request->search ?? 'Informática Livre',
+    //         'Pesquisa - ' . $this->configService->getConfig()->nomedosite,
+    //         route('web.blog.artigos'),
+    //         $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+    //     );
         
-        return view('web.blog.categoria', [
-            'head' => $head,
-            'posts' => $posts,
-            'categoria' => $categoria,
-            'categorias' => $categorias
-        ]);
-    }
+    //     return view('web.pesquisa',[
+    //         'head' => $head,
+    //         'paginas' => $paginas,
+    //         'artigos' => $artigos,
+    //         'projetos' => $projetos
+    //     ]);
+    // }
 
-    public function pesquisa(Request $request)
-    {
-        $search = $request->only('search');
+    // public function pagina($slug)
+    // {
+    //     $projetosCount = Portifolio::count();
+    //     $clientesCount = User::where('client', 1)->count();
+    //     $post = Post::where('slug', $slug)->where('tipo', 'pagina')->postson()->first();        
+    //     $post->views = $post->views + 1;
+    //     $post->save();
 
-        $paginas = Post::where(function($query) use ($request){
-            if($request->search){
-                $query->orWhere('titulo', 'LIKE', "%{$request->search}%")
-                    ->where('tipo', 'pagina')->postson();
-                $query->orWhere('content', 'LIKE', "%{$request->search}%")
-                    ->where('tipo', 'pagina')->postson();
-            }
-        })->postson()->limit(10)->get();
+    //     $head = $this->seo->render($post->titulo ?? 'Informática Livre',
+    //         $post->titulo,
+    //         route('web.pagina', ['slug' => $post->slug]),
+    //         $post->cover() ?? $this->configService->getMetaImg()
+    //     );
 
-        $artigos = Post::where(function($query) use ($request){
-            if($request->search){
-                $query->orWhere('titulo', 'LIKE', "%{$request->search}%")
-                    ->where('tipo', 'artigo')->postson();
-                $query->orWhere('content', 'LIKE', "%{$request->search}%")
-                    ->where('tipo', 'artigo')->postson();
-            }
-        })->postson()->limit(10)->get();
-
-        $projetos = Portifolio::where(function($query) use ($request){
-            if($request->search){
-                $query->orWhere('name', 'LIKE', "%{$request->search}%");
-                $query->orWhere('content', 'LIKE', "%{$request->search}%");
-            }
-        })->available()->limit(10)->get();
-        
-        $head = $this->seo->render('Pesquisa por ' . $request->search ?? 'Informática Livre',
-            'Pesquisa - ' . $this->configService->getConfig()->nomedosite,
-            route('web.blog.artigos'),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-        );
-        
-        return view('web.pesquisa',[
-            'head' => $head,
-            'paginas' => $paginas,
-            'artigos' => $artigos,
-            'projetos' => $projetos
-        ]);
-    }
-
-    public function pagina($slug)
-    {
-        $projetosCount = Portifolio::count();
-        $clientesCount = User::where('client', 1)->count();
-        $post = Post::where('slug', $slug)->where('tipo', 'pagina')->postson()->first();        
-        $post->views = $post->views + 1;
-        $post->save();
-
-        $head = $this->seo->render($post->titulo ?? 'Informática Livre',
-            $post->titulo,
-            route('web.pagina', ['slug' => $post->slug]),
-            $post->cover() ?? $this->configService->getMetaImg()
-        );
-
-        return view('web.pagina', [
-            'head' => $head,
-            'post' => $post,
-            'projetosCount' => $projetosCount,
-            'clientesCount' => $clientesCount
-        ]);
-    }
+    //     return view('web.pagina', [
+    //         'head' => $head,
+    //         'post' => $post,
+    //         'projetosCount' => $projetosCount,
+    //         'clientesCount' => $clientesCount
+    //     ]);
+    // }
     
     
     public function atendimento()

@@ -1,179 +1,306 @@
 @extends('web.master.master')
 
 @section('content')
-<section class="section section-30 section-xxl-40 section-xxl-66 section-xxl-bottom-90 novi-background bg-gray-dark page-title-wrap" style="background-image: url({{$configuracoes->gettopodosite()}});">
-    <div class="container">
-        <div class="page-title">
-            <h2>Blog</h2>
-        </div>
-    </div>
-</section>
-  <section class="section section-60 section-md-75 section-xl-90">
-    <div class="container">
-      <div class="row row-50">
-        <div class="col-lg-8 col-xl-9">
-          <article class="post post-single">
-            <div class="post-image">
-              <figure>
-                  <img src="{{$post->cover()}}" alt="{{$post->titulo}}" width="870" height="412"/>
-              </figure>
-            </div>
-            <div class="post-header">
-              <h4>{{$post->titulo}}</h4>
-            </div>
-            <div class="post-meta">
-              <ul class="list-bordered-horizontal">
-                <li>
-                  <dl class="list-terms-inline">
-                    <dt>Data</dt>
-                    <dd>
-                      <time datetime="{{\Carbon\Carbon::createFromFormat('d/m/Y', $post->publish_at)->format('Y-m-d')}}">{{$post->publish_at}}</time>
-                    </dd>
-                  </dl>
-                </li>
-                <li>
-                  <dl class="list-terms-inline">
-                    <dt>Por</dt>
-                    <dd>{{$post->user->name}}</dd>
-                  </dl>
-                </li>                
-                <li>
-                  <dl class="list-terms-inline">
-                    <dt>Categoria</dt>
-                    <dd>{{$post->categoriaObject->titulo}}</dd>
-                  </dl>
-                </li>
-              </ul>
-            </div>
-            <div class="divider-fullwidth bg-gray-light"></div>
-            <div class="post-body" style="color: #0c0707;">
-                {!!$post->content!!}
 
-                
-                @if($post->images()->get()->count())                    
-                    @foreach($post->images()->get() as $image)
-                        <div class="cell-xs-4 cell-md-6 inset-lg-left-13 inset-lg-right-13 offset-top-20">
-                            <div class="inset-left-30 inset-right-30 inset-xs-left-0 inset-xs-right-0">
-                                <a class="thumbnail-rayen" href="{{ $image->getUrlCroppedAttribute() }}" data-toggle="lightbox" data-gallery="property-gallery" data-type="image">
-                                    <img width="160" height="160" src="{{ $image->getUrlCroppedAttribute() }}" alt="{{ $post->titulo }}"> 
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach                                
-                @endif 
-               
-            </div>
-            <div class="post-footer">
-                <h5>Compartilhe este artigo:</h5>
-                <div class="fb-share-button" data-href="{{url()->current()}}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{url()->current()}}&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartilhar</a></div>
-                <a class="btn-front mdi mdi-whatsapp" target="_blank" href="https://web.whatsapp.com/send?text={{url()->current()}}" data-action="share/whatsapp/share"> Compartilhar</a>
-            </div>
-          </article>
-          <div class="divider-fullwidth bg-gray-lighter"></div>         
-          
-        </div>
-        <div class="col-lg-4 col-xl-3">
-          <div class="blog-aside">
-            <!--<div class="blog-aside-item">
-              <form class="rd-search rd-search-classic" action="search-results.html" method="GET">
-                <div class="form-wrap">
-                  <label class="form-label" for="rd-search-form-input-1">Search...</label>
-                  <input class="form-input" id="rd-search-form-input-1" type="text" name="s" autocomplete="off">
-                </div>
-                <button class="rd-search-submit" type="submit"></button>
-              </form>
-            </div>-->
-            <div class="blog-aside-item">
-                <h6>Categorias</h6>
-                <ul class="list-marked-bordered">
-                    @if(!empty($categorias) && $categorias->count() > 0)
-                        @foreach($categorias as $categoria)                                    
-                            @if($categoria->children)
-                                @foreach($categoria->children as $subcategoria)
-                                    @if($subcategoria->countposts() >= 1)
-                                        <li><a href="{{route('web.blog.categoria', ['slug' => $subcategoria->slug] )}}" title="{{ $subcategoria->titulo }}"><span>{{ $subcategoria->titulo }}</span><span class="list-counter">({{$subcategoria->countposts()}})</span></a></li>
-                                    @endif                                            
-                                @endforeach
-                            @endif                                                                                                                             
-                        @endforeach
-                    @endif
+<div class="page-title">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    <li><a href="{{route('web.home')}}">Início</a></li>
+                    <li>{{($post->tipo == 'noticia' ? 'Notícia' : 'Blog - Artigo')}}</li>
                 </ul>
             </div>
+        </div>
+    </div>
+</div>
 
-            @if(!empty($postsMais) && $postsMais->count() > 0)
-            <div class="blog-aside-item">
-                <h6>Popular posts</h6>
-                <div class="post-preview-wrap">
-                    @foreach ($postsMais as $postsmais)
-                        <article class="post post-preview">
-                            <a href="{{route('web.blog.artigo', ['slug' => $postsmais->slug] )}}">
-                                <div class="unit unit-spacing-sm">
-                                    <div class="unit-left">
-                                        <figure class="post-image">
-                                            <img style="width: 70px !important;height: 70px !important;" src="{{$postsmais->nocover()}}" alt="{{$postsmais->titulo}}"/>
-                                        </figure>
-                                    </div>
-                                    <div class="unit-body">
-                                        <div class="post-header">
-                                            <p>{{$postsmais->titulo}}</p>
-                                        </div>
-                                        <div class="post-meta">
-                                        <ul class="list-meta">
-                                            <li>
-                                                <time datetime="{{\Carbon\Carbon::createFromFormat('d/m/Y', $post->publish_at)->format('Y-m-d')}}">{{$post->publish_at}}</time>
-                                            </li>                                            
-                                        </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </article>
-                    @endforeach
-                </div>
+<section class="utf_block_wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-12">
+        <div class="single-post">
+            <div class="utf_post_title-area"> <a class="utf_post_cat" href="#">{{$post->categoriaObject->titulo}}</a>
+                <h2 class="utf_post_title">{{$post->titulo}}</h2>
+                <div class="utf_post_meta"> 
+                    <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</span> 
+                    <span class="post-hits"><i class="fa fa-eye"></i> {{$post->views}}</span> 
+                    {{--<span class="post-comment"><i class="fa fa-comments-o"></i> <a href="#" class="comments-link"><span>01</span></a></span> --}}
+                    <div class="fb-share-button" data-href="{{url()->current()}}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{url()->current()}}&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartilhar</a></div>
+                    <a class="btn-front" target="_blank" href="https://web.whatsapp.com/send?text={{url()->current()}}" data-action="share/whatsapp/share"><i class="fa fa-whatsapp"></i> Compartilhar</a>
+                </div>                
             </div>
+
+            <div class="utf_post_content-area">
+                <div class="post-media post-featured-image"> 
+                    <a href="{{$post->nocover()}}" class="gallery-popup">
+                        <img src="{{$post->cover()}}" class="img-fluid" alt="{{$post->titulo}}">
+                    </a> 
+                </div>
+                <div class="entry-content">
+                    {!!$post->content!!}
+
+                    @if($post->images()->get()->count()) 
+                        <div class="row mt-3">                   
+                            @foreach($post->images()->get() as $image)                                
+                                <div class="col-4">
+                                  <div class="utf_post_thumb">                            
+                                      <a href="{{ $image->url_image }}" class="gallery-popup">
+                                          <img class="img-fluid" src="{{ $image->url_image }}" alt="{{ $post->titulo }}"> 
+                                      </a>                            
+                                  </div>
+                                </div>                                                        
+                            @endforeach 
+                        </div>                               
+                    @endif
+                </div>
+              
+                <div class="share-items clearfix">
+                    <h5>Compartilhe este artigo:</h5>
+                    <div class="fb-share-button" data-href="{{url()->current()}}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{url()->current()}}&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartilhar</a></div>
+                    <a class="btn-front" target="_blank" href="https://web.whatsapp.com/send?text={{url()->current()}}" data-action="share/whatsapp/share"><i class="fa fa-whatsapp"></i> Compartilhar</a>
+                </div>              
+            </div>
+        </div>
+        
+        <nav class="post-navigation clearfix">
+            @if (!empty($postprevious) && $postprevious->count() > 0)
+                <div class="post-previous"> 
+                    <a href="{{route(($postprevious->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postprevious->slug] )}}"> <span><i class="fa fa-angle-left"></i>Anterior</span>
+                        <h3>{{$postprevious->titulo}}</h3>
+                    </a> 
+                </div>
             @endif
-            <div class="blog-aside-item">
-                <div class="fb-root fb-widget">
-                    <div class="fb-page-responsive">
-                    <div data-href="{{$configuracoes->facebook}}" data-tabs="timeline" data-height="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" class="fb-page">
-                        <div class="fb-xfbml-parse-ignore">
-                        <blockquote cite="{{$configuracoes->facebook}}"><a href="{{$configuracoes->facebook}}">{{$configuracoes->nomedosite}}</a></blockquote>
-                        </div>
-                    </div>
-                    </div>
+            @if (!empty($postnext) && $postnext->count() > 0)
+                <div class="post-next"> 
+                    <a href="{{route(($postnext->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postnext->slug] )}}"> <span>Próximo <i class="fa fa-angle-right"></i></span>
+                        <h3>{{$postnext->titulo}}</h3>
+                    </a> 
+                </div>
+            @endif
+        </nav>
+        
+        @if ($post->tipo == 'artigo')
+            <div class="author-box">
+                <div class="author-img pull-left"> 
+                    <img src="images/news/author.png" alt=""> 
+                </div>
+                <div class="author-info">
+                    <h3>Miss Lisa Doe</h3>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since It has survived not only five centuries, but also the leap into electronic type setting, remaining essentially unchanged.</p>              
                 </div>
             </div>
+        @endif
+        
+        <!-- Post comment start 
+        <div id="comments" class="comments-area block">
+          <h3 class="utf_block_title"><span>03 Comments</span></h3>
+          <ul class="comments-list">
+            <li>
+              <div class="comment"> <img class="comment-avatar pull-left" alt="" src="images/news/user1.png">
+                <div class="comment-body">
+                  <div class="meta-data"> <span class="comment-author">Miss Lisa Doe</span> <span class="comment-date pull-right">15 Jan, 2021</span> </div>
+                  <div class="comment-content">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since It has survived not only five centuries, but also the leap into electronic type setting, remaining essentially unchanged.</p>
+                  </div>
+                  <div class="text-left"> <a class="comment-reply" href="#"><i class="fa fa-share"></i> Reply</a> </div>
+                </div>
+              </div>
+              
+              <ul class="comments-reply">
+                <li>
+                  <div class="comment"> <img class="comment-avatar pull-left" alt="" src="images/news/user2.png">
+                    <div class="comment-body">
+                      <div class="meta-data"> <span class="comment-author">Miss Lisa Doe</span> <span class="comment-date pull-right">15 Jan, 2021</span> </div>
+          <div class="comment-content">
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since It has survived not only five centuries, but also the leap into electronic type setting, remaining essentially unchanged.</p>
           </div>
+          <div class="text-left"> <a class="comment-reply" href="#"><i class="fa fa-share"></i> Reply</a> </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div class="comment last"> <img class="comment-avatar pull-left" alt="" src="images/news/user1.png">
+                <div class="comment-body">
+                  <div class="meta-data"> <span class="comment-author">Miss Lisa Doe</span> <span class="comment-date pull-right">15 Jan, 2021</span> </div>
+                  <div class="comment-content">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since It has survived not only five centuries, but also the leap into electronic type setting, remaining essentially unchanged.</p>
+                  </div>
+                  <div class="text-left"> <a class="comment-reply" href="#"><i class="fa fa-share"></i> Reply</a> </div>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
+         Post comment end -->
+        
+    <!-- Comments Form Start 
+        <div class="comments-form">
+          <h3 class="title-normal">Leave a comment</h3>
+          <form>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input class="form-control" name="name" id="name" placeholder="Name" type="text" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input class="form-control" name="email" id="email" placeholder="Email" type="email" required>
+                </div>
+              </div>
+      <div class="col-md-6">
+                <div class="form-group">
+                  <input class="form-control" placeholder="Phone" type="text" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input class="form-control" placeholder="Subject" type="text" required>
+                </div>
+              </div>
+      <div class="col-md-12">
+                <div class="form-group">
+                  <textarea class="form-control required-field" id="message" placeholder="Comment" rows="10" required></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix">
+              <button class="comments-btn btn btn-primary" type="submit">Post Comment</button>
+            </div>
+          </form>
+        </div>
+         Comments form end -->           
       </div>
-    </div>
-  </section>
+      
+      <div class="col-lg-4 col-md-12">
+          <div class="sidebar utf_sidebar_right">  
+            
+              <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
+                <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/tim.png'))}}" alt="" /> 
+              </div>
+
+              <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
+                <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/anjosads.png'))}}" alt="" /> 
+              </div>
+
+              @if (!empty($postsMais) && $postsMais->count() > 0)
+                  <div class="widget color-default">
+                      <h3 class="utf_block_title"><span>Veja Também</span></h3>
+                      <div class="utf_list_post_block">
+                          <ul class="utf_list_post">
+                              @foreach ($postsMais as $postmais)
+                                <li class="clearfix" style="min-height: 130px;">
+                                    <div class="utf_post_block_style post-float clearfix">
+                                        <div class="utf_post_thumb"> 
+                                            <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}"> 
+                                                <img class="img-fluid" src="{{$postmais->cover()}}" alt="{{$postmais->titulo}}" /> 
+                                            </a> 
+                                        </div>                      
+                                        <div class="utf_post_content">
+                                            <h2 class="utf_post_title title-small"> 
+                                                <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}">{{$postmais->titulo}}</a> 
+                                            </h2>
+                                            <div class="utf_post_meta"> 
+                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{$postmais->views}}</span> 
+                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($postmais->created_at)->format('d/m/Y') }}</span> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                              @endforeach
+                          </ul>
+                      </div>
+                  </div>
+              @endif   
+            
+              @if (!empty($categorias) && $categorias->count() > 0)
+                <div class="widget widget-categories">
+                    <h3 class="utf_block_title"><span>Categorias</span></h3>
+                    <ul class="list-round mr_bottom-20">
+                        @foreach ($categorias as $categoria)
+                            @if ($categoria->countposts() >= 1)
+                                <li>
+                                    <a href="{{route(($categoria->tipo == 'artigo' ? 'web.blog.categoria' : 'web.noticia.categoria'), ['slug' => $categoria->slug] )}}">
+                                        <span class="catTitle"> {{$categoria->titulo}}</span><span class="catCounter"> ({{$categoria->countposts()}})</span>
+                                    </a> 
+                                </li>
+                            @endif                        
+                        @endforeach                                            
+                    </ul>
+                </div>
+              @endif
+              
+              @if(!empty($postsTags) && $postsTags->count() > 0)  
+                  <div class="widget widget-tags">
+                      <h3 class="utf_block_title"><span>Popular Tags</span></h3>
+                      <ul class="unstyled clearfix">
+                        @foreach($postsTags as $posttags) 
+                            @php
+                                $array = explode(",", $posttags->tags);
+                                foreach($array as $tags){
+                                    $tag = trim($tags);                                                       
+                                    echo '<li>';
+                                    if($posttags->tipo == 'artigo'){
+                                        echo '<a href="'.route('web.blog.artigo',['slug' => $posttags->slug]).'">';
+                                    }else{
+                                        echo '<a href="'.route('web.noticia',['slug' => $posttags->slug]).'">';
+                                    }    
+                                    echo $tag;
+                                    echo '</a></li>';
+                                }
+                            @endphp                                                     
+                        @endforeach              
+                      </ul>
+                  </div>
+              @endif
 
 
-  <section class="section section-60 section-md-100 bg-accent novi-background">
-    <div class="container text-center text-lg-start">
-        <div class="row row-30 align-items-md-center justify-content-lg-center">
-            <div class="col-lg-8 col-xl-7">
-                <h3>Solicite Agora um Orçamento</h3>
-            </div>
-            <div class="col-lg-4 col-xl-3">
-                <a class="btn btn-xl btn-black-outline" href="{{route('web.formorcamento')}}">Quero um Orçamento</a>
-            </div>
-        </div>
+              <div class="widget">
+                  <div class="utf_newsletter_block">
+                      <div class="utf_newsletter_introtext">
+                          <h4>Subscribe Newsletter!</h4>
+                          <p>Lorem ipsum dolor sit consectetur adipiscing elit Maecenas in pulvinar neque Nulla finibus lobortis pulvinar.</p>
+                      </div>
+                      <div class="utf_newsletter_form">
+                          <form action="#" method="post">
+                              <div class="form-group">
+                                  <input type="email" name="email" id="utf_newsletter_form-email" class="form-control form-control-lg" placeholder="E-Mail Address" autocomplete="off">
+                                  <button class="btn btn-primary">Subscribe</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div> 
+              
+              <div class="widget text-center">
+                  <div class="fb-root fb-widget">
+                      <div class="fb-page-responsive">
+                          <div data-href="{{$configuracoes->facebook}}" data-tabs="timeline" data-height="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" class="fb-page">
+                              <div class="fb-xfbml-parse-ignore">
+                                <blockquote cite="{{$configuracoes->facebook}}"><a href="{{$configuracoes->facebook}}">{{$configuracoes->nomedosite}}</a></blockquote>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+          </div>
+      </div>        
     </div>
+  </div>
 </section>
   
 @endsection
 
 @section('css')
-<!-- Ekko Lightbox -->
-<link rel="stylesheet" href="{{url(asset('backend/plugins/ekko-lightbox/ekko-lightbox.css'))}}"/>
 <style>
     .btn-front{
         background-color: #6ebf58;
         color:#fff;
         border-radius: .25rem;
-        padding: 7px 8px !important;
+        padding: 5px 8px !important;
         border:none;
     }
     .btn-front:hover, mdi:hover{
@@ -183,20 +310,6 @@
 @endsection
 
 @section('js')
-<!-- Ekko Lightbox -->
-<script src="{{url(asset('backend/plugins/ekko-lightbox/ekko-lightbox.min.js'))}}"></script>
-<script>
-    $(function () {       
-
-        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-            event.preventDefault();
-            $(this).ekkoLightbox({
-            alwaysShowClose: true
-            });
-        });
-
-    });
-</script>
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v11.0&appId=1787040554899561&autoLogAppEvents=1" nonce="1eBNUT9J"></script>
 @endsection

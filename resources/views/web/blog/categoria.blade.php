@@ -1,66 +1,62 @@
 @extends('web.master.master')
 
 @section('content')
-<section class="section section-30 section-xxl-40 section-xxl-66 section-xxl-bottom-90 novi-background bg-gray-dark page-title-wrap" style="background-image: url({{$configuracoes->gettopodosite()}});">
+<div class="page-title">
     <div class="container">
-        <div class="page-title">
-            <h2>Blog - {{$categoria->titulo}}</h2>
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="breadcrumb">
+                    <li><a href="{{route('web.home')}}">Início</a></li>
+                    <li>{{$type}} - {{$categoria->titulo}}</li>
+                </ul>
+            </div>
         </div>
     </div>
-</section>
+</div>
 
 @if($posts->count() && $posts->count() > 0)
-<section class="section section-50 section-md-75 section-xl-100">
-    <div class="container">
-        <div class="row row-30 justify-content-md-center justify-content-lg-start">
-            @foreach($posts as $artigo)
-                <div class="col-md-9 col-lg-6 height-fill">
-                    <article class="post-block">
-                        <div class="post-image">
-                            <img src="{{$artigo->cover()}}" alt="" width="570" height="253" />
-                        </div>
-                        <div class="post-body">
-                            <h4 class="post-header">
-                                <a href="{{route('web.blog.artigo',['slug' => $artigo->slug])}}">{{$artigo->titulo}}</a>
-                            </h4>
-                            <ul class="post-meta">
-                                <li class="object-inline">
-                                    <span class="novi-icon icon icon-xxs icon-white material-icons-query_builder"></span>
-                                    <time datetime="2021-01-01">há 1 mês</time>
-                                </li>
-                                <li class="object-inline">
-                                    <span class="novi-icon icon icon-xxs icon-white material-icons-loyalty"></span>
-                                    <ul class="list-tags-inline">
-                                        <li><a href="{{route('web.blog.categoria', ['slug' => $artigo->categoriaObject->slug] )}}">{{$artigo->categoriaObject->titulo}}</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </div>
-            @endforeach
+    <section class="utf_block_wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="block category-listing scrolling-pagination">
+                        <div class="row">
+                            @foreach($posts as $post)
+                                <div class="col-lg-4">
+                                    <div class="utf_post_block_style post-grid clearfix">
+                                        <div class="utf_post_thumb"> 
+                                            <a href="{{route(($post->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'),[ 'slug' => $post->slug ])}}"> 
+                                                <img class="img-fluid" src="{{$post->cover()}}" alt="" /> 
+                                            </a> 
+                                        </div>
+                                        <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoriaObject->slug ])}}">{{$post->categoriaObject->titulo}}</a>
+                                        <div class="utf_post_content">
+                                            <h2 class="utf_post_title title-large"> 
+                                                <a href="{{route(($post->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'),['slug' => $post->slug])}}">{{$post->titulo}}</a> 
+                                            </h2>
+                                            <div class="utf_post_meta"> 
+                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{$post->views}}</span> 
+                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</span> 
+                                                {{--<span class="post-comment pull-right"><i class="fa fa-comments-o"></i> <a href="#" class="comments-link"><span>03</span></a></span> --}}
+                                            </div>					
+                                            <p>{!! Words($post->content, 21) !!}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                            @if (isset($filters))
+                                {{ $posts->appends($filters)->links() }}
+                            @else
+                                {{ $posts->links() }}
+                            @endif
+                        </div>                        
+                    </div>                              
+                </div>  
+            </div>
         </div>
-        <div class="pagination-custom-wrap text-center">
-            @if($posts->hasPages())                  
-                {{ $posts->links() }}                
-            @endif 
-        </div>
-    </div>
-</section>
+    </section>
 @endif
 
-<section class="section section-60 section-md-100 bg-accent novi-background">
-    <div class="container text-center text-lg-start">
-        <div class="row row-30 align-items-md-center justify-content-lg-center">
-            <div class="col-lg-8 col-xl-7">
-                <h3>Solicite Agora um Orçamento</h3>
-            </div>
-            <div class="col-lg-4 col-xl-3">
-                <a class="btn btn-xl btn-black-outline" href="{{route('web.formorcamento')}}">Quero um Orçamento</a>
-            </div>
-        </div>
-    </div>
-</section>
 @endsection
 
 @section('css')
@@ -68,5 +64,20 @@
 @endsection
 
 @section('js')
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
+<script>
+    // Paginação infinita
+    $('ul.pagination-custom').hide();
+    $(function() {
+        $('.scrolling-pagination').jscroll({
+            autoTrigger: true,
+            padding: 0,
+            nextSelector: '.pagination-custom li.active + li a',
+            contentSelector: 'div.scrolling-pagination',
+            callback: function() {
+                $('ul.pagination-custom').remove();
+            }
+        });
+    });       
+</script>
 @endsection
