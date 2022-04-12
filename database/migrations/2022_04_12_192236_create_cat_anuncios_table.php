@@ -14,7 +14,16 @@ class CreateCatAnunciosTable extends Migration
     public function up()
     {
         Schema::create('cat_anuncios', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->integer('id_pai')->unsigned()->nullable();            
+            $table->string('titulo');
+            $table->text('content')->nullable();
+            $table->string('slug')->nullable();
+            $table->string('tags')->nullable();
+            $table->bigInteger('views')->default(0);
+            $table->string('tipo')->nullable();
+            $table->integer('status')->nullable();
+            
             $table->timestamps();
         });
     }

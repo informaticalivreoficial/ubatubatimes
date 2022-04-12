@@ -266,6 +266,24 @@ return [
             'icon' => 'fas fa-industry',
         ],
         [
+            'text' => 'Anúncios',            
+            'icon' => 'fas fa-fw fa-suitcase',
+            'submenu' => [                
+                [
+                    'text' => 'Listar Anúncios',
+                    'url'  => 'admin/anuncios',
+                ],
+                [
+                    'text' => 'Cadastrar Anúncio',
+                    'url'  => 'admin/anuncios/create',
+                ],
+                [
+                    'text' => 'Categorias',
+                    'url'  => 'admin/anuncios/categorias',
+                ]
+            ]
+        ],        
+        [
             'text' => 'Posts',            
             'icon' => 'fas fa-fw fa-pen',
             'submenu' => [
