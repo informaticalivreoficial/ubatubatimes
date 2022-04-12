@@ -158,4 +158,64 @@ class NewsletterController extends Controller
             'message' => 'A Inscrição de '.$newsletterUpdate->nome.' foi alualizada com sucesso!'
         ]);
     }
+
+    public function emailSetStatus(Request $request)
+    {        
+        $email = Newsletter::find($request->id);
+        $email->status = $request->status;
+        $email->autorizacao = $request->status;
+        $email->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function emailDelete(Request $request)
+    {
+        $email = Newsletter::where('id', $request->id)->first();
+        $nome = getPrimeiroNome(auth()->user()->name);
+
+        if(!empty($email)){
+            $json = "<b>$nome</b> você tem certeza que deseja excluir este Email da Lista?";
+            return response()->json(['error' => $json,'id' => $email->id]);           
+        }else{
+            return response()->json(['success' => true]);
+        }
+    }
+    
+    public function emailDeleteon(Request $request)
+    { 
+        $email = Newsletter::where('id', $request->email_id)->first();  
+        $emailR = $email->email;
+        
+        if(!empty($email)){
+            $email->delete();
+        }
+
+        return Redirect::route('lista.newsletters',[
+            'categoria' => $email->categoria
+        ])->with([
+            'color' => 'success', 
+            'message' => 'O email '.$emailR.' foi removido com sucesso da lista!'
+        ]);
+    }
+
+    public function padraoMark(Request $request)
+    {
+        $lista = NewsletterCat::where('id', $request->id)->first();
+        $allListas = NewsletterCat::where('id', '!=', $lista->id)->get();
+
+        foreach ($allListas as $listaall) {
+            $listaall->sistema = null;
+            $listaall->save();
+        }
+
+        $lista->sistema = true;
+        $lista->save();
+
+        $json = [
+            'success' => true,
+        ];
+
+        return response()->json($json);         
+    }
 }

@@ -16,6 +16,7 @@ use App\Mail\Web\SendOrcamento;
 use App\Models\Configuracoes;
 use App\Models\Empresa;
 use App\Models\Newsletter;
+use App\Models\NewsletterCat;
 use App\Models\Orcamento;
 use App\Models\Parceiro;
 use App\Models\Produto;
@@ -111,22 +112,27 @@ class SendEmailController extends Controller
     public function sendNewsletter(Request $request)
     {
         if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
-            $json = "The <strong>Email</strong> field is empty or does not have a valid format!";
+            $json = "O campo <strong>Email</strong> está vazio ou não tem um formato válido!";
             return response()->json(['error' => $json]);
         }
         if(!empty($request->bairro) || !empty($request->cidade)){
-            $json = "<strong>ERROR</strong> you are practicing SPAM!"; 
+            $json = "<strong>ERRO</strong> Você está praticando SPAM!"; 
             return response()->json(['error' => $json]);
         }else{   
             $validaNews = Newsletter::where('email', $request->email)->first();            
             if(!empty($validaNews)){
                 Newsletter::where('email', $request->email)->update(['status' => 1]);
-                $json = "Your email is already registered!"; 
+                $json = "Seu e-mail já está cadastrado!"; 
                 return response()->json(['sucess' => $json]);
             }else{
-                $NewsletterCreate = Newsletter::create($request->all());
+                $categoriaPadrão = NewsletterCat::where('sistema', 1)->first();                
+                $data = $request->all();
+                $data['autorizacao'] = 1;
+                $data['categoria'] = $categoriaPadrão->id;
+                $data['nome'] = $request->nome ?? '#Cadastrado pelo Site';
+                $NewsletterCreate = Newsletter::create($data);
                 $NewsletterCreate->save();
-                $json = "Thank you Successfully registered!"; 
+                $json = "Obrigado Cadastrado com sucesso!"; 
                 return response()->json(['sucess' => $json]);
             }            
         }

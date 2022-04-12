@@ -30,6 +30,10 @@ mix
     'resources/views/web/assets/css/colorbox.css'
     ], 'public/frontend/assets/css/colorbox.css')     
 
+    .styles([
+    'resources/views/web/assets/css/renato.css'
+    ], 'public/frontend/assets/css/renato.css')     
+
     .copyDirectory('resources/views/web/assets/fonts','public/frontend/assets/fonts')
     .copyDirectory('resources/views/web/assets/images','public/frontend/assets/images')
 

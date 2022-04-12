@@ -324,6 +324,12 @@
                                                             </div>
                                                         </div>                                                                                                       
                                                     </div>
+                                                    <div class="row mb-2">
+                                                        <div class="col-12">   
+                                                            <label class="labelforms"><b>Notas Adicionais</b></label>
+                                                            <textarea id="inputDescription" class="form-control" rows="5" name="notasadicionais">{{ old('notasadicionais') }}</textarea>                                                      
+                                                        </div>
+                                                    </div> 
                                                 </div>
                                             </div>
                                         </div>

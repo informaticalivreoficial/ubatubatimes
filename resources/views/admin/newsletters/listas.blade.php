@@ -49,11 +49,12 @@
                         <td class="text-center">{{$lista->newsletters->count()}}</td>
                         <td class="text-center">{{$lista->created_at}}</td>                           
                         <td class="acoes">
+                            <a title="Marcar como Padrão" class="btn btn-xs {{ ($lista->sistema == true ? 'btn-warning' : 'btn-secondary') }} icon-notext j_padrao" data-action="{{ route('listas.padrao', ['id' => $lista->id]) }}"><i class="fas fa-magnet"></i></a>
                             <a class="btn btn-secondary btn-xs" href=""><i class="fa fa-download"></i> Exportar csv</a>
                             <a class="btn btn-secondary btn-xs" href=""><i class="fa fa-download"></i> Exportar excel</a>
                             <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $lista->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $lista->status == true ? 'checked' : ''}}>
                             <a data-toggle="tooltip" data-placement="top" title="Editar Lista" href="{{route('listas.edit',[ 'id' => $lista->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
-                            <a href="{{route('lista.newsletters',['categoria' => $lista->id])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
+                            <a href="{{route('lista.newsletters',[ 'categoria' => $lista->id ])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
                             <button data-placement="top" title="Remover Lista" type="button" class="btn btn-xs btn-danger text-white j_modal_btn" data-id="{{$lista->id}}" data-toggle="modal" data-target="#modal-default"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
@@ -122,6 +123,23 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
+            });
+
+            $('.j_padrao').click(function (event) {
+                event.preventDefault();
+                var button = $(this);
+                $.post(button.data('action'), {}, function (response) {
+                    if (response.success === true) {
+                        $('.acoes').find('a.btn-warning').removeClass('btn-warning');
+                        button.addClass('btn-warning');                        
+                        toastr.success('Lista Padrão Selecionada!');
+                        $('[data-toggle="tooltip"]').tooltip("hide");
+                    }
+                    if(response.success === false){
+                        button.addClass('btn-secondary');
+                        toastr.error(data.error);
+                    }
+                }, 'json');
             });
            
             //FUNÇÃO PARA EXCLUIR

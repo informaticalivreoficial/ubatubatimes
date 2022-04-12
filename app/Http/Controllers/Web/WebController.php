@@ -61,6 +61,20 @@ class WebController extends Controller
                     ->get();
         $artigos = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'artigo')
+                    ->where('categoria', '!=', 9)
+                    ->where('categoria', '!=', 7)
+                    ->postson()
+                    ->limit(4)
+                    ->get();
+        $praiasDeUbatuba = Post::orderBy('created_at', 'DESC')
+                    ->where('tipo', 'artigo')
+                    ->where('categoria', 9)
+                    ->postson()
+                    ->limit(5)
+                    ->get();
+        $gastronomiaDeUbatuba = Post::orderBy('created_at', 'DESC')
+                    ->where('tipo', 'artigo')
+                    ->where('categoria', 7)
                     ->postson()
                     ->limit(4)
                     ->get();
@@ -81,7 +95,9 @@ class WebController extends Controller
             'noticiasSaoSebastiao' => $noticiasSaoSebastiao,
             'noticiasIlhabela' => $noticiasIlhabela,
             'boletim' => $boletim,
-            'artigos' => $artigos
+            'artigos' => $artigos,
+            'praiasDeUbatuba' => $praiasDeUbatuba,
+            'gastronomiaDeUbatuba' => $gastronomiaDeUbatuba,
 		]);
 }
 

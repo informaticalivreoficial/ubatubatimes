@@ -20,25 +20,25 @@
 <div class="row">
     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="info-box">
-            <span class="info-box-icon bg-info"><a href="{{-- route('vendas.orcamentos') --}}" title="Orçamentos"><i class="fa far fa-file"></i></a></span>
+            <span class="info-box-icon bg-info"><a href="{{ route('posts.noticias') }}" title="Notícias"><i class="fa far fa-pen"></i></a></span>
 
             <div class="info-box-content">
-                <span class="info-box-text"><b>Orçamentos</b></span>
-                <span class="info-box-text">Pendentes: {{-- $orcamentosPendentes --}}</span>
-                <span class="info-box-text">Concluídos: {{-- $orcamentosConcluidos --}}</span>
-                <span class="info-box-text">Total: {{-- $orcamentosPendentes + $orcamentosConcluidos --}}</span>
+                <span class="info-box-text"><b>Notícias</b></span>
+                <span class="info-box-text">Publicado: {{ $noticiasAvailable }}</span>
+                <span class="info-box-text">Rascunho: {{ $noticiasUnavailable }}</span>
+                <span class="info-box-text">Total: {{ $noticiasAvailable + $noticiasUnavailable }}</span>
             </div>            
         </div>
     </div>
     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="info-box">
-            <span class="info-box-icon bg-teal"><a href="{{--route('produtos.index')--}}" title="Produtos"><i class="fa far fa-store"></i></a></span>
+            <span class="info-box-icon bg-teal"><a href="{{ route('posts.artigos') }}" title="Artigos"><i class="fa far fa-pen"></i></a></span>
 
             <div class="info-box-content">
-                <span class="info-box-text"><b>Produtos</b></span>
-                <span class="info-box-text">Disponíveis: {{-- $produtosAvailable --}}</span>
-                <span class="info-box-text">Inativos: {{-- $produtosUnavailable --}}</span>
-                <span class="info-box-text">Total: {{-- $produtosTotal --}}</span>
+                <span class="info-box-text"><b>Artigos</b></span>
+                <span class="info-box-text">Publicado: {{ $artigosAvailable }}</span>
+                <span class="info-box-text">Rascunho: {{ $artigosUnavailable }}</span>
+                <span class="info-box-text">Total: {{ $artigosAvailable + $artigosUnavailable }}</span>
             </div>
         </div>
     </div> 
@@ -422,12 +422,13 @@
         var donutDataposts        = {
             labels: [ 
                 'Artigos', 
-                'Páginas'             
+                'Páginas',
+                'Notícias'             
             ],
             datasets: [
                 {
-                data: [{{ $postsArtigos }}, {{ $postsPaginas }}],
-                    backgroundColor : ['#018577', '#BAC431'],
+                data: [{{ $postsArtigos }}, {{ $postsPaginas }}, {{ $postsNoticias }}],
+                    backgroundColor : ['#8EC63D', '#60BA47', '#69BD63'],
                 }
             ]
             }

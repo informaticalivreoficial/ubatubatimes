@@ -26,16 +26,19 @@ class AdminController extends Controller
         $time = User::where('admin', 1)->orWhere('editor', 1)->count();
         $usersAvailable = User::where('client', 1)->available()->count();
         $usersUnavailable = User::where('client', 1)->unavailable()->count();
-        //Artigos
+        //CHART PIZZA
         $postsArtigos = CatPost::where('tipo', 'artigo')->count();
         $postsPaginas = CatPost::where('tipo', 'pagina')->count();
-        $artigosTop = Post::where('tipo', 'artigo')
-                ->limit(4)
-                ->postson()
-                ->get()
-                ->sortByDesc('views');
+        $postsNoticias = CatPost::where('tipo', 'noticia')->count();
+        $artigosTop = Post::where(DB::raw('YEAR(created_at)'), '=', date('Y'))
+                ->where('tipo', 'artigo')
+                ->limit(6)
+                ->postson()   
+                ->get()            
+                ->sortByDesc('views');                
         $totalViewsArtigos = Post::selectRaw('SUM(views) AS VIEWS')
                 ->where('tipo', 'artigo')
+                ->where( DB::raw('YEAR(created_at)'), '=', date('Y') )
                 ->postson()
                 ->first();
         $paginasTop = Post::where('tipo', 'pagina')
@@ -48,10 +51,12 @@ class AdminController extends Controller
                 ->postson()
                 ->first();
 
-        //Roteiros
-        // $roteirosAvailable = Roteiro::available()->count();
-        // $roteirosUnavailable = Roteiro::unavailable()->count();
-        // $roteirosTotal = Roteiro::all()->count();
+        //Notícias
+        $noticiasAvailable = Post::postson()->where('tipo', 'noticia')->count();
+        $noticiasUnavailable = Post::postsoff()->where('tipo', 'noticia')->count();
+        //Notícias
+        $artigosAvailable = Post::postson()->where('tipo', 'artigo')->count();
+        $artigosUnavailable = Post::postsoff()->where('tipo', 'artigo')->count();
         //Roteiros Mais
         // $roteirosTop = Roteiro::where(DB::raw('YEAR(created_at)'), '=', date('Y'))
         //         ->limit(4)->available()->get()->sortByDesc('views');
@@ -78,9 +83,16 @@ class AdminController extends Controller
             'time' => $time,
             'usersAvailable' => $usersAvailable,
             'usersUnavailable' => $usersUnavailable,
+            //Notícias
+            'noticiasAvailable' => $noticiasAvailable,
+            'noticiasUnavailable' => $noticiasUnavailable,
             //Artigos
+            'artigosAvailable' => $artigosAvailable,
+            'artigosUnavailable' => $artigosUnavailable,
+            //CHART PIZZA
             'postsArtigos' => $postsArtigos,
             'postsPaginas' => $postsPaginas,
+            'postsNoticias' => $postsNoticias,
             'artigosTop' => $artigosTop,
             'artigostotalviews' => $totalViewsArtigos->VIEWS,
             'paginasTop' => $paginasTop,

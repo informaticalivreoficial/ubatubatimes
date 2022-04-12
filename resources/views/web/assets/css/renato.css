@@ -1,0 +1,11 @@
+.link-colunas{
+    background-color: #FFC100;
+}
+.link-colunas a{
+    color: #fff !important;
+}
+@media (max-width: 767px){
+    .link-colunas{
+        padding-left: 5px !important;
+    }
+}
