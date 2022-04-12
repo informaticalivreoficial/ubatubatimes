@@ -290,12 +290,7 @@ return [
                     'url'  => 'admin/posts/categorias',
                 ]
             ]
-        ],
-        [
-            'text' => 'Parceiros',
-            'url'  => 'admin/parceiros',
-            'icon' => 'fas fa-puzzle-piece',
-        ],
+        ],        
         [
             'text' => 'Banner Slides',
             'url'  => 'admin/slides',

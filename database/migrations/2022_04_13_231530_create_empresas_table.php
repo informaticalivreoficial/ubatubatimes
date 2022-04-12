@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateParceirosTable extends Migration
+class CreateEmpresasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,15 @@ class CreateParceirosTable extends Migration
      */
     public function up()
     {
-        Schema::create('parceiros', function (Blueprint $table) {
+        Schema::create('empresas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('social_name');
+            $table->string('alias_name');
+            $table->string('document_company')->nullable();
+            $table->string('document_company_secondary')->nullable();
+            $table->integer('status')->default('0');
             $table->string('logomarca')->nullable();
-            $table->text('content')->nullable();
-            $table->string('link')->nullable();
-            $table->string('slug')->nullable();
-            $table->text('mapa_google')->nullable();
-            $table->text('metatags')->nullable();
-            $table->integer('status')->nullable();
-			$table->integer('email_send_count')->default(0);
-			$table->bigInteger('views')->default(0);
+            $table->text('notasadicionais')->nullable();
 
             /** address */
             $table->string('cep')->nullable();
@@ -35,12 +31,12 @@ class CreateParceirosTable extends Migration
             $table->string('bairro')->nullable();
             $table->integer('uf')->nullable();
             $table->integer('cidade')->nullable();
-
+            
             /** contact */
             $table->string('telefone')->nullable();
             $table->string('celular')->nullable();
             $table->string('whatsapp')->nullable();
-            $table->string('skype')->nullable();
+            $table->string('email')->nullable();
 
             /** Redes Sociais */
             $table->string('facebook')->nullable();
@@ -64,6 +60,6 @@ class CreateParceirosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('parceiros');
+        Schema::dropIfExists('empresas');
     }
 }

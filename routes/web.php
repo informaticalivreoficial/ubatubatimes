@@ -48,18 +48,13 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     //** Página Inicial */
     Route::match(['post', 'get'], '/filtro', 'WebController@filter')->name('filter');
 
-    //****************************** Parceiros *********************************************/
-    Route::get('/parceiro/{slug}', [WebController::class, 'parceiro'])->name('parceiro');
-
     //***************************** Cliente ********************************************/
     Route::get('/cliente/login', [ClienteController::class, 'login'])->name('login');
-    Route::get('/cliente/meus-passeios', [ClienteController::class, 'passeios'])->name('passeios');
    
     //**************************** Emails ********************************************/
     Route::get('/atendimento', [WebController::class, 'atendimento'])->name('atendimento');
     Route::get('/sendEmail', [SendEmailController::class, 'sendEmail'])->name('sendEmail');
     Route::get('/sendNewsletter', [SendEmailController::class, 'sendNewsletter'])->name('sendNewsletter');
-    Route::get('/sendOrcamento', [SendEmailController::class, 'sendOrcamento'])->name('sendOrcamento');
     Route::get('/sendFormCaptacao', [SendEmailController::class, 'sendFormCaptacao'])->name('sendFormCaptacao');
     
     //****************************** Blog ***********************************************/
@@ -67,10 +62,6 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     Route::get('/blog/categoria/{slug}', [WebController::class, 'categoria'])->name('blog.categoria');
     Route::get('/blog', [WebController::class, 'artigos'])->name('blog.artigos');
     Route::match(['get', 'post'],'/blog/pesquisar', [WebController::class, 'searchBlog'])->name('blog.searchBlog');
-
-    //****************************** Portifólio *******************************************/
-    Route::get('/portifolio/{slug}', [WebController::class, 'projeto'])->name('projeto');
-    Route::get('/portifolio', [WebController::class, 'portifolio'])->name('portifolio');
 
     //*************************************** Páginas *******************************************/
     Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
@@ -119,71 +110,6 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('slides/create', [SlideController::class, 'create'])->name('slides.create');
     Route::post('slides/store', [SlideController::class, 'store'])->name('slides.store');
     Route::get('slides', [SlideController::class, 'index'])->name('slides.index');
-
-    //******************** Parceiros *********************************************/
-    Route::match(['post', 'get'], 'parceiros/fetchCity', [ParceiroController::class, 'fetchCity'])->name('parceiros.fetchCity');
-    Route::get('parceiros/set-status', [ParceiroController::class, 'parceiroSetStatus'])->name('parceiros.parceiroSetStatus');
-    Route::post('parceiros/image-set-cover', [ParceiroController::class, 'imageSetCover'])->name('parceiros.imageSetCover');
-    Route::delete('parceiros/image-remove', [ParceiroController::class, 'imageRemove'])->name('parceiros.imageRemove');
-    Route::delete('parceiros/deleteon', [ParceiroController::class, 'deleteon'])->name('parceiros.deleteon');
-    Route::get('parceiros/delete', [ParceiroController::class, 'delete'])->name('parceiros.delete');
-    Route::put('parceiros/{id}', [ParceiroController::class, 'update'])->name('parceiros.update');
-    Route::get('parceiros/{id}/edit', [ParceiroController::class, 'edit'])->name('parceiros.edit');
-    Route::get('parceiros/create', [ParceiroController::class, 'create'])->name('parceiros.create');
-    Route::post('parceiros/store', [ParceiroController::class, 'store'])->name('parceiros.store');
-    Route::get('parceiros', [ParceiroController::class, 'index'])->name('parceiros.index');
-    
-    //******************** Vendas *************************************************************/
-    Route::get('pedidos/show/{id}', [PedidoController::class, 'show'])->name('pedidos.show');
-    Route::get('pedidos', [PedidoController::class, 'index'])->name('pedidos.index');  
-    Route::get('orcamentos/set-status', [OrcamentoController::class, 'orcamentoSetStatus'])->name('orcamento.orcamentoSetStatus'); 
-    Route::delete('orcamentos/deleteon', [OrcamentoController::class, 'deleteon'])->name('orcamento.deleteon');
-    Route::get('orcamentos/delete', [OrcamentoController::class, 'delete'])->name('orcamento.delete'); 
-    Route::get('orcamentos', [OrcamentoController::class, 'index'])->name('vendas.orcamentos');
-
-    //*************************** Portifólio Categorias **********************************/
-    Route::get('portifolio/categorias/delete', [CatPortifolioController::class, 'delete'])->name('portifolio-categorias.delete');
-    Route::delete('portifolio/categorias/deleteon', [CatPortifolioController::class, 'deleteon'])->name('portifolio-categorias.deleteon');
-    Route::get('portifolio/categorias/{id}/edit', [CatPortifolioController::class, 'edit'])->name('portifolio-categorias.edit');
-    Route::put('portifolio/categorias/{id}', [CatPortifolioController::class, 'update'])->name('portifolio-categorias.update');
-    Route::match(['post', 'get'],'portifolio/categorias/create/{catpai}', [CatPortifolioController::class, 'create'])->name('portifolio-categorias.create');
-    Route::post('portifolio/categorias/store', [CatPortifolioController::class, 'store'])->name('portifolio-categorias.store');
-    Route::get('portifolio/categorias', [CatPortifolioController::class, 'index'])->name('catportifolio.index');
-
-    //*************************** Portifólio *******************************************/
-    Route::match(['get', 'post'], 'portifolio/pesquisa', [PortifolioController::class, 'search'])->name('portifolio.search');
-    Route::get('portifolio/set-status', [PortifolioController::class, 'portifolioSetStatus'])->name('portifolio.portifolioSetStatus');
-    Route::post('portifolio/image-set-cover', [PortifolioController::class, 'imageSetCover'])->name('portifolio.imageSetCover');
-    Route::delete('portifolio/image-remove', [PortifolioController::class, 'imageRemove'])->name('portifolio.imageRemove');
-    Route::delete('portifolio/deleteon', [PortifolioController::class, 'deleteon'])->name('portifolio.deleteon');
-    Route::get('portifolio/delete', [PortifolioController::class, 'delete'])->name('portifolio.delete');
-    Route::put('portifolio/{id}', [PortifolioController::class, 'update'])->name('portifolio.update');
-    Route::get('portifolio/{id}/edit', [PortifolioController::class, 'edit'])->name('portifolio.edit');
-    Route::get('portifolio/create', [PortifolioController::class, 'create'])->name('portifolio.create');
-    Route::post('portifolio/store', [PortifolioController::class, 'store'])->name('portifolio.store');
-    Route::get('portifolio', [PortifolioController::class, 'index'])->name('portifolio.index');
-
-    //*************************** Produtos Categorias **********************************/
-    Route::get('produtos/categorias/delete', [CatProdutoController::class, 'delete'])->name('produtos-categorias.delete');
-    Route::delete('produtos/categorias/deleteon', [CatProdutoController::class, 'deleteon'])->name('produtos-categorias.deleteon');
-    Route::get('produtos/categorias/{id}/edit', [CatProdutoController::class, 'edit'])->name('produtos-categorias.edit');
-    Route::put('produtos/categorias/{id}', [CatProdutoController::class, 'update'])->name('produtos-categorias.update');
-    Route::match(['post', 'get'],'produtos/categorias/create/{catpai}', [CatProdutoController::class, 'create'])->name('produtos-categorias.create');
-    Route::post('produtos/categorias/store', [CatProdutoController::class, 'store'])->name('produtos-categorias.store');
-    Route::get('produtos/categorias', [CatProdutoController::class, 'index'])->name('catprodutos.index');
-
-    //*************************** Produtos *********************************************/
-    Route::match(['get', 'post'], 'produtos/pesquisa', [ProdutoController::class, 'search'])->name('produtos.search');
-    Route::get('produtos/set-status', [ProdutoController::class, 'produtoSetStatus'])->name('produtos.produtoSetStatus');
-    Route::post('produtos/image-set-cover', [ProdutoController::class, 'imageSetCover'])->name('produtos.imageSetCover');
-    Route::delete('produtos/image-remove', [ProdutoController::class, 'imageRemove'])->name('produtos.imageRemove');
-    Route::delete('produtos/deleteon', [ProdutoController::class, 'deleteon'])->name('produtos.deleteon');
-    Route::get('produtos/delete', [ProdutoController::class, 'delete'])->name('produtos.delete');
-    Route::put('produtos/{id}', [ProdutoController::class, 'update'])->name('produtos.update');
-    Route::get('produtos/{id}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit');
-    Route::get('produtos/create', [ProdutoController::class, 'create'])->name('produtos.create');
-    Route::post('produtos/store', [ProdutoController::class, 'store'])->name('produtos.store');
-    Route::get('produtos', [ProdutoController::class, 'index'])->name('produtos.index');    
 
     //****************************** Empresas *******************************************/
     Route::match(['post', 'get'], 'empresas/fetchCity', [EmpresaController::class, 'fetchCity'])->name('empresas.fetchCity');
