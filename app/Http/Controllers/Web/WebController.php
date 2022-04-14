@@ -7,11 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\{
     BoletimOndas,
-    CatPortifolio,
     Post,
-    CatPost,
-    Estados,   
-    User
+    CatPost
 };
 use Goutte\Client;
 use App\Services\ConfigService;
@@ -99,7 +96,23 @@ class WebController extends Controller
             'praiasDeUbatuba' => $praiasDeUbatuba,
             'gastronomiaDeUbatuba' => $gastronomiaDeUbatuba,
 		]);
-}
+    }
+
+    public function ondas()
+    {
+        $boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');
+
+        $head = $this->seo->render('Boletim das Ondas para Ubatuba' ?? 'Informática Livre',
+            'Boletim das Ondas para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+            route('web.ondas'),
+            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+
+        return view('web.boletim-das-ondas',[
+            'head' => $head,
+            'boletim' => $boletim,
+        ]);
+    }
 
     //public function home()
     //{
@@ -296,74 +309,56 @@ class WebController extends Controller
     //     }
     // }
 
-    public function noticiaCaragua($local, $categoria, $ano, $mes, $slug)
-    {
-        if(!empty($local)){
-            $url = "https://www.caraguatatuba.sp.gov.br/{$categoria}/{$ano}/{$mes}/{$slug}";
-            $page = $this->crowler->request('GET', $url);
-
-            $post = [
-                'titulo' => $page->filter('.card-body h5')->text(),
-                'data' => $page->filter('.created-at small')->text(),
-                'img' => $page->filter('.card-deck img')->attr('src'),
-                'content' => $page->filter('.card-text')->html(),
-                'fonte' => 'Prefeitura Municipal de Caraguatatuba',
-                'fontelink' => 'https://www.caraguatatuba.sp.gov.br'
-            ];  
-            
-            $postMais = 'https://www.caraguatatuba.sp.gov.br/pmc/category/noticias/';
-            $pageMais = $this->crowler->request('GET', $postMais);
-            $pageMais->filter('#latestNews .row')->each( function ($item){
-                $this->resultsCaragua[] = [
-                    'titulo' => $item->filter('h5')->text(),
-                    'content' => $item->filter('p')->text(),
-                    'url' => $item->filter('a')->attr('href'),
-                    'img' => $item->filter('img')->attr('src'),
-                    'data' => $item->filter('.created-at')->text(),
-                    'local' => 'caraguatatuba'
-                ];           
-            });
-
-            $head = $this->seo->render($post['titulo'] . ' - ' .$this->configService->getConfig()->nomedosite,
-                $post['titulo'] . ' - ' .$this->configService->getConfig()->nomedosite,
-                route('web.noticiaCaragua',[
-                    'local' => 'caraguatatuba',
-                    'categoria' => 'pmc',
-                    'ano' => $ano,
-                    'mes' => $mes,
-                    'slug' => $slug
-                ]),
-                $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-            );
-
-            return view('web.noticia',[
-                'head' => $head,
-                'post' => $post,
-                'pageMais' => $this->resultsCaragua,
-                'cidade' => 'caraguatatuba'
-            ]);
-
-        }else{
-            return redirect()->back();
-        }
-    }
-
-    // public function quemsomos()
+    // public function noticiaCaragua($local, $categoria, $ano, $mes, $slug)
     // {
-    //     $projetosCount = Portifolio::count();
-    //     $clientesCount = User::where('client', 1)->count();
-    //     $paginaQuemSomos = Post::where('tipo', 'pagina')->postson()->where('id', 5)->first();
-    //     $head = $this->seo->render('Quem Somos - ' . $this->configService->getConfig()->nomedosite,
-    //         $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
-    //         route('web.quemsomos'),
-    //         $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-    //     );
-    //     return view('web.quem-somos',[
-    //         'head' => $head,
-    //         'paginaQuemSomos' => $paginaQuemSomos,
-    //         'projetosCount' => $projetosCount,
-    //         'clientesCount' => $clientesCount
-    //     ]);
+    //     if(!empty($local)){
+    //         $url = "https://www.caraguatatuba.sp.gov.br/{$categoria}/{$ano}/{$mes}/{$slug}";
+    //         $page = $this->crowler->request('GET', $url);
+
+    //         $post = [
+    //             'titulo' => $page->filter('.card-body h5')->text(),
+    //             'data' => $page->filter('.created-at small')->text(),
+    //             'img' => $page->filter('.card-deck img')->attr('src'),
+    //             'content' => $page->filter('.card-text')->html(),
+    //             'fonte' => 'Prefeitura Municipal de Caraguatatuba',
+    //             'fontelink' => 'https://www.caraguatatuba.sp.gov.br'
+    //         ];  
+            
+    //         $postMais = 'https://www.caraguatatuba.sp.gov.br/pmc/category/noticias/';
+    //         $pageMais = $this->crowler->request('GET', $postMais);
+    //         $pageMais->filter('#latestNews .row')->each( function ($item){
+    //             $this->resultsCaragua[] = [
+    //                 'titulo' => $item->filter('h5')->text(),
+    //                 'content' => $item->filter('p')->text(),
+    //                 'url' => $item->filter('a')->attr('href'),
+    //                 'img' => $item->filter('img')->attr('src'),
+    //                 'data' => $item->filter('.created-at')->text(),
+    //                 'local' => 'caraguatatuba'
+    //             ];           
+    //         });
+
+    //         $head = $this->seo->render($post['titulo'] . ' - ' .$this->configService->getConfig()->nomedosite,
+    //             $post['titulo'] . ' - ' .$this->configService->getConfig()->nomedosite,
+    //             route('web.noticiaCaragua',[
+    //                 'local' => 'caraguatatuba',
+    //                 'categoria' => 'pmc',
+    //                 'ano' => $ano,
+    //                 'mes' => $mes,
+    //                 'slug' => $slug
+    //             ]),
+    //             $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+    //         );
+
+    //         return view('web.noticia',[
+    //             'head' => $head,
+    //             'post' => $post,
+    //             'pageMais' => $this->resultsCaragua,
+    //             'cidade' => 'caraguatatuba'
+    //         ]);
+
+    //     }else{
+    //         return redirect()->back();
+    //     }
     // }
 
     public function politica()
@@ -388,6 +383,30 @@ class WebController extends Controller
         $head = $this->seo->render('Blog - ' . $this->configService->getConfig()->nomedosite ?? 'Informática Livre',
             'Blog - ' . $this->configService->getConfig()->nomedosite,
             route('web.blog.artigos'),
+            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+
+        return view('web.blog.artigos', [
+            'head' => $head,
+            'posts' => $posts,
+            'categorias' => $categorias
+        ]);
+    }
+
+    public function noticias()
+    {
+        $posts = Post::orderBy('created_at', 'DESC')
+                ->where('tipo', '=', 'noticia')
+                ->postson()
+                ->paginate(21);
+
+        $categorias = CatPost::orderBy('titulo', 'ASC')
+                ->where('tipo', 'noticia')
+                ->get();
+        
+        $head = $this->seo->render('Notícias - ' . $this->configService->getConfig()->nomedosite ?? 'Informática Livre',
+            'Notícias - ' . $this->configService->getConfig()->nomedosite,
+            route('web.noticias'),
             $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
         );
 
@@ -534,32 +553,5 @@ class WebController extends Controller
             'head' => $head            
         ]);
     }
-
     
-
-    
-
-    // public function sendNewsletter(Request $request)
-    // {
-    //     if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
-    //         $json = "O campo <strong>Email</strong> está vazio ou não tem um formato válido!";
-    //         return response()->json(['error' => $json]);
-    //     }
-    //     if(!empty($request->bairro) || !empty($request->cidade)){
-    //         $json = "<strong>ERRO</strong> Você está praticando SPAM!"; 
-    //         return response()->json(['error' => $json]);
-    //     }else{   
-    //         $validaNews = Newsletter::where('email', $request->email)->first();            
-    //         if(!empty($validaNews)){
-    //             Newsletter::where('email', $request->email)->update(['status' => 1]);
-    //             $json = "Seu e-mail já está cadastrado!"; 
-    //             return response()->json(['sucess' => $json]);
-    //         }else{
-    //             $NewsletterCreate = Newsletter::create($request->all());
-    //             $NewsletterCreate->save();
-    //             $json = "Obrigado Cadastrado com sucesso!"; 
-    //             return response()->json(['sucess' => $json]);
-    //         }            
-    //     }
-    // }
 }

@@ -8,14 +8,14 @@
             <div class="col-sm-12">
                 <ul class="breadcrumb">
                     <li><a href="{{route('web.home')}}">Início</a></li>
-                    <li>Blog </li>
+                    <li>{{(!empty($posts) && $posts[0]->tipo == 'noticia' ? 'Notícias' : 'Blog')}}</li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
 
-@if($posts->count() && $posts->count() > 0)
+@if(!empty($posts) && $posts->count() > 0)
     <section class="utf_block_wrapper">
         <div class="container">
             <div class="row">
@@ -26,13 +26,13 @@
                                 <div class="col-lg-4">
                                     <div class="utf_post_block_style post-grid clearfix">
                                         <div class="utf_post_thumb"> 
-                                            <a href="#"> 
-                                                <img class="img-fluid" src="{{$post->cover()}}" alt="" /> 
+                                            <a href="{{route(($post->tipo == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}"> 
+                                                <img class="img-fluid" src="{{$post->cover()}}" alt="{{$post->titulo}}" /> 
                                             </a> 
                                         </div>
                                         <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoriaObject->slug ])}}">{{$post->categoriaObject->titulo}}</a>
                                         <div class="utf_post_content">
-                                            <h2 class="utf_post_title title-large"> <a href="#">{{$post->titulo}}</a> </h2>
+                                            <h2 class="utf_post_title title-large"> <a href="{{route(($post->tipo == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}">{{$post->titulo}}</a> </h2>
                                             <div class="utf_post_meta"> 
                                                 <span class="utf_post_author"><i class="fa fa-eye"></i> {{$post->views}}</span> 
                                                 <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</span> 

@@ -549,6 +549,8 @@
         </div>
     </div>
 </div>
+
+<ul id="rudr_instafeed"></ul>
   
 @endsection
 

@@ -60,24 +60,29 @@
 				<div class="row">
 					<div class="col-md-8">
 						<ul class="unstyled top-nav">
-							<li><a href="login-signup.html">Login & Signup</a></li>
+							<li><a href="{{route('web.ondas')}}">Boletim das Ondas</a></li>
+							<li><a href="">Previsão do Tempo</a></li>
 						</ul>
 					</div>
 					<div class="col-md-4 top-social text-lg-right text-md-center">
-						<ul class="unstyled">
-							@if ($configuracoes->facebook)
-								<li><a target="_blank" href="{{$configuracoes->facebook}}" title="Facebook"><i class="fa fa-facebook"></i></a></li>
-							@endif
-							@if ($configuracoes->twitter)
-								<li><a target="_blank" href="{{$configuracoes->twitter}}" title="Twitter"><i class="fa fa-twitter"></i></a></li>
-							@endif
-							@if ($configuracoes->instagram)
-								<li><a target="_blank" href="{{$configuracoes->instagram}}" title="Instagram"><i class="fa fa-instagram"></i></a></li>
-							@endif
-							@if ($configuracoes->linkedin)
-								<li><a target="_blank" href="{{$configuracoes->linkedin}}" title="linkedin"><i class="fa fa-linkedin"></i></a></li>
-							@endif
-						</ul>
+						@php
+							// PEGA COTAÇÃO DO DOLAR VIA JSON
+							//$url = file_get_contents('https://economia.awesomeapi.com.br/json/USD-BRL/1');
+							if (!empty($url)) {
+								$json = json_decode($url, true);
+								$imprime = end($json);
+								$cor = ($imprime['pctChange'] < '0' ? 'pos' :
+									($imprime['pctChange'] == '0' ? 'neutro' : 
+									($imprime['pctChange'] > '0' ? 'neg' : 'neg')));
+								$sinal = ($imprime['pctChange'] < '0' ? '' :
+									($imprime['pctChange'] == '0' ? '' : 
+									($imprime['pctChange'] > '0' ? '+' : '+')));
+								echo '<div class="numbers">';                    
+								echo '<span class="value bra"> '.$imprime['name'].' R$'.number_format($imprime['ask'],'3',',','').'</span>';
+								echo '<span class="data '.$cor.'">'.$sinal.' '.number_format($imprime['pctChange'],'2',',','').'% </span>';
+								echo '</div>';
+							}							
+						@endphp
 					</div>
 				</div>
 			</div>
@@ -115,9 +120,9 @@
 					<div id="navbarSupportedContent" class="collapse navbar-collapse navbar-responsive-collapse">
 					<ul class="nav navbar-nav">
 												               
-						<li class="link-colunas"> <a href="category-style2.html"> <b>Guia</b> </a> </li>
-						<li> <a href="http://localhost/Ubatuba-Times/public/blog/categoria/praias-de-ubatuba"> <b>Praias de Ubatuba</b> </a> </li>
-						<li> <a href=""> <b>Boletim das Ondas</b> </a> </li>
+						<li class="link-colunas"> <a href="#"> <b>Guia</b> </a> </li>
+						<li> <a href="{{route('web.blog.categoria', [ 'slug' => 'praias-de-ubatuba' ])}}"> <b>Praias de Ubatuba</b> </a> </li>
+						<li> <a href="{{route('web.blog.artigos')}}"> <b>Blog</b> </a> </li>
 
 						@if (!empty($catcolunas) && $catcolunas->count() > 0 )
 							<li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown">Colunas <i class="fa fa-angle-down"></i></a>
@@ -141,7 +146,7 @@
 								</ul>
 							</li>
 						@endif		
-						<li> <a href="http://localhost/Ubatuba-Times/public/blog/categoria/wiki-ubatuba">Wiki Ubatuba</a> </li>				
+						<li> <a href="{{route('web.blog.categoria', [ 'slug' => 'wiki-ubatuba' ])}}">Wiki Ubatuba</a> </li>				
 					</ul>
 					</div>            
 				</div>
@@ -203,54 +208,47 @@
 							</ul>
 					</div>
 				
-				<div class="col-lg-4 col-sm-12 col-xs-12 footer-widget widget-categories">
-					<h3 class="widget-title">Popular Categories</h3>
+				<div class="col-lg-4 col-sm-12 col-xs-12 footer-widget">
+					<h3 class="widget-title">Links úteis</h3>
 					<ul>
-					<li><i class="fa fa-angle-double-right"></i><a href="#"><span class="catTitle">Make-Up</span><span class="catCounter"> (05)</span></a> </li>
-					<li><i class="fa fa-angle-double-right"></i><a href="#"><span class="catTitle">Health</span><span class="catCounter"> (06)</span></a> </li>
-					<li><i class="fa fa-angle-double-right"></i><a href="#"><span class="catTitle">Audio</span><span class="catCounter"> (15)</span></a> </li>
-					<li><i class="fa fa-angle-double-right"></i><a href="#"><span class="catTitle">Travel</span><span class="catCounter"> (25)</span></a> </li>
-					<li><i class="fa fa-angle-double-right"></i><a href="#"><span class="catTitle">Health</span><span class="catCounter"> (05)</span></a> </li>
-					<li><i class="fa fa-angle-double-right"></i><a href="#"><span class="catTitle">Gadgets</span><span class="catCounter"> (12)</span></a> </li>
-					<li><i class="fa fa-angle-double-right"></i><a href="#"><span class="catTitle">Food</span><span class="catCounter"> (14)</span></a> </li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="#"><span class="catTitle">Guia Comercial Ubatuba</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="{{route('web.blog.artigos')}}"><span class="catTitle">Blog</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="{{route('web.noticias')}}"><span class="catTitle">Notícias</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="{{route('web.ondas')}}"><span class="catTitle">Boletim das Ondas</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="#"><span class="catTitle">Previsão do Tempo</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="{{route('web.blog.categoria', [ 'slug' => 'praias-de-ubatuba' ])}}"><span class="catTitle">Praias de Ubatuba</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="{{route('web.blog.categoria', [ 'slug' => 'wiki-ubatuba' ])}}"><span class="catTitle">Wiki Ubatuba</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="{{route('web.politica')}}"><span class="catTitle">Política de Privacidade</span></a> 
+						</li>
 					</ul>
 				</div>
 				
 				<div class="col-lg-4 col-sm-12 col-xs-12 footer-widget">
-					<h3 class="widget-title">Popular Post</h3>
-					<div class="utf_list_post_block">
-					<ul class="utf_list_post">
-						<li class="clearfix">
-						<div class="utf_post_block_style post-float clearfix">
-							<div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/health2.jpg" alt="" /> </a> </div>                    
-							<div class="utf_post_content">
-							<h2 class="utf_post_title title-small"> <a href="#">Santino loganne legan an year old resident...</a> </h2>
-							<div class="utf_post_meta"> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
-							</div>
-						</div>
-						</li>
-						
-						<li class="clearfix">
-						<div class="utf_post_block_style post-float clearfix">
-							<div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/health3.jpg" alt="" /> </a> </div>                    
-							<div class="utf_post_content">
-							<h2 class="utf_post_title title-small"> <a href="#">Santino loganne legan an year old resident...</a> </h2>
-							<div class="utf_post_meta"> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
-							</div>
-						</div>
-						</li>
-						
-						<li class="clearfix">
-						<div class="utf_post_block_style post-float clearfix">
-							<div class="utf_post_thumb"> <a href="#"> <img class="img-fluid" src="images/news/lifestyle/health4.jpg" alt="" /> </a> </div>                    
-							<div class="utf_post_content">
-							<h2 class="utf_post_title title-small"> <a href="#">Santino loganne legan an year old resident...</a> </h2>
-							<div class="utf_post_meta"> <span class="utf_post_date"><i class="fa fa-clock-o"></i> 25 Jan, 2021</span> </div>
-							</div>
-						</div>
-						</li>
-					</ul>
-					</div>            
+					<h3 class="widget-title">Instagram Posts</h3>
+					            
 				</div>
 							
 				</div>

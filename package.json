@@ -40,5 +40,8 @@
     "url": "https://github.com/informaticalivreoficial/ubatubatimes/issues"
   },
   "homepage": "https://github.com/informaticalivreoficial/ubatubatimes#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "instafeed.js": "^2.0.0"
+  }
 }

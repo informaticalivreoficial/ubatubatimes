@@ -29,19 +29,13 @@ use App\Http\Controllers\Web\{
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
-    Route::get('teste', [PostController::class, 'crowlerNoticiasCaraguatatuba'])->name('teste');
-   
     /** Página Inicial */   
-    Route::get('teste-qrcode', [WebController::class, 'qrcode'])->name('qrcode'); 
     Route::get('/', [WebController::class, 'home'])->name('home');     
 
-    //****************************** Política de Privacidade ******************************/
+    //****************************** Páginas ******************************/
     Route::get('/politica-de-privacidade', [WebController::class, 'politica'])->name('politica');
-    Route::get('/consultoria/produtos', [WebController::class, 'orcamento'])->name('orcamento');
-    Route::get('/consultoria/orcamento', [WebController::class, 'formorcamento'])->name('formorcamento');
-    Route::get('/quem-somos', [WebController::class, 'quemsomos'])->name('quemsomos');
-    Route::get('consultoria/orcamentos/form-client/{token}', [WebController::class, 'formClient'])->name('formClient');
-
+    Route::get('/boletim-das-ondas', [WebController::class, 'ondas'])->name('ondas');
+    
     //** Página Destaque */
     Route::get('/destaque', 'WebController@spotlight')->name('spotlight');
     
@@ -66,10 +60,9 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     //*************************************** Páginas *******************************************/
     Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
     Route::get('/noticia/{slug}', [WebController::class, 'noticia'])->name('noticia');
+    Route::get('/noticias', [WebController::class, 'noticias'])->name('noticias');
     Route::get('/noticia/categoria/{slug}', [WebController::class, 'categoria'])->name('noticia.categoria');
-    //Route::get('/noticia/{local}/{categoria}/{slug}', [WebController::class, 'noticia'])->name('noticia');
-    //Route::get('/noticia/{local}/{categoria}/{ano}/{mes}/{slug}', [WebController::class, 'noticiaCaragua'])->name('noticiaCaragua');
-
+    
     //** Pesquisa */
     Route::match(['post', 'get'], '/pesquisa', [WebController::class, 'pesquisa'])->name('pesquisa');
 
