@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\{
     BoletimOndas,
     Post,
-    CatPost
+    CatPost,
+    PrevisaoTempo
 };
 use Goutte\Client;
 use App\Services\ConfigService;
@@ -19,7 +20,6 @@ class WebController extends Controller
 {
     protected $configService;
     protected $seo;
-    //private $results = [];
 
     public function __construct(ConfigService $configService)
     {
@@ -114,113 +114,21 @@ class WebController extends Controller
         ]);
     }
 
-    //public function home()
-    //{
-    //     $client = new Client();
-    //     //URLS
-    //     $urlUbatuba  = 'https://www.ubatuba.sp.gov.br/noticias/';
-    //     $urlCaragua  = 'https://www.caraguatatuba.sp.gov.br/pmc/';
-    //     $urlSaoSeba  = 'http://www.saosebastiao.sp.gov.br/noticia-lista.asp';
-    //     $urlIlhaBela = 'https://www.ilhabela.sp.gov.br/noticias/';
+    public function tempo()
+    {
+        $boletim = new PrevisaoTempo('http://servicos.cptec.inpe.br/XML/cidade/5515/previsao.xml');
 
-    //     //Pegar as Notícias de Ubatuba
-    //     $pageUbatuba = $client->request('GET', $urlUbatuba);
-    //     $pageUbatuba->filter('.blog-items li')->each( function ($item){
-    //         $this->resultsUbatuba[] = [
-    //             'titulo' => $item->filter('h4')->text(),
-    //             'content' => $item->filter('.excerpt')->text(),
-    //             'url' => $item->filter('a')->attr('href'),
-    //             'img' => $item->filter('img')->attr('src'),
-    //             'local' => 'ubatuba'
-    //         ];           
-    //     });
-
-    //     //Pegar as Notícias de Caraguatatuba
-    //     $pageCaragua = $client->request('GET', $urlCaragua);
-    //     $pageCaragua->filter('.card-deck .card')->each( function ($item){
-    //         $this->resultsCaragua[] = [
-    //             'titulo' => $item->filter('h5')->text(),
-    //             'content' => $item->filter('p')->text(),
-    //             'url' => $item->filter('a')->attr('href'),
-    //             'img' => $item->filter('img')->attr('src'),
-    //             'local' => 'caraguatatuba'
-    //         ];           
-    //     });
-
-    //     //Pegar as Notícias de São Sebastião
-    //     $pageSaoSeba = $client->request('GET', $urlSaoSeba);        
-    //     $pageSaoSeba->filter('.notice-list-page .notice')->each( function ($item){            
-    //         $this->resultsSaoSeba[] = [
-    //             'titulo' => $item->filter('.notice-core h2')->text(),
-    //             //'content' => $item->filter('.notice-content p')->text(),
-    //             'url' => $item->filter('a')->attr('href'),
-    //             //'img' => $item->filter('img')->attr('src'),
-    //             //'local' => 'sao-sebastiao'
-    //         ];   
-    //     });
-
-    //     //Noticia 1
-    //     $pegaThumb1 = explode('/', $urlSaoSeba);
-    //     $pegaThumbb1 = $pegaThumb1[0].'//'.$pegaThumb1[2].'/'.$this->resultsSaoSeba[0]['url'];
-    //     $pegaThumbUrl1 = $client->request('GET', $pegaThumbb1);
-    //     if(count($pegaThumbUrl1->filter('.slide')) > 0){
-    //         $img1 = explode("'", $pegaThumbUrl1->filter('.slide')->attr("style"));   
-    //         $img1 = $pegaThumb1[0].'//'.$pegaThumb1[2].'/'.$img1[1];         
-    //     }else{
-    //         $img1 = $pegaThumbUrl1->filter('.post-image img')->eq(0)->attr('src');
-    //         $img1 = $pegaThumb1[0].'//'.$pegaThumb1[2].'/'.$img1;
-    //     }
+        $head = $this->seo->render('Previsão do tempo para Ubatuba' ?? 'Informática Livre',
+            'Previsão do tempo para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+            route('web.tempo'),
+            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
         
-    //     //Noticia 2
-    //     $pegaThumb = explode('/', $urlSaoSeba);
-    //     $pegaThumbb = $pegaThumb[0].'//'.$pegaThumb[2].'/'.$this->resultsSaoSeba[1]['url'];
-    //     $pegaThumbUrl = $client->request('GET', $pegaThumbb);
-    //     if(count($pegaThumbUrl->filter('.slide')) > 0){
-    //         $img = explode("'", $pegaThumbUrl->filter('.slide')->attr("style"));   
-    //         $img = $pegaThumb[0].'//'.$pegaThumb[2].'/'.$img[1];         
-    //     }else{
-    //         $img = $pegaThumbUrl->filter('.post-image img')->eq(0)->attr('src');
-    //         $img = $pegaThumb[0].'//'.$pegaThumb[2].'/'.$img;
-    //     }
-    //     $responseSSB = [
-    //         [
-    //             'titulo' => $this->resultsSaoSeba[0]['titulo'],
-    //             'img' => $img1,
-    //             'local' => 'sao-sebastiao'
-    //         ],
-    //         [
-    //             'titulo' => $this->resultsSaoSeba[1]['titulo'],
-    //             'img' => $img,
-    //             'local' => 'sao-sebastiao'
-    //         ]
-    //     ];
-
-    //     //Pegar as Notícias de IlhaBela
-    //     $pageIlhaBela = $client->request('GET', $urlIlhaBela);
-    //     $pageIlhaBela->filter('#content article')->each( function ($item){
-    //         $this->resultsIlhaBela[] = [
-    //             'titulo' => $item->filter('.entry-header h2')->text(),
-    //             // 'content' => $item->filter('p')->text(),
-    //             // 'url' => $item->filter('a')->attr('href'),
-    //             'img' => $item->filter('.entry-thumbnail img')->attr('src'),
-    //             // 'local' => 'ilhabela'
-    //         ];           
-    //     });
-         
-    //     $head = $this->seo->render($this->configService->getConfig()->nomedosite ?? 'Informática Livre',
-    //         $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
-    //         route('web.home'),
-    //         $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-    //     ); 
-        
-	// 	return view('web.home',[
-    //         'head' => $head,
-    //         'noticiasubatuba'  => $this->resultsUbatuba,
-    //         'noticiascaragua'  => $this->resultsCaragua,
-    //         'noticiassaoseba'  => $responseSSB,
-    //         'noticiasilhabela' => $this->resultsIlhaBela
-	// 	]);
-    // }
+        return view('web.previsao-do-tempo',[
+            'head' => $head,
+            'boletim' => $boletim->getContent(),
+        ]);
+    }
 
     public function noticia($slug)
     {
@@ -267,100 +175,7 @@ class WebController extends Controller
             'postnext' => $postnext,
         ]);
     }
-
-    // public function noticia($local, $categoria, $slug)
-    // {        
-    //     if(!empty($local)){
-
-    //         if($local == 'ubatuba'){                
-    //             $url = "https://www.ubatuba.sp.gov.br/{$categoria}/{$slug}";
-    //             $page = $this->crowler->request('GET', $url);
-    //             $post = [
-    //                 'titulo' => $page->filter('.heading-text h1')->text(),
-    //                 'data' => $page->filter('.date')->text(),
-    //                 'img' => $page->filter('.page-content figure img')->attr('src'),
-    //                 'content' => $page->filter('.article-body-wrap .body-text')->html(),
-    //                 'fonte' => 'Prefeitura Municipal de Ubatuba',
-    //                 'fontelink' => 'https://www.ubatuba.sp.gov.br'
-    //             ];     
-                
-    //             $postMais = 'https://www.ubatuba.sp.gov.br/noticias/';
-    //             $pageMais = $this->crowler->request('GET', $postMais);
-    //             $pageMais->filter('.blog-items li')->each( function ($item){
-    //                 $this->resultsUbatuba[] = [
-    //                     'titulo' => $item->filter('h4')->text(),
-    //                     'content' => $item->filter('.excerpt')->text(),
-    //                     'url' => $item->filter('a')->attr('href'),
-    //                     'img' => $item->filter('img')->attr('src'),
-    //                     'local' => 'ubatuba'
-                        
-    //                 ];           
-    //             });
-    //         }
-            
-    //         return view('web.noticia',[
-    //             //'head' => $head,
-    //             'post' => $post,
-    //             'pageMais' => $this->resultsUbatuba,
-    //             'cidade' => 'ubatuba'
-    //         ]);
-    //     }else{
-    //         //return redirect()->back();
-    //     }
-    // }
-
-    // public function noticiaCaragua($local, $categoria, $ano, $mes, $slug)
-    // {
-    //     if(!empty($local)){
-    //         $url = "https://www.caraguatatuba.sp.gov.br/{$categoria}/{$ano}/{$mes}/{$slug}";
-    //         $page = $this->crowler->request('GET', $url);
-
-    //         $post = [
-    //             'titulo' => $page->filter('.card-body h5')->text(),
-    //             'data' => $page->filter('.created-at small')->text(),
-    //             'img' => $page->filter('.card-deck img')->attr('src'),
-    //             'content' => $page->filter('.card-text')->html(),
-    //             'fonte' => 'Prefeitura Municipal de Caraguatatuba',
-    //             'fontelink' => 'https://www.caraguatatuba.sp.gov.br'
-    //         ];  
-            
-    //         $postMais = 'https://www.caraguatatuba.sp.gov.br/pmc/category/noticias/';
-    //         $pageMais = $this->crowler->request('GET', $postMais);
-    //         $pageMais->filter('#latestNews .row')->each( function ($item){
-    //             $this->resultsCaragua[] = [
-    //                 'titulo' => $item->filter('h5')->text(),
-    //                 'content' => $item->filter('p')->text(),
-    //                 'url' => $item->filter('a')->attr('href'),
-    //                 'img' => $item->filter('img')->attr('src'),
-    //                 'data' => $item->filter('.created-at')->text(),
-    //                 'local' => 'caraguatatuba'
-    //             ];           
-    //         });
-
-    //         $head = $this->seo->render($post['titulo'] . ' - ' .$this->configService->getConfig()->nomedosite,
-    //             $post['titulo'] . ' - ' .$this->configService->getConfig()->nomedosite,
-    //             route('web.noticiaCaragua',[
-    //                 'local' => 'caraguatatuba',
-    //                 'categoria' => 'pmc',
-    //                 'ano' => $ano,
-    //                 'mes' => $mes,
-    //                 'slug' => $slug
-    //             ]),
-    //             $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
-    //         );
-
-    //         return view('web.noticia',[
-    //             'head' => $head,
-    //             'post' => $post,
-    //             'pageMais' => $this->resultsCaragua,
-    //             'cidade' => 'caraguatatuba'
-    //         ]);
-
-    //     }else{
-    //         return redirect()->back();
-    //     }
-    // }
-
+    
     public function politica()
     {
         $head = $this->seo->render('Política de Privacidade - ' . $this->configService->getConfig()->nomedosite ?? 'Informática Livre',
@@ -373,7 +188,6 @@ class WebController extends Controller
             'head' => $head
         ]);
     }
-
 
     public function artigos()
     {

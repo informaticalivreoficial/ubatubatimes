@@ -12,10 +12,20 @@ use Illuminate\Http\Request;
 use App\Models\Empresa;
 use App\Models\Estados;
 use App\Models\User;
+use App\Services\CidadeService;
+use App\Services\EstadoService;
 use Illuminate\Support\Facades\Auth;
 
 class EmpresaController extends Controller
 {
+    private $estadoService, $cidadeService;
+
+    public function __construct(EstadoService $estadoService, CidadeService $cidadeService)
+    {
+        $this->estadoService = $estadoService;
+        $this->cidadeService = $cidadeService;
+    }
+
     public function index()
     {
         $empresas = Empresa::orderBy('created_at', 'DESC')->orderBy('status', 'ASC')->paginate(25);
@@ -26,13 +36,9 @@ class EmpresaController extends Controller
     
     public function create()
     {
-        $estados = Estados::orderBy('estado_nome', 'ASC')->get();
-        $cidades = Cidades::orderBy('cidade_nome', 'ASC')->get();
-        $users = User::orderBy('name')->get();
         return view('admin.empresas.create', [
-            'users' => $users,
-            'estados' => $estados,
-            'cidades' => $cidades
+            'estados' => $this->estadoService->getEstados(),
+            'cidades' => $this->cidadeService->getCidades()
         ]);
     }
     
@@ -45,6 +51,11 @@ class EmpresaController extends Controller
             $criarEmpresa->logomarca = $request->file('logomarca')->storeAs('empresas', Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
             $criarEmpresa->save();
         }
+
+        if(!empty($request->file('metaimg'))){
+            $criarEmpresa->metaimg = $request->file('metaimg')->storeAs('empresas', Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('metaimg')->extension());
+            $criarEmpresa->save();
+        }
         
         return redirect()->route('empresas.edit', [
             'id' => $criarEmpresa->id,
@@ -53,16 +64,11 @@ class EmpresaController extends Controller
     
     public function edit($id)
     {
-        $estados = Estados::orderBy('estado_nome', 'ASC')->get();
-        $cidades = Cidades::orderBy('cidade_nome', 'ASC')->get();
         $empresa = Empresa::where('id', $id)->first();
-        $users = User::orderBy('name')->get();
-
         return view('admin.empresas.edit', [
             'empresa' => $empresa,
-            'users' => $users,
-            'estados' => $estados,
-            'cidades' => $cidades
+            'estados' => $this->estadoService->getEstados(),
+            'cidades' => $this->cidadeService->getCidades()
         ]);
     }
 
@@ -79,6 +85,11 @@ class EmpresaController extends Controller
 
         if(!empty($request->file('logomarca'))){
             $empresa->logomarca = $request->file('logomarca')->storeAs('empresas', Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
+            $empresa->save();
+        }
+
+        if(!empty($request->file('metaimg'))){
+            $empresa->metaimg = $request->file('metaimg')->storeAs('empresas', Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('metaimg')->extension());
             $empresa->save();
         }
 

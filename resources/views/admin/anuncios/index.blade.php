@@ -1,16 +1,16 @@
 @extends('adminlte::page')
 
-@section('title', 'Gerenciar Slides')
+@section('title', 'Gerenciar Anúncios')
 
 @section('content_header')
 <div class="row mb-2">
     <div class="col-sm-6">
-        <h1><i class="fas fa-search mr-2"></i> Empresas</h1>
+        <h1><i class="fas fa-search mr-2"></i> Anúncios</h1>
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">                    
             <li class="breadcrumb-item"><a href="{{route('home')}}">Painel de Controle</a></li>
-            <li class="breadcrumb-item active">Empresas</li>
+            <li class="breadcrumb-item active">Anúncios</li>
         </ol>
     </div>
 </div>
@@ -20,7 +20,7 @@
 
     <div class="card">
         <div class="card-header text-right">
-            <a href="{{route('empresas.create')}}" class="btn btn-default"><i class="fas fa-plus mr-2"></i> Cadastrar Empresa</a>
+            <a href="{{route('anuncios.create')}}" class="btn btn-default"><i class="fas fa-plus mr-2"></i> Cadastrar Anúncio</a>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -33,43 +33,28 @@
                     @endif
                 </div>            
             </div>
-            @if(!empty($empresas) && $empresas->count() > 0)
+            @if(!empty($anuncios) && $anuncios->count() > 0)
                 <table id="example1" class="table table-bordered table-striped projects">
                     <thead>
                         <tr>
-                            <th>Logomarca</th>
-                            <th>Nome Fantasia</th>
-                            <th>CNPJ</th>
-                            <th>Responsável</th>
+                            <th>Posição</th>
+                            <th>Empresa</th>
+                            <th>Plano</th>
+                            <th>ss</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody> 
-                        @foreach($empresas as $empresa)
+                        @foreach($anuncios as $anuncio)
                         <tr>
-                            <td class="text-center">
-                                <a href="{{$empresa->nocover()}}" data-title="{{$empresa->alias_name}}" data-toggle="lightbox">
-                                    <img style="width: 50px;" alt="{{$empresa->alias_name}}" src="{{$empresa->cover()}}">
-                                </a>
-                            </td>
-                            <td>{{$empresa->alias_name}}</td>
-                            <td>{{$empresa->document_company}}</td>
-                            <td>{{$empresa->responsável }}</td>
+                            <td>{{$anuncio->posicao}}</td>
+                            <td>{{$anuncio->empresa->alias_name}}</td>
+                            <td>{{$anuncio->plano->name}}</td>
+                            <td>ss</td>
                             <td>
-                                <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $empresa->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $empresa->status == true ? 'checked' : ''}}>
-                                @if(!empty($empresa->whatsapp))
-                                    <a target="_blank" href="{{getNumZap($empresa->whatsapp)}}" class="btn btn-xs btn-success text-white"><i class="fab fa-whatsapp"></i></a>
-                                @endif
-                                @if(!empty($empresa->email))
-                                    <form class="btn btn-xs" action="{{route('email.send')}}" method="post">
-                                        @csrf
-                                        <input type="hidden" name="nome" value="{{ $empresa->alias_name }}">
-                                        <input type="hidden" name="email" value="{{ $empresa->email }}">
-                                        <button title="Enviar Email" type="submit" class="btn btn-xs text-white bg-teal"><i class="fas fa-envelope"></i></button>
-                                    </form>
-                                @endif                                
-                                <a href="{{route('empresas.edit',['id' => $empresa->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
-                                <button type="button" class="btn btn-xs btn-danger text-white j_modal_btn" data-id="{{$empresa->id}}" data-toggle="modal" data-target="#modal-default">
+                                <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $anuncio->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $anuncio->status == true ? 'checked' : ''}}>
+                                <a href="{{route('anuncios.edit',['id' => $anuncio->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
+                                <button type="button" class="btn btn-xs btn-danger text-white j_modal_btn" data-id="{{$anuncio->id}}" data-toggle="modal" data-target="#modal-default">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -88,11 +73,9 @@
             @endif         
         </div>
         <div class="card-footer paginacao">  
-            {{ $empresas->links() }}
+            {{ $anuncios->links() }}
         </div>
-        <!-- /.card-body -->
     </div>
-    <!-- /.card -->   
   
 
 <div class="modal fade" id="modal-default">
@@ -103,7 +86,7 @@
             @method('DELETE')
             <input id="id_empresa" name="empresa_id" type="hidden" value=""/>
                 <div class="modal-header">
-                    <h4 class="modal-title">Remover Empresa!</h4>
+                    <h4 class="modal-title">Remover Anúncio!</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -117,11 +100,8 @@
                 </div>
             </form>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
-
 @endsection
 
 @section('css')

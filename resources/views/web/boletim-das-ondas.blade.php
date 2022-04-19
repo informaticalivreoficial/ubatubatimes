@@ -22,10 +22,10 @@
                     @if(!empty($boletim))
                         <div class="row">
                             <div class="col-12">
-                                <h3><span>{{ Carbon\Carbon::parse($boletim->getContent()->atualizacao)->format('d/m/Y') }}</span></h3>    
+                                <h3>Atualização: <span>{{ Carbon\Carbon::parse($boletim->getContent()->atualizacao)->format('d/m/Y') }}</span></h3>    
                             </div>                      
                             <div class="col-sm-12 col-md-6">                       
-                                <h4 style="float: left" class="mr-2">Manhã:</h3>
+                                <h4 style="float: left" class="mr-2">Manhã:</h4>
                                   <img  width="55" src="{{$boletim->ondasAlturaManha()['img']}}" alt="{{$boletim->ondasAlturaManha()['img']}}">    
                                 <ul class="list-round mr_bottom-20">
                                     <li>Situação do mar: {{$boletim->getContent()->manha->agitacao}}</li>
@@ -36,7 +36,7 @@
                                 </ul>                                      
                             </div>
                             <div class="col-sm-12 col-md-6">                       
-                                <h4 style="float: left" class="mr-2">Tarde:</h3>
+                                <h4 style="float: left" class="mr-2">Tarde:</h4>
                                   <img  width="55" src="{{$boletim->ondasAlturaTarde()['img']}}" alt="{{$boletim->ondasAlturaTarde()['img']}}">    
                                 <ul class="list-round mr_bottom-20">
                                     <li>Situação do mar: {{$boletim->getContent()->tarde->agitacao}}</li>

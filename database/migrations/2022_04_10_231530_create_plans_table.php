@@ -20,6 +20,7 @@ class CreatePlansTable extends Migration
             $table->text('content')->nullable();
             $table->string('slug')->nullable();
             $table->integer('status')->nullable();
+            $table->integer('avaliacao')->nullable();
 
             /** pricing and values */
             $table->boolean('exibivalores')->nullable();

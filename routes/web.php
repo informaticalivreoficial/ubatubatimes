@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
     AdminController,
+    AnunciosController,
     CatPortifolioController,
     UserController,
     EmailController,
@@ -16,6 +17,7 @@ use App\Http\Controllers\Admin\{
     NewsletterController,
     OrcamentoController,
     ParceiroController,
+    PlanController,
     PortifolioController,
     SitemapController,
     SlideController
@@ -35,6 +37,7 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     //****************************** Páginas ******************************/
     Route::get('/politica-de-privacidade', [WebController::class, 'politica'])->name('politica');
     Route::get('/boletim-das-ondas', [WebController::class, 'ondas'])->name('ondas');
+    Route::get('/previsao-do-tempo', [WebController::class, 'tempo'])->name('tempo');
     
     //** Página Destaque */
     Route::get('/destaque', 'WebController@spotlight')->name('spotlight');
@@ -114,6 +117,19 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('empresas/create', [EmpresaController::class, 'create'])->name('empresas.create');
     Route::post('empresas/store', [EmpresaController::class, 'store'])->name('empresas.store');
     Route::get('/empresas', [EmpresaController::class, 'index'])->name('empresas.index');
+
+    //********************************* Anúncios *******************************************/
+    Route::get('anuncios/create', [AnunciosController::class, 'create'])->name('anuncios.create');
+    Route::post('anuncios/store', [AnunciosController::class, 'store'])->name('anuncios.store');
+    Route::get('/anuncios', [AnunciosController::class, 'index'])->name('anuncios.index');
+
+    //********************************** Planos *******************************************/
+    Route::get('anuncios/planos/set-status', [PlanController::class, 'planSetStatus'])->name('plans.planSetStatus');
+    Route::put('anuncios/planos/{id}', [PlanController::class, 'update'])->name('plans.update');
+    Route::get('anuncios/planos/{id}/edit', [PlanController::class, 'edit'])->name('plans.edit');
+    Route::get('anuncios/planos/create', [PlanController::class, 'create'])->name('plans.create');
+    Route::post('anuncios/planos/store', [PlanController::class, 'store'])->name('plans.store');
+    Route::get('/anuncios/planos', [PlanController::class, 'index'])->name('plans.index');
 
     //******************** Sitemap *********************************************/
     Route::get('gerarxml', [SitemapController::class, 'gerarxml'])->name('admin.gerarxml');

@@ -61,7 +61,7 @@
 					<div class="col-md-8">
 						<ul class="unstyled top-nav">
 							<li><a href="{{route('web.ondas')}}">Boletim das Ondas</a></li>
-							<li><a href="">Previsão do Tempo</a></li>
+							<li><a href="{{route('web.tempo')}}">Previsão do Tempo</a></li>
 						</ul>
 					</div>
 					<div class="col-md-4 top-social text-lg-right text-md-center">
@@ -229,7 +229,7 @@
 						</li>
 						<li>
 							<i class="fa fa-angle-double-right"></i>
-							<a href="#"><span class="catTitle">Previsão do Tempo</span></a> 
+							<a href="{{route('web.tempo')}}"><span class="catTitle">Previsão do Tempo</span></a> 
 						</li>
 						<li>
 							<i class="fa fa-angle-double-right"></i>

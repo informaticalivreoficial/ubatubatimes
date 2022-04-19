@@ -280,6 +280,10 @@ return [
                 [
                     'text' => 'Categorias',
                     'url'  => 'admin/anuncios/categorias',
+                ],
+                [
+                    'text' => 'Planos',
+                    'url'  => 'admin/anuncios/planos',
                 ]
             ]
         ],        

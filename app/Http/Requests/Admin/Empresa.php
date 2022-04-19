@@ -25,14 +25,10 @@ class Empresa extends FormRequest
     public function rules()
     {
         return [
-            'user' => 'required',
-            'social_name' => 'required',            
-            'uf' => 'required',
-            'cidade' => 'required',
-            'bairro' => 'required',
-            'rua' => 'required',
-            'num' => 'required',
-            'cep' => 'required|min:8|max:10',
+            'responsavel' => 'required|min:3|max:191',
+            'responsavel_email' => 'required',
+            'email' => 'required',
+            'alias_name' => 'required', 
             'celular' => 'required'
         ];
     }

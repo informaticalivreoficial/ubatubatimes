@@ -18,7 +18,7 @@ class CreateEmpresasTable extends Migration
             $table->string('responsavel');
             $table->string('responsavel_email');
             $table->string('responsavel_cpf')->nullable();
-            $table->string('social_name');
+            $table->string('social_name')->nullable();
             $table->string('alias_name');
             $table->string('document_company')->nullable();
             $table->string('document_company_secondary')->nullable();

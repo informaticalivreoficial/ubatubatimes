@@ -16,14 +16,22 @@ class Empresa extends Model
     protected $table = 'empresas';
 
     protected $fillable = [
-        'user',
+        'responsavel',
+        'responsavel_email',
+        'responsavel_cpf',
         'social_name',
         'alias_name',
         'document_company',
         'document_company_secondary',
         'status',
-        'logomarca',        
-        'notasadicionais',        
+        'logomarca', 
+        'ano_de_inicio',  
+        'content',    
+        'notasadicionais',  
+        'dominio',
+        'metaimg',
+        'mapa_google',
+        'metatags',      
         'cep',
         'rua',
         'num',
@@ -50,7 +58,6 @@ class Empresa extends Model
     /**
      * Scopes
     */
-
     public function scopeAvailable($query)
     {
         return $query->where('status', 1);
@@ -63,15 +70,20 @@ class Empresa extends Model
 
     /**
      * Relacionamentos
-     */
-    public function owner()
-    {
-        return $this->hasOne(User::class, 'id', 'user');
-    }
+    */
 
     /**
      * Accerssors and Mutators
      */
+    public function getmetaimg()
+    {
+        $image = $this->metaimg;        
+        if(empty($this->metaimg) || !File::exists('../public/storage/' . $image)) {
+            return url(asset('backend/assets/images/image.jpg'));
+        } 
+        return Storage::url(Cropper::thumb($this->metaimg, env('METAIMG_WIDTH'), env('METAIMG_HEIGHT')));
+    }
+    
     public function cover()
     {       
         if(empty($this->logomarca) || !File::exists('../public/storage/' . $this->logomarca)) {

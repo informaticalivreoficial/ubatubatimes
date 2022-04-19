@@ -35,17 +35,17 @@
             </item>
         @endforeach
 
-        @foreach($projetos as $projeto)
+        @foreach($noticias as $noticia)
             <item>
-                <title><![CDATA[{{ $projeto->name }}]]></title>
-                <link>{{ url('portifolio/'.$projeto->slug) }}</link>
-                <image>{{ $projeto->cover() }}</image>
-                <description><![CDATA[{!! $projeto->getContentWebAttribute() !!}]]></description>
-                <category>Projetos</category>
-                <author><![CDATA[ {{ $configuracoes->nomedosite }} ]]></author>
-                <guid>{{ $projeto->id }}</guid>
-                <pubDate>{{ $projeto->created_at }}</pubDate>
+                <title><![CDATA[{{ $noticia->titulo }}]]></title>
+                <link>{{ url('noticia/'.$noticia->slug) }}</link>
+                <image>{{ $noticia->cover() }}</image>
+                <description><![CDATA[{!! $noticia->getContentWebAttribute() !!}]]></description>
+                <category>{{ $noticia->categoriaObject->titulo }}</category>
+                <author><![CDATA[{{ $noticia->userObject->name }}]]></author>
+                <guid>{{ $noticia->id }}</guid>
+                <pubDate>{{ $noticia->created_at }}</pubDate>
             </item>
-        @endforeach        
+        @endforeach
     </channel>
 </rss>

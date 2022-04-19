@@ -195,6 +195,14 @@ return [
         'locacao' => 'venda de Pacote',
         'nome_conjuje' => 'nome do conjuje',
         'nasc_conjuje' => 'data de nascimento do conjuje',
+
+        //Empresa
+        'responsavel' => 'nome do responsável',
+        'responsavel_email' => 'email do responsável',
+        'social_name' => 'Nome Fantasia',
+
+        'uf' => 'estado',
+        'cidade' => 'cidade',
         
     ],
 
