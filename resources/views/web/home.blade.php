@@ -33,7 +33,14 @@
               <div class="col-lg-4 col-md-12 pad-l">
                   <div class="row">
                       <div class="col-md-12">
-                          @if(!empty($boletim))
+                        <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
+                            <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/tim.png'))}}" alt="" /> 
+                        </div>
+        
+                        <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
+                            <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/anjosads.png'))}}" alt="" /> 
+                        </div>
+                          {{--@if(!empty($boletim))
                               <div class="widget color-blue pl-3 pt-0">
                                   <h3 class="utf_block_title"><span>Boletim das Ondas - {{ Carbon\Carbon::parse($boletim->getContent()->atualizacao)->format('d/m/Y') }}</span></h3>                      
                                   <div class="utf_list_post_block">                       
@@ -58,7 +65,7 @@
                                       </ul>                                       
                                   </div>
                               </div>
-                          @endif
+                          @endif --}}
                       </div>
                   </div>
               </div>        

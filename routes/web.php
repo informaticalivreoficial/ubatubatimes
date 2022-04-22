@@ -119,6 +119,10 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('/empresas', [EmpresaController::class, 'index'])->name('empresas.index');
 
     //********************************* Anúncios *******************************************/
+    Route::get('anuncios/set-status', [AnunciosController::class, 'anuncioSetStatus'])->name('anuncios.anuncioSetStatus');
+    Route::get('anuncios/delete', [AnunciosController::class, 'delete'])->name('anuncios.delete');
+    Route::put('anuncios/{id}', [AnunciosController::class, 'update'])->name('anuncios.update');
+    Route::get('anuncios/{id}/edit', [AnunciosController::class, 'edit'])->name('anuncios.edit');
     Route::get('anuncios/create', [AnunciosController::class, 'create'])->name('anuncios.create');
     Route::post('anuncios/store', [AnunciosController::class, 'store'])->name('anuncios.store');
     Route::get('/anuncios', [AnunciosController::class, 'index'])->name('anuncios.index');
@@ -130,6 +134,16 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('anuncios/planos/create', [PlanController::class, 'create'])->name('plans.create');
     Route::post('anuncios/planos/store', [PlanController::class, 'store'])->name('plans.store');
     Route::get('/anuncios/planos', [PlanController::class, 'index'])->name('plans.index');
+
+    //********************* Categorias para Anúncios *******************************/
+    Route::match(['post', 'get'], 'anuncios/categorias/fetchSubcategorias', [AnunciosController::class, 'fetchSubcategorias'])->name('anuncios.categorias.fetchSubcategorias');
+    Route::get('anuncios/categorias/delete', [AnunciosController::class, 'categoriasDelete'])->name('anuncios.categorias.delete');
+    Route::delete('anuncios/categorias/deleteon', [AnunciosController::class, 'categoriasDeleteon'])->name('anuncios.categorias.deleteon');
+    Route::put('anuncios/categorias/posts/{id}', [AnunciosController::class, 'categoriasUpdate'])->name('anuncios.categorias.update');
+    Route::get('anuncios/categorias/{id}/edit', [AnunciosController::class, 'categoriasEdit'])->name('anuncios.categorias.edit');
+    Route::match(['post', 'get'],'anuncios/categorias/create/{catpai}', [AnunciosController::class, 'categoriasCreate'])->name('anuncios.categorias.create');
+    Route::post('anuncios/categorias/store', [AnunciosController::class, 'categoriasStore'])->name('anuncios.categorias.store');
+    Route::get('anuncios/categorias', [AnunciosController::class, 'categorias'])->name('anuncios.categorias.index');
 
     //******************** Sitemap *********************************************/
     Route::get('gerarxml', [SitemapController::class, 'gerarxml'])->name('admin.gerarxml');

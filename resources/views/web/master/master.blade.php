@@ -99,11 +99,13 @@
 						</div>
 					</div>        
 					<div class="col-md-9 col-sm-12 header-right">
-						<div class="float-right mt-3"> 
-							<a href="#">
-								<img src="{{url(asset('frontend/assets/images/cavalo.png'))}}" class="img-fluid" alt="">
-							</a> 
-						</div>
+						@if (!empty($positionTopohome) && $positionTopohome->count() > 0)
+							<div class="float-right mt-3"> 
+								<a target="_blank" id="j_click" href="{{$positionTopohome[0]->link ?? '#'}}">
+									<img src="{{$positionTopohome[0]->get728x90()}}" class="img-fluid" alt="{{$positionTopohome[0]->titulo}}">
+								</a> 
+							</div>
+						@endif						
 					</div>
 				</div>
 			</div>

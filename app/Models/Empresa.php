@@ -71,6 +71,10 @@ class Empresa extends Model
     /**
      * Relacionamentos
     */
+    public function anuncios()
+    {
+        return $this->hasMany(Anuncio::class, 'empresa', 'id');
+    }
 
     /**
      * Accerssors and Mutators

@@ -100,7 +100,7 @@ $config = [
                                     <div class="col-12 col-md-4 col-lg-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>CPF</b></label>
-                                            <input type="text" class="form-control cpfmask" name="cpf" value="{{ old('cpf') }}"/>
+                                            <input type="text" class="form-control cpfmask" name="responsavel_cpf" value="{{ old('responsavel_cpf') }}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +116,7 @@ $config = [
                                             }
                                         @endphp
                                         <img id="preview" src="{{$cover}}" alt="{{ old('alias_name') }}" title="{{ old('alias_name') }}"/>
-                                        <input id="img-input" type="file" name="logomarca">
+                                        <input id="img-logomarca" type="file" name="logomarca">
                                     </div>                                                
                                 </div>
                             </div>
@@ -351,7 +351,7 @@ $config = [
                                     <label class="labelforms"><b>Meta Imagem: </b>(800X418) pixels</label>
                                     <div class="thumb_user_admin">                                                    
                                         <img style="max-height: 418px;" id="preview1" src="{{url(asset('backend/assets/images/image.jpg'))}}" alt="{{ old('dominio') }}" title="{{ old('dominio') }}"/>
-                                        <input id="img-input" type="file" name="metaimg">
+                                        <input id="img-metaimg" type="file" name="metaimg">
                                     </div>
                                 </div>
                             </div>
@@ -463,8 +463,8 @@ $config = [
                 file.readAsDataURL(this.files[0]);
             }
         }
-        document.getElementById("img-input").addEventListener("change", readImageMetaImagem, false);
-        document.getElementById("img-input").addEventListener("change", readImage, false);
+        document.getElementById("img-metaimg").addEventListener("change", readImageMetaImagem, false);
+        document.getElementById("img-logomarca").addEventListener("change", readImage, false);
 
         $('#state-dd').on('change', function () {
             var idState = this.value;

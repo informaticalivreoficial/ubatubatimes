@@ -17,6 +17,7 @@ class CreateAnunciosTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('empresa');
             $table->unsignedInteger('categoria');
+            $table->integer('cat_pai')->nullable();
             $table->unsignedBigInteger('plan_id'); // Plano ID
 
             /** imagens */
@@ -27,6 +28,7 @@ class CreateAnunciosTable extends Migration
 
             $table->string('titulo');
             $table->string('slug')->nullable();
+            $table->string('link')->nullable();
             $table->integer('posicao')->default('0');
             $table->integer('status')->default('0');
 
@@ -40,7 +42,7 @@ class CreateAnunciosTable extends Migration
             $table->timestamps();
 
             $table->foreign('empresa')->references('id')->on('empresas')->onDelete('CASCADE');
-            $table->foreign('categoria')->references('id')->on('cat_post')->onDelete('CASCADE');
+            $table->foreign('categoria')->references('id')->on('cat_anuncios')->onDelete('CASCADE');
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('CASCADE');
         });
     }

@@ -76,7 +76,13 @@ $config = [
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="row mb-2">
-                                    <div class="col-12 col-md-4 col-lg-4"> 
+                                    <div class="col-12 col-md-4">
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Título do Anúncio:</b></label>
+                                            <input class="form-control" name="titulo" value="{{old('titulo')}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>*Empresa:</b></label>
                                             <select class="form-control" name="empresa">
@@ -91,7 +97,7 @@ $config = [
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4 col-lg-4"> 
+                                    <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>*Plano:</b></label>
                                             <select class="form-control" name="plan_id">
@@ -109,23 +115,17 @@ $config = [
                                     <div class="col-12 col-md-4 col-lg-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>Posição:</b></label>
-                                            <select class="form-control" name="plan_id">
-                                                <option value="4"> Artigo Sidebar 300x250 </option>
-                                                <option value="11"> Blog Main Footer 728x90 </option>
-                                                <option value="10"> Blog Sidebar 300x250 </option>
-                                                <option value="12"> Boletim das Ondas Sidebar 300x250 </option>
-                                                <option value="6"> Categoria Blog Main 728x90 </option>
-                                                <option value="5"> Categoria Blog Sidebar 300x250 </option>
-                                                <option value="14"> Categoria Notícias Main Footer 728x90 </option>
-                                                <option value="13"> Categoria Notícias Sidebar 300x250 </option>
-                                                <option value="8"> Home Main Footer 728x90 </option>
-                                                <option value="1"> Home Sidebar 300x250 </option>
-                                                <option value="9"> Notícia Main Footer 728x90 </option>
-                                                <option value="7"> Notícia Sidebar 300x250 </option>
-                                                <option value="2"> Página Lista Noticias Sidebar 300x250 </option>
-                                                <option value="15"> Pesquisa Sidebar 300X250 </option>
-                                                <option value="16"> Somente no Guia </option>
-                                                <option value="3"> Topo home 728x90 </option>
+                                            <select class="form-control" name="posicao">
+                                                <option value="1">Home Sidebar 300x250</option>
+                                                <option value="2">Topo home 728x90</option>
+                                                <option value="3">Artigo Sidebar 300x250</option>
+                                                <option value="4">Notícia Sidebar 300x250</option>
+                                                <option value="5">Home Main Footer 728x90</option>
+                                                <option value="6">Notícia Main Footer 728x90</option>
+                                                <option value="7">Blog Main Footer 728x90</option>
+                                                <option value="8">Boletim das Ondas Sidebar 300x250</option>
+                                                <option value="9">Home Main Center 728x90</option>
+                                                <option value="10">Artigo Main Footer 728x90</option>
                                             </select>
                                         </div>
                                     </div>                                    
@@ -136,13 +136,22 @@ $config = [
                                     <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>Categoria:</b></label>
-                                            <input type="text" class="form-control" name="alias_name" value="{{ old('alias_name') }}">
+                                            @if (!empty($categorias) && $categorias->count() > 0)
+                                                <select class="form-control j_category" name="cat_pai">
+                                                    <option value="">Selecione a Categoria</option>
+                                                    @foreach ($categorias as $categoria)
+                                                    <option value="{{$categoria->id}}" {{ (old('cat_pai') == $categoria->cat_pai ? 'selected' : '') }}>{{$categoria->titulo}}</option>
+                                                    @endforeach
+                                                </select>                                            
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>Sub-categoria:</b></label>
-                                            <input type="text" class="form-control" name="social_name" value="{{ old('social_name') }}">
+                                            <select class="form-control j_subcategory" name="categoria">
+                                                <option value="">Selecione a Categoria</option>
+                                            </select>
                                         </div>
                                     </div> 
                                 </div>
@@ -161,10 +170,10 @@ $config = [
                             <hr>
                             <div class="col-12 col-md-6 col-sm-6 col-lg-6"> 
                                 <div class="form-group">
-                                    <label class="labelforms"><b>Logomarca do site</b> - {{env('LOGOMARCA_WIDTH')}}x{{env('LOGOMARCA_HEIGHT')}} pixels</label>
+                                    <label class="labelforms"><b>Banner</b> - 300x250 pixels</label>
                                     <div class="thumb_user_admin">                                                    
-                                        <img id="preview2" src="" alt="{{ old('dominio') }}" title="{{ old('dominio')  }}"/>
-                                        <input id="img-logomarca" type="file" name="logomarca">
+                                        <img id="preview1" src="" alt="" title=""/>
+                                        <input id="img-300x250" type="file" name="300x250">
                                     </div>
                                 </div>
                             </div>
@@ -285,17 +294,29 @@ $config = [
             }
         });
 
-        function readImage() {
-            if (this.files && this.files[0]) {
-                var file = new FileReader();
-                file.onload = function(e) {
-                    document.getElementById("preview").src = e.target.result;
-                };       
-                file.readAsDataURL(this.files[0]);
-            }
-        }
+        $('.j_subcategory').attr('disabled', true);
+        $('.j_category').on('change', function () {
+            var idCategoria = this.value;
+            $('.j_subcategory').html('Carregando...');
+            $.ajax({
+                url: "{{route('anuncios.categorias.fetchSubcategorias')}}",
+                type: "POST",
+                data: {
+                    cat_id: idCategoria,
+                    _token: '{{csrf_token()}}'
+                },
+                dataType: 'json',
+                success: function (res) {
+                    $('.j_subcategory').html('<option value="">Selecione a sub-categoria</option>');
+                    $('.j_subcategory').attr('disabled', false);
+                    $.each(res.values, function (key, value) {
+                        $('.j_subcategory').append('<option value="' + value.id + '">' + value.titulo + '</option>');
+                    });
+                }
+            });
+        });
 
-        function readImageMetaImagem() {
+        function readImage300x250() {
             if (this.files && this.files[0]) {
                 var file = new FileReader();
                 file.onload = function(e) {
@@ -304,29 +325,12 @@ $config = [
                 file.readAsDataURL(this.files[0]);
             }
         }
-        document.getElementById("img-input").addEventListener("change", readImageMetaImagem, false);
-        document.getElementById("img-input").addEventListener("change", readImage, false);
+        
+        document.getElementById("img-300x250").addEventListener("change", readImage300x250, false);
 
-        $('#state-dd').on('change', function () {
-            var idState = this.value;
-            $("#city-dd").html('Carregando...');
-            $.ajax({
-                url: "{{route('empresas.fetchCity')}}",
-                type: "POST",
-                data: {
-                    estado_id: idState,
-                    _token: '{{csrf_token()}}'
-                },
-                dataType: 'json',
-                success: function (res) {
-                    $('#city-dd').html('<option value="">Selecione a cidade</option>');
-                    $.each(res.cidades, function (key, value) {
-                        $("#city-dd").append('<option value="' + value
-                            .cidade_id + '">' + value.cidade_nome + '</option>');
-                    });
-                }
-            });
-        });
+        
+
+
 
         //tag input
         function onAddTag(tag) {

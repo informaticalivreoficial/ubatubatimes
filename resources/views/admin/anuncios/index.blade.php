@@ -37,23 +37,26 @@
                 <table id="example1" class="table table-bordered table-striped projects">
                     <thead>
                         <tr>
-                            <th>Posição</th>
+                            <th>Anúncio</th>
                             <th>Empresa</th>
                             <th>Plano</th>
-                            <th>ss</th>
+                            <th>Posição</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody> 
                         @foreach($anuncios as $anuncio)
                         <tr>
-                            <td>{{$anuncio->posicao}}</td>
-                            <td>{{$anuncio->empresa->alias_name}}</td>
+                            <td>{{$anuncio->titulo}}</td>                            
+                            <td>{{$anuncio->empresaObject->alias_name}}</td>
                             <td>{{$anuncio->plano->name}}</td>
-                            <td>ss</td>
+                            <td>{{$anuncio->posicao}}</td>
                             <td>
                                 <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $anuncio->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $anuncio->status == true ? 'checked' : ''}}>
                                 <a href="{{route('anuncios.edit',['id' => $anuncio->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
+                                @if (!empty($anuncio->link))
+                                    <a target="_blank" href="{{$anuncio->link}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
+                                @endif
                                 <button type="button" class="btn btn-xs btn-danger text-white j_modal_btn" data-id="{{$anuncio->id}}" data-toggle="modal" data-target="#modal-default">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -152,14 +155,14 @@
 
         $('.toggle-class').on('change', function() {
             var status = $(this).prop('checked') == true ? 1 : 0;
-            var empresa_id = $(this).data('id');
+            var anuncio_id = $(this).data('id');
             $.ajax({
                 type: 'GET',
                 dataType: 'JSON',
-                url: "{{ route('empresas.empresaSetStatus') }}",
+                url: "{{ route('anuncios.anuncioSetStatus') }}",
                 data: {
                     'status': status,
-                    'id': empresa_id
+                    'id': anuncio_id
                 },
                 success:function(data) {
                     

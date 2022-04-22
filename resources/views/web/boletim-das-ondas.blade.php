@@ -24,7 +24,12 @@
                             <div class="col-12">
                                 <h3>Atualização: <span>{{ Carbon\Carbon::parse($boletim->getContent()->atualizacao)->format('d/m/Y') }}</span></h3>    
                             </div>                      
-                            <div class="col-sm-12 col-md-6">                       
+                            <div class="col-sm-12 col-md-4">                       
+                                <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
+                                    <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/tim.png'))}}" alt="" /> 
+                                </div>                                      
+                            </div>
+                            <div class="col-sm-12 col-md-4">                       
                                 <h4 style="float: left" class="mr-2">Manhã:</h4>
                                   <img  width="55" src="{{$boletim->ondasAlturaManha()['img']}}" alt="{{$boletim->ondasAlturaManha()['img']}}">    
                                 <ul class="list-round mr_bottom-20">
@@ -35,7 +40,7 @@
                                     <li>Vento direção: {{$boletim->getContent()->manha->vento_dir}}</li>
                                 </ul>                                      
                             </div>
-                            <div class="col-sm-12 col-md-6">                       
+                            <div class="col-sm-12 col-md-4">                       
                                 <h4 style="float: left" class="mr-2">Tarde:</h4>
                                   <img  width="55" src="{{$boletim->ondasAlturaTarde()['img']}}" alt="{{$boletim->ondasAlturaTarde()['img']}}">    
                                 <ul class="list-round mr_bottom-20">

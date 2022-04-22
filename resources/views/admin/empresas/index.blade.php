@@ -54,7 +54,7 @@
                             </td>
                             <td>{{$empresa->alias_name}}</td>
                             <td>{{$empresa->document_company}}</td>
-                            <td>{{$empresa->responsável }}</td>
+                            <td>{{$empresa->responsavel }}</td>
                             <td>
                                 <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $empresa->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $empresa->status == true ? 'checked' : ''}}>
                                 @if(!empty($empresa->whatsapp))
@@ -64,7 +64,7 @@
                                     <form class="btn btn-xs" action="{{route('email.send')}}" method="post">
                                         @csrf
                                         <input type="hidden" name="nome" value="{{ $empresa->alias_name }}">
-                                        <input type="hidden" name="email" value="{{ $empresa->email }}">
+                                        <input type="hidden" name="email" value="{{ $empresa->email }}{{(!empty($empresa->responsavel_email) && $empresa->responsavel_email != $empresa->email ? ','.$empresa->responsavel_email : '')}}">
                                         <button title="Enviar Email" type="submit" class="btn btn-xs text-white bg-teal"><i class="fas fa-envelope"></i></button>
                                     </form>
                                 @endif                                

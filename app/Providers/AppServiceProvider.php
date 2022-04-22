@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Anuncio;
 use App\Models\CatPost;
 use App\Models\NewsletterCat;
 use App\Models\Post;
@@ -56,12 +57,9 @@ class AppServiceProvider extends ServiceProvider
                         ->first();
         View()->share('newsletterForm', $newsletter);
 
-        // //Páginas no menu frontend
-        // $servicos = Post::orderBy('created_at', 'ASC')
-        //                 ->postson()
-        //                 ->where('categoria', 9)
-        //                 ->get();
-        // View()->share('menu_servicos', $servicos);
+        //Páginas no menu frontend
+        $positionTopohome = Anuncio::where('posicao', 2)->available()->limit(1)->get();
+        View()->share('positionTopohome', $positionTopohome);
 
         Paginator::useBootstrap();
     }
