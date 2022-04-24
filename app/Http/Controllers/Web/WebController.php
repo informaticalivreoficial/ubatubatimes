@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\{
+    Anuncio,
     BoletimOndas,
     Post,
     CatPost,
@@ -75,6 +76,8 @@ class WebController extends Controller
                     ->postson()
                     ->limit(4)
                     ->get();
+        
+        $positionSidebarhome = Anuncio::where('posicao', 1)->available()->limit(2)->get();
 
         //Boletim das Ondas
         $boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');
@@ -95,12 +98,15 @@ class WebController extends Controller
             'artigos' => $artigos,
             'praiasDeUbatuba' => $praiasDeUbatuba,
             'gastronomiaDeUbatuba' => $gastronomiaDeUbatuba,
+            'positionSidebarhome' => $positionSidebarhome,
 		]);
     }
 
     public function ondas()
     {
         $boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');
+        //Anúncio
+        $positionSidebarhome = Anuncio::where('posicao', 8)->available()->limit(1)->get();
 
         $head = $this->seo->render('Boletim das Ondas para Ubatuba' ?? 'Informática Livre',
             'Boletim das Ondas para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
@@ -111,6 +117,7 @@ class WebController extends Controller
         return view('web.boletim-das-ondas',[
             'head' => $head,
             'boletim' => $boletim,
+            'positionSidebarhome' => $positionSidebarhome,
         ]);
     }
 
@@ -159,6 +166,10 @@ class WebController extends Controller
         $postprevious = Post::where('id', '<', $post->id)->postson()->where('tipo', 'noticia')->first();
         $postnext = Post::where('id', '>', $post->id)->postson()->where('tipo', 'noticia')->first();
 
+        //Anúncio
+        $positionSidebarNoticia = Anuncio::where('posicao', 4)->available()->limit(2)->get();
+        $positionSidebarArtigo = Anuncio::where('posicao', 3)->available()->limit(2)->get();
+
         $head = $this->seo->render($post->titulo ?? 'Informática Livre',
             $post->titulo,
             route('web.noticia', ['slug' => $post->slug]),
@@ -173,6 +184,8 @@ class WebController extends Controller
             'postsTags' => $postsTags,
             'postprevious' => $postprevious,
             'postnext' => $postnext,
+            'positionSidebarNoticia' => $positionSidebarNoticia,
+            'positionSidebarArtigo' => $positionSidebarArtigo,
         ]);
     }
     

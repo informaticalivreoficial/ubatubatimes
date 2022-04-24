@@ -39,8 +39,9 @@
                         <tr>
                             <th>Logomarca</th>
                             <th>Nome Fantasia</th>
-                            <th>CNPJ</th>
-                            <th>Responsável</th>
+                            <th class="text-center">Cliente</th>
+                            <th class="text-center">Views</th>
+                            <th class="text-center">Imagens</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -48,13 +49,14 @@
                         @foreach($empresas as $empresa)
                         <tr>
                             <td class="text-center">
-                                <a href="{{$empresa->nocover()}}" data-title="{{$empresa->alias_name}}" data-toggle="lightbox">
-                                    <img style="width: 50px;" alt="{{$empresa->alias_name}}" src="{{$empresa->cover()}}">
+                                <a href="{{$empresa->nologoCover()}}" data-title="{{$empresa->alias_name}}" data-toggle="lightbox">
+                                    <img style="width: 50px;" alt="{{$empresa->alias_name}}" src="{{$empresa->logoCover()}}">
                                 </a>
                             </td>
                             <td>{{$empresa->alias_name}}</td>
-                            <td>{{$empresa->document_company}}</td>
-                            <td>{{$empresa->responsavel }}</td>
+                            <td class="text-center">{{($empresa->anuncios->count() > 0 ? 'Sim' : 'Não')}}</td>
+                            <td class="text-center">{{$empresa->views }}</td>
+                            <td class="text-center">{{$empresa->images()->count() }}</td>
                             <td>
                                 <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $empresa->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $empresa->status == true ? 'checked' : ''}}>
                                 @if(!empty($empresa->whatsapp))

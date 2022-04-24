@@ -33,13 +33,18 @@
               <div class="col-lg-4 col-md-12 pad-l">
                   <div class="row">
                       <div class="col-md-12">
-                        <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
-                            <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/tim.png'))}}" alt="" /> 
-                        </div>
+
+                        @if (!empty($positionSidebarhome) && $positionSidebarhome->count() > 0)
+                            @foreach($positionSidebarhome as $p)
+                                <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
+                                    <a href="{{$p->link ?? '#'}}" target="_blank">
+                                        <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->titulo}}" />
+                                    </a>                                                                      
+                                </div>
+                            @endforeach
+                        @endif
+                        
         
-                        <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
-                            <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/anjosads.png'))}}" alt="" /> 
-                        </div>
                           {{--@if(!empty($boletim))
                               <div class="widget color-blue pl-3 pt-0">
                                   <h3 class="utf_block_title"><span>Boletim das Ondas - {{ Carbon\Carbon::parse($boletim->getContent()->atualizacao)->format('d/m/Y') }}</span></h3>                      

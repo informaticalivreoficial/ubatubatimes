@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\{
 };
 use App\Http\Controllers\Web\{
     ClienteController,
+    GuiaController,
     RssFeedController,
     SendEmailController,
     WebController
@@ -38,6 +39,10 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     Route::get('/politica-de-privacidade', [WebController::class, 'politica'])->name('politica');
     Route::get('/boletim-das-ondas', [WebController::class, 'ondas'])->name('ondas');
     Route::get('/previsao-do-tempo', [WebController::class, 'tempo'])->name('tempo');
+
+    //****************************** Guia ******************************/
+    Route::get('/guia-ubatuba', [GuiaController::class, 'guiaUbatuba'])->name('guiaUbatuba');
+    Route::get('/guia-ubatuba/{slug}', [GuiaController::class, 'guiaEmpresa'])->name('guiaEmpresa');
     
     //** Página Destaque */
     Route::get('/destaque', 'WebController@spotlight')->name('spotlight');
@@ -118,6 +123,18 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::post('empresas/store', [EmpresaController::class, 'store'])->name('empresas.store');
     Route::get('/empresas', [EmpresaController::class, 'index'])->name('empresas.index');
 
+    //********************* Categorias para Anúncios *******************************/
+    Route::post('empresas/image-set-cover', [EmpresaController::class, 'imageSetCover'])->name('empresas.imageSetCover');
+    Route::delete('empresas/image-remove', [EmpresaController::class, 'imageRemove'])->name('empresas.imageRemove');
+    Route::match(['post', 'get'], 'empresas/categorias/fetchSubcategorias', [EmpresaController::class, 'fetchSubcategorias'])->name('empresas.categorias.fetchSubcategorias');
+    Route::get('empresas/categorias/delete', [EmpresaController::class, 'categoriasDelete'])->name('empresas.categorias.delete');
+    Route::delete('empresas/categorias/deleteon', [EmpresaController::class, 'categoriasDeleteon'])->name('empresas.categorias.deleteon');
+    Route::put('empresas/categorias/posts/{id}', [EmpresaController::class, 'categoriasUpdate'])->name('empresas.categorias.update');
+    Route::get('empresas/categorias/{id}/edit', [EmpresaController::class, 'categoriasEdit'])->name('empresas.categorias.edit');
+    Route::match(['post', 'get'],'empresas/categorias/create/{catpai}', [EmpresaController::class, 'categoriasCreate'])->name('empresas.categorias.create');
+    Route::post('empresas/categorias/store', [EmpresaController::class, 'categoriasStore'])->name('empresas.categorias.store');
+    Route::get('empresas/categorias', [EmpresaController::class, 'categorias'])->name('empresas.categorias.index');
+
     //********************************* Anúncios *******************************************/
     Route::get('anuncios/set-status', [AnunciosController::class, 'anuncioSetStatus'])->name('anuncios.anuncioSetStatus');
     Route::get('anuncios/delete', [AnunciosController::class, 'delete'])->name('anuncios.delete');
@@ -134,16 +151,6 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('anuncios/planos/create', [PlanController::class, 'create'])->name('plans.create');
     Route::post('anuncios/planos/store', [PlanController::class, 'store'])->name('plans.store');
     Route::get('/anuncios/planos', [PlanController::class, 'index'])->name('plans.index');
-
-    //********************* Categorias para Anúncios *******************************/
-    Route::match(['post', 'get'], 'anuncios/categorias/fetchSubcategorias', [AnunciosController::class, 'fetchSubcategorias'])->name('anuncios.categorias.fetchSubcategorias');
-    Route::get('anuncios/categorias/delete', [AnunciosController::class, 'categoriasDelete'])->name('anuncios.categorias.delete');
-    Route::delete('anuncios/categorias/deleteon', [AnunciosController::class, 'categoriasDeleteon'])->name('anuncios.categorias.deleteon');
-    Route::put('anuncios/categorias/posts/{id}', [AnunciosController::class, 'categoriasUpdate'])->name('anuncios.categorias.update');
-    Route::get('anuncios/categorias/{id}/edit', [AnunciosController::class, 'categoriasEdit'])->name('anuncios.categorias.edit');
-    Route::match(['post', 'get'],'anuncios/categorias/create/{catpai}', [AnunciosController::class, 'categoriasCreate'])->name('anuncios.categorias.create');
-    Route::post('anuncios/categorias/store', [AnunciosController::class, 'categoriasStore'])->name('anuncios.categorias.store');
-    Route::get('anuncios/categorias', [AnunciosController::class, 'categorias'])->name('anuncios.categorias.index');
 
     //******************** Sitemap *********************************************/
     Route::get('gerarxml', [SitemapController::class, 'gerarxml'])->name('admin.gerarxml');

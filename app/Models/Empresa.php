@@ -16,11 +16,16 @@ class Empresa extends Model
     protected $table = 'empresas';
 
     protected $fillable = [
+        'cat_pai',
+        'categoria',
+        'views',
+        'exibirnoguia',
         'responsavel',
         'responsavel_email',
         'responsavel_cpf',
         'social_name',
         'alias_name',
+        'slug',
         'document_company',
         'document_company_secondary',
         'status',
@@ -71,9 +76,19 @@ class Empresa extends Model
     /**
      * Relacionamentos
     */
+    public function categoriaObject()
+    {
+        return $this->hasOne(CatEmpresa::class, 'id', 'categoria');
+    }
+
     public function anuncios()
     {
         return $this->hasMany(Anuncio::class, 'empresa', 'id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(EmpresaGb::class, 'empresa', 'id')->orderBy('cover', 'ASC');
     }
 
     /**
@@ -87,8 +102,42 @@ class Empresa extends Model
         } 
         return Storage::url(Cropper::thumb($this->metaimg, env('METAIMG_WIDTH'), env('METAIMG_HEIGHT')));
     }
-    
+
     public function cover()
+    {
+        $images = $this->images();
+        $cover = $images->where('cover', 1)->first(['path']);
+
+        if(!$cover) {
+            $images = $this->images();
+            $cover = $images->first(['path']);
+        }
+
+        if(empty($cover['path']) || !File::exists('../public/storage/' . $cover['path'])) {
+            return $this->nologoCover();
+        }
+
+        return Storage::url(Cropper::thumb($cover['path'], 720, 480));
+    }
+
+    public function nocover()
+    {
+        $images = $this->images();
+        $cover = $images->where('cover', 1)->first(['path']);
+
+        if(!$cover) {
+            $images = $this->images();
+            $cover = $images->first(['path']);
+        }
+
+        if(empty($cover['path']) || !File::exists('../public/storage/' . $cover['path'])) {
+            return $this->nologoCover();
+        }
+
+        return Storage::url($cover['path']);
+    }
+    
+    public function logoCover()
     {       
         if(empty($this->logomarca) || !File::exists('../public/storage/' . $this->logomarca)) {
             return url(asset('backend/assets/images/image.jpg'));
@@ -97,7 +146,7 @@ class Empresa extends Model
         return Storage::url(Cropper::thumb($this->logomarca, 300, 300));
     }
 
-    public function nocover()
+    public function nologoCover()
     {       
         if(empty($this->logomarca) || !File::exists('../public/storage/' . $this->logomarca)) {
             return url(asset('backend/assets/images/image.jpg'));
@@ -180,6 +229,24 @@ class Empresa extends Model
             substr($value, 0, 2) . ') ' .
             substr($value, 2, 5) . '-' .
             substr($value, 7, 4) ;
+    }
+
+    public function setExibirnoguiaAttribute($value)
+    {
+        $this->attributes['exibirnoguia'] = ($value == '1' ? 1 : 0);
+    }
+
+    public function setSlug()
+    {
+        if(!empty($this->alias_name)){
+            $empresa = Empresa::where('alias_name', $this->alias_name)->first(); 
+            if(!empty($empresa) && $empresa->id != $this->id){
+                $this->attributes['slug'] = Str::slug($this->alias_name) . '-' . $this->id;
+            }else{
+                $this->attributes['slug'] = Str::slug($this->alias_name);
+            }            
+            $this->save();
+        }
     }
 
     private function clearField(?string $param)

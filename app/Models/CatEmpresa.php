@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class CatAnuncio extends Model
+class CatEmpresa extends Model
 {
     use HasFactory;
 
-    protected $table = 'cat_anuncios';
+    protected $table = 'cat_empresas';
 
     protected $fillable = [
         'titulo',
@@ -41,7 +41,7 @@ class CatAnuncio extends Model
      */
     public function children()
     {
-        return $this->hasMany(CatAnuncio::class, 'id_pai', 'id');
+        return $this->hasMany(CatEmpresa::class, 'id_pai', 'id');
     }
 
     /**
@@ -61,15 +61,20 @@ class CatAnuncio extends Model
         $this->attributes['status'] = ($value == '1' ? 1 : 0);
     }
 
-    public function countAnuncios()
+    public function countEmpresas()
     {
-        return $this->hasMany(Anuncio::class, 'categoria', 'id')->count();
+        return $this->hasMany(Empresa::class, 'categoria', 'id')->count();
+    }
+
+    public function countEmpresasPai()
+    {
+        return $this->hasMany(Empresa::class, 'cat_pai', 'id')->count();
     }
 
     public function setSlug()
     {
         if(!empty($this->titulo)){
-            $categoria = CatAnuncio::where('titulo', $this->titulo)->first(); 
+            $categoria = CatEmpresa::where('titulo', $this->titulo)->first(); 
             if(!empty($categoria) && $categoria->id != $this->id){
                 $this->attributes['slug'] = Str::slug($this->titulo) . '-' . $this->id;
             }else{

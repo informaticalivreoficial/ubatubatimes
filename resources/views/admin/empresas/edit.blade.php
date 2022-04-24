@@ -64,13 +64,15 @@ $config = [
 @method('PUT')  
 <div class="row">            
     <div class="col-12">
-        <div class="card card-teal card-outline card-outline-tabs">  
-            
+        <div class="card card-teal card-outline card-outline-tabs"> 
             <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Dados Cadastrais</a>
-                    </li>                               
+                    </li>  
+                    <li class="nav-item">
+                        <a class="nav-link" id="custom-tabs-four-imagens-tab" data-toggle="pill" href="#custom-tabs-four-imagens" role="tab" aria-controls="custom-tabs-four-imagens" aria-selected="false">Imagens</a>
+                    </li>                             
                     <li class="nav-item">
                         <a class="nav-link" id="custom-tabs-four-redes-tab" data-toggle="pill" href="#custom-tabs-four-redes" role="tab" aria-controls="custom-tabs-four-redes" aria-selected="false">Redes Sociais</a>
                     </li>
@@ -92,22 +94,62 @@ $config = [
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="row mb-2">
-                                    <div class="col-12 col-md-4 col-lg-4"> 
+                                    <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>*Responsável Legal:</b></label>
                                             <input type="text" class="form-control" name="responsavel" value="{{ old('responsavel') ?? $empresa->responsavel }}">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4 col-lg-4"> 
+                                    <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>*Responsável Email:</b></label>
                                             <input type="text" class="form-control" name="responsavel_email" value="{{ old('responsavel_email') ?? $empresa->responsavel_email }}">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4 col-lg-4"> 
+                                    <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>CPF</b></label>
                                             <input type="text" class="form-control cpfmask" name="responsavel_cpf" value="{{ old('responsavel_cpf') ?? $empresa->responsavel_cpf }}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Categoria:</b></label>
+                                            @if (!empty($categorias) && $categorias->count() > 0)
+                                                <select class="form-control j_category" name="cat_pai">
+                                                    <option value="">Selecione a Categoria</option>
+                                                    @foreach ($categorias as $categoria)
+                                                    <option value="{{$categoria->id}}" {{ (old('cat_pai') == $categoria->id ? 'selected' : ($empresa->cat_pai == $categoria->id ? 'selected' : '')) }}>{{$categoria->titulo}}</option>
+                                                    @endforeach
+                                                </select>                                            
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Sub-categoria:</b></label>
+                                            <select class="form-control j_subcategory" name="categoria">
+                                                @if(!empty($categorias) && !empty($empresa->categoria))
+                                                    @foreach($categorias as $cat)
+                                                        @if ($cat->children)
+                                                            @foreach ($cat->children as $subcat)
+                                                                <option value="{{$subcat->id}}" {{ (old('categoria') == $subcat->id ? 'selected' : ($empresa->categoria == $subcat->id ? 'selected' : '')) }}>{{$subcat->titulo}}</option>
+                                                            @endforeach                                                        
+                                                        @endif                                                    
+                                                    @endforeach 
+                                                @else
+                                                    <option value="">Selecione a Categoria</option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Exibir no Guia?</b></label>
+                                            <select name="exibirnoguia" class="form-control">
+                                                <option value="1" {{ (old('exibirnoguia') == '1' ? 'selected' : ($empresa->exibirnoguia == 1 ? 'selected' : '')) }}>Sim</option>
+                                                <option value="0" {{ (old('exibirnoguia') == '0' ? 'selected' : ($empresa->exibirnoguia == 0 ? 'selected' : '')) }}>Não</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +159,7 @@ $config = [
                                     <div class="thumb_user_admin">
                                         @php
                                             if(!empty($empresa->logomarca) && \Illuminate\Support\Facades\File::exists(public_path() . '/storage/' . $empresa->logomarca)){
-                                                $cover = $empresa->cover();
+                                                $cover = $empresa->logoCover();
                                             } else {
                                                 $cover = url(asset('backend/assets/images/image.jpg'));
                                             }
@@ -252,7 +294,35 @@ $config = [
                                 <textarea id="inputDescription" class="form-control" rows="5" name="notasadicionais">{{ old('notasadicionais') ?? $empresa->notasadicionais }}</textarea>                                                      
                             </div>                                
                         </div>                           
-                    </div> 
+                    </div>
+                    
+                    <div class="tab-pane fade" id="custom-tabs-four-imagens" role="tabpanel" aria-labelledby="custom-tabs-four-imagens-tab">
+                        <div class="row mb-4">
+                            <div class="col-sm-12">                                        
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="exampleInputFile" name="files[]" multiple>
+                                        <label class="custom-file-label" for="exampleInputFile">Escolher Imagens</label>
+                                    </div>
+                                </div>                                        
+                                <div class="content_image"></div> 
+                                                        
+                                <div class="property_image">
+                                    @foreach($empresa->images()->get() as $image)
+                                    <div class="property_image_item">
+                                        <a href="{{ $image->getUrlImageAttribute() }}" data-toggle="lightbox" data-gallery="property-gallery" data-type="image">
+                                        <img src="{{ $image->url_cropped }}" alt="">
+                                        </a>
+                                        <div class="property_image_actions">
+                                            <a href="javascript:void(0)" class="btn btn-xs {{ ($image->cover == true ? 'btn-success' : 'btn-default') }} icon-notext image-set-cover px-2" data-action="{{ route('empresas.imageSetCover', ['image' => $image->id]) }}"><i class="nav-icon fas fa-check"></i> </a>
+                                            <a href="javascript:void(0)" class="btn btn-danger btn-xs image-remove px-2" data-action="{{ route('empresas.imageRemove', ['image' => $image->id]) }}"><i class="nav-icon fas fa-times"></i> </a>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
 
                     <div class="tab-pane fade" id="custom-tabs-four-redes" role="tabpanel" aria-labelledby="custom-tabs-four-redes-tab">
                         <div class="row mb-2 text-muted">
@@ -347,13 +417,13 @@ $config = [
                             </div>
                             <div class="col-12 mb-1">   
                                 <div class="form-group">
-                                    <label class="labelforms"><b>Mapa do Google</b> <small class="text-info">(Copie o código de incorporação do Google Maps e cole abaixo)</small></label>
+                                    <label class="labelforms text-muted"><b>Mapa do Google</b> <small class="text-info">(Copie o código de incorporação do Google Maps e cole abaixo)</small></label>
                                     <textarea id="inputDescription" class="form-control" rows="5" name="mapa_google">{{ old('mapa_google') ?? $empresa->mapa_google }}</textarea> 
                                 </div>                                                     
                             </div>
                             <div class="col-12 mb-1"> 
                                 <div class="form-group">
-                                    <label class="labelforms"><b>Meta Imagem: </b>(800X418) pixels</label>
+                                    <label class="labelforms text-muted"><b>Meta Imagem: </b>(800X418) pixels</label>
                                     <div class="thumb_user_admin">                                                    
                                         <img style="max-height: 418px;" id="preview1" src="{{$empresa->getmetaimg()}}" alt="{{ old('dominio') }}" title="{{ old('dominio') }}"/>
                                         <input id="img-metaimg" type="file" name="metaimg">
@@ -364,7 +434,37 @@ $config = [
                     </div>
 
                     <div class="tab-pane fade" id="custom-tabs-four-anuncios" role="tabpanel" aria-labelledby="custom-tabs-four-anuncios-tab">
-                        
+                        <div class="col-sm-12">
+                            <div class="form-group text-muted">
+                                <h5><b>Anúncios</b></h5>               
+                            </div>
+                        </div>
+                        @if (!empty($anuncios) && $anuncios->count() > 0)
+                            <table id="example1" class="table table-bordered table-striped projects">
+                                <thead>
+                                    <tr class="text-muted">
+                                        <th>Posição</th>
+                                        <th>Criado</th>
+                                        <th>Expira</th>
+                                        <th>Situação</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($anuncios as $anuncio)
+                                        <tr>
+                                            <td>{{$anuncio->posicao}}</td>
+                                            <td>{{$anuncio->created_at}}</td>
+                                            <td></td>
+                                            <td>{{($anuncio->status == 1 ? 'Ativo' : 'Inativo')}}</td>
+                                            <td>
+                                                <a href="{{route('anuncios.edit',['id' => $anuncio->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
 
                     <div class="tab-pane fade" id="custom-tabs-four-faturas" role="tabpanel" aria-labelledby="custom-tabs-four-faturas-tab">
@@ -415,8 +515,57 @@ $config = [
         top: 0;
         opacity: 0;
     }
-    .thumb_user_admin img{
-                    
+    img {
+        max-width: 100%;
+    }
+    .realty_list_item  {    
+        border: 1px solid #F3F3F3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .border-item-imovel{
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        border: 1px solid #F3F3F3;  
+        background-color: #F3F3F3;
+    }
+    
+    .property_image, .content_image {
+        width: 100%;
+        flex-basis: 100%;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    .property_image .property_image_item, .content_image .property_image_item {
+        flex-basis: calc(25% - 20px) !important;
+        margin-bottom: 20px;
+        margin-right: 20px;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        position: relative;
+    }
+
+    .property_image .property_image_item img, .content_image .property_image_item img {
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+    .property_image .property_image_item .property_image_actions, .content_image .property_image_item .property_image_actions {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+    .embed {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+        max-width: 100%;
     }
 </style>
 @stop
@@ -447,6 +596,36 @@ $config = [
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        $(document).ready(function() {  
+            $(".j_subcategory").on('input',function(e) {
+                if($(this).val() !== '') {
+                    $(".j_subcategory").removeAttr('disabled');
+                } else {
+                    $(".j_subcategory").attr('disabled', true);
+                }
+            });
+        });
+
+        $('.j_category').on('change', function () {
+            var idCategoria = this.value;
+            $('.j_subcategory').html('Carregando...');
+            $.ajax({
+                url: "{{route('empresas.categorias.fetchSubcategorias')}}",
+                type: "POST",
+                data: {
+                    cat_id: idCategoria,
+                    _token: '{{csrf_token()}}'
+                },
+                dataType: 'json',
+                success: function (res) {
+                    $('.j_subcategory').html('<option value="">Selecione a sub-categoria</option>');
+                    $.each(res.values, function (key, value) {
+                        $('.j_subcategory').append('<option value="' + value.id + '">' + value.titulo + '</option>');
+                    });
+                }
+            });
         });
 
         function readImage() {
@@ -509,6 +688,65 @@ $config = [
                 height:200
             });
         }); 
+
+        $('input[name="files[]"]').change(function (files) {
+            $('.content_image').text('');
+            $.each(files.target.files, function (key, value) {
+                var reader = new FileReader();
+                reader.onload = function (value) {
+                    $('.content_image').append(
+                        '<div id="list" class="property_image_item">' +
+                        '<div class="embed radius" style="background-image: url(' + value.target.result + '); background-size: cover; background-position: center center;"></div>' +
+                        '<div class="property_image_actions">' +
+                            '<a href="javascript:void(0)" class="btn btn-danger btn-xs image-remove1 px-2"><i class="nav-icon fas fa-times"></i> </a>' +
+                        '</div>' +
+                        '</div>');
+                        
+                    $('.image-remove1').click(function(){
+                        $(this).closest('#list').remove()
+                    });
+                };
+                reader.readAsDataURL(value);
+            });
+        }); 
+
+        $('.image-set-cover').click(function (event) {
+            event.preventDefault();
+            var button = $(this);
+            $.post(button.data('action'), {}, function (response) {
+                if (response.success === true) {
+                    $('.property_image').find('a.btn-success').removeClass('btn-success');
+                    button.addClass('btn-success');
+                }
+                if(response.success === false){
+                    button.addClass('btn-default');
+                }
+            }, 'json');
+        });
+            
+        $('.image-remove').click(function(event){
+            event.preventDefault();
+            var button = $(this);
+            $.ajax({
+                url: button.data('action'),
+                type: 'DELETE',
+                dataType: 'json',
+                success: function(response){
+                    if(response.success === true) {
+                        button.closest('.property_image_item').fadeOut(function(){
+                            $(this).remove();
+                        });
+                    }
+                }
+            });
+        });
+            
+        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox({
+            alwaysShowClose: true
+            });
+        });
 
     });
 </script>

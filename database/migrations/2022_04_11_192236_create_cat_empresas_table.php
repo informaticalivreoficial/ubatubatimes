@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCatAnunciosTable extends Migration
+class CreateCatEmpresasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCatAnunciosTable extends Migration
      */
     public function up()
     {
-        Schema::create('cat_anuncios', function (Blueprint $table) {
+        Schema::create('cat_empresas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_pai')->unsigned()->nullable();            
             $table->string('titulo');
@@ -35,6 +35,6 @@ class CreateCatAnunciosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cat_anuncios');
+        Schema::dropIfExists('cat_empresas');
     }
 }

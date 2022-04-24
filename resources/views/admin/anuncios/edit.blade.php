@@ -128,38 +128,7 @@ $config = [
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div> 
-                                    <div class="col-12 col-md-4"> 
-                                        <div class="form-group">
-                                            <label class="labelforms text-muted"><b>Categoria:</b></label>
-                                            @if (!empty($categorias) && $categorias->count() > 0)
-                                                <select class="form-control j_category" name="cat_pai">
-                                                    <option value="">Selecione a Categoria</option>
-                                                    @foreach ($categorias as $categoria)
-                                                    <option value="{{$categoria->id}}" {{ (old('cat_pai') == $categoria->id ? 'selected' : ($anuncio->cat_pai == $categoria->id ? 'selected' : '')) }}>{{$categoria->titulo}}</option>
-                                                    @endforeach
-                                                </select>                                            
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4"> 
-                                        <div class="form-group">
-                                            <label class="labelforms text-muted"><b>Sub-categoria:</b></label>
-                                            <select class="form-control j_subcategory" name="categoria">
-                                                @if(!empty($categorias) && !empty($anuncio->categoria))
-                                                    @foreach($categorias as $cat)
-                                                        @if ($cat->children)
-                                                            @foreach ($cat->children as $subcat)
-                                                                <option value="{{$subcat->id}}" {{ (old('categoria') == $subcat->id ? 'selected' : ($anuncio->categoria == $subcat->id ? 'selected' : '')) }}>{{$subcat->titulo}}</option>
-                                                            @endforeach                                                        
-                                                        @endif                                                    
-                                                    @endforeach 
-                                                @else
-                                                    <option value="">Selecione a Categoria</option>
-                                                @endif
-                                            </select>
-                                        </div>
-                                    </div>                                   
+                                    </div>                            
                                 </div>
                             </div>
                             <div class="col-12">
@@ -213,7 +182,7 @@ $config = [
                                 <div class="form-group">
                                     <label class="labelforms"><b>Banner</b> - 728x90 pixels</label>
                                     <div class="thumb_user_admin">                                                    
-                                        <img width="728" height="90" id="preview4" src="{{$anuncio->get728x90()}}" alt="{{ old('titulo') ?? $anuncio->titulo }}" title="{{ old('titulo') ?? $anuncio->titulo }}"/>
+                                        <img style="width: 100%;" height="90" id="preview4" src="{{$anuncio->get728x90()}}" alt="{{ old('titulo') ?? $anuncio->titulo }}" title="{{ old('titulo') ?? $anuncio->titulo }}"/>
                                         <input id="img-728x90" type="file" name="728x90">
                                     </div>
                                 </div>
@@ -266,7 +235,7 @@ $config = [
         opacity: 0;
     }
     .thumb_user_admin img{
-        width: 100%;            
+                    
     }
 </style>
 @stop
@@ -300,37 +269,7 @@ $config = [
         });
 
         $(document).ready(function() {  
-            $(".j_subcategory").on('input',function(e) {
-                if($(this).val() == '') {
-                    $(".j_subcategory").removeAttr('disabled');
-                } else {
-                    $(".j_subcategory").attr('disabled', true);
-                }
-            });
-        });
-
-        $(document).ready(function() {  
             $(".j_posicao").find('option[value="{{$anuncio->posicao}}"]').attr('selected', true);               
-        });
-
-        $('.j_category').on('change', function () {
-            var idCategoria = this.value;
-            $('.j_subcategory').html('Carregando...');
-            $.ajax({
-                url: "{{route('anuncios.categorias.fetchSubcategorias')}}",
-                type: "POST",
-                data: {
-                    cat_id: idCategoria,
-                    _token: '{{csrf_token()}}'
-                },
-                dataType: 'json',
-                success: function (res) {
-                    $('.j_subcategory').html('<option value="">Selecione a sub-categoria</option>');
-                    $.each(res.values, function (key, value) {
-                        $('.j_subcategory').append('<option value="' + value.id + '">' + value.titulo + '</option>');
-                    });
-                }
-            });
         });
 
         function readImage300x250() {

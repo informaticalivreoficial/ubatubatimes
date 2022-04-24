@@ -44,13 +44,13 @@
     </div> 
     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="info-box">
-            <span class="info-box-icon bg-teal"><a href="{{--route('empresas.index')--}}" title="Empresas"><i class="fa far fa-industry"></i></a></span>
+            <span class="info-box-icon bg-teal"><a href="{{ route('empresas.index') }}" title="Empresas"><i class="fa far fa-industry"></i></a></span>
 
             <div class="info-box-content">
                 <span class="info-box-text"><b>Empresas</b></span>
-                <span class="info-box-text">Ativas: {{-- $empresasAvailable --}}</span>
-                <span class="info-box-text">Inativas: {{-- $empresasUnavailable --}}</span>
-                <span class="info-box-text">Total: {{-- $empresasTotal --}}</span>
+                <span class="info-box-text">Ativas: {{ $empresasAvailable }}</span>
+                <span class="info-box-text">Inativas: {{ $empresasUnavailable }}</span>
+                <span class="info-box-text">Total: {{ $empresasAvailable + $empresasUnavailable }}</span>
             </div>
             <!-- /.info-box-content -->
         </div>

@@ -122,7 +122,7 @@
 					<div id="navbarSupportedContent" class="collapse navbar-collapse navbar-responsive-collapse">
 					<ul class="nav navbar-nav">
 												               
-						<li class="link-colunas"> <a href="#"> <b>Guia</b> </a> </li>
+						<li class="link-colunas"> <a href="{{route('web.guiaUbatuba')}}"> <b>Guia</b> </a> </li>
 						<li> <a href="{{route('web.blog.categoria', [ 'slug' => 'praias-de-ubatuba' ])}}"> <b>Praias de Ubatuba</b> </a> </li>
 						<li> <a href="{{route('web.blog.artigos')}}"> <b>Blog</b> </a> </li>
 
@@ -185,7 +185,7 @@
 									<li><i class="fa fa-phone"></i> <a href="tel:{{$configuracoes->telefone3}}">{{$configuracoes->telefone3}}</a></li>
 								@endif								
 								@if ($configuracoes->whatsapp)
-									<li><i class="fa fa-whatsapp"></i> <a href="{{getNumZap($configuracoes->whatsapp ,$configuracoes->nomedosite)}}">{{$configuracoes->whatsapp}}</a></li>
+									<li><i class="fa fa-whatsapp"></i> <a target="_blank" href="{{getNumZap($configuracoes->whatsapp ,$configuracoes->nomedosite)}}">{{$configuracoes->whatsapp}}</a></li>
 								@endif								
 								@if ($configuracoes->email)
 									<li><i class="fa fa-envelope-o"></i> <a href="mailto:{{$configuracoes->email}}">{{$configuracoes->email}}</a></li>
@@ -215,7 +215,7 @@
 					<ul>
 						<li>
 							<i class="fa fa-angle-double-right"></i>
-							<a href="#"><span class="catTitle">Guia Comercial Ubatuba</span></a> 
+							<a href="{{route('web.guiaUbatuba')}}"><span class="catTitle">Guia Comercial Ubatuba</span></a> 
 						</li>
 						<li>
 							<i class="fa fa-angle-double-right"></i>

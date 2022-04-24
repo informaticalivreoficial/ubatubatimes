@@ -89,7 +89,7 @@
                                       @if($configuracoes->whatsapp)
                                           <dl class="list-terms-inline">
                                               <span class="novi-icon icon icon-xxs icon-primary fa-whatsapp"></span>
-                                              <dd><a class="link-secondary" href="{{getNumZap($configuracoes->whatsapp ,'Atendimento '.$configuracoes->nomedosite)}}">{{$configuracoes->whatsapp}}</a></dd>  
+                                              <dd><a target="_blank" class="link-secondary" href="{{getNumZap($configuracoes->whatsapp ,'Atendimento '.$configuracoes->nomedosite)}}">{{$configuracoes->whatsapp}}</a></dd>  
                                               @if ($configuracoes->skype)
                                                 <span style="margin-left: 10px;" class="novi-icon icon icon-xxs icon-primary fa-skype"></span>
                                                 <dd><a href="skype:{{$configuracoes->skype}}">{{$configuracoes->skype}}</a></dd>

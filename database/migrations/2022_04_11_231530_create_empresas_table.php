@@ -15,14 +15,20 @@ class CreateEmpresasTable extends Migration
     {
         Schema::create('empresas', function (Blueprint $table) {
             $table->increments('id');
+            $table->uuid('uuid');
+            $table->unsignedInteger('categoria');
+            $table->integer('cat_pai')->nullable();
             $table->string('responsavel');
             $table->string('responsavel_email');
             $table->string('responsavel_cpf')->nullable();
             $table->string('social_name')->nullable();
             $table->string('alias_name');
+            $table->string('slug')->nullable();
             $table->string('document_company')->nullable();
             $table->string('document_company_secondary')->nullable();
             $table->integer('status')->default('0');
+            $table->integer('exibirnoguia')->default('0');
+            $table->bigInteger('views')->default(0);
             $table->string('logomarca')->nullable();
             $table->integer('ano_de_inicio')->nullable();
             $table->text('content')->nullable();
@@ -61,6 +67,8 @@ class CreateEmpresasTable extends Migration
             $table->string('snapchat')->nullable();
 
             $table->timestamps();
+
+            $table->foreign('categoria')->references('id')->on('cat_empresas')->onDelete('CASCADE');
         });
     }
 

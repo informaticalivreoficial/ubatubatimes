@@ -130,32 +130,7 @@ $config = [
                                         </div>
                                     </div>                                    
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="row mb-2">                                    
-                                    <div class="col-12 col-md-4"> 
-                                        <div class="form-group">
-                                            <label class="labelforms text-muted"><b>Categoria:</b></label>
-                                            @if (!empty($categorias) && $categorias->count() > 0)
-                                                <select class="form-control j_category" name="cat_pai">
-                                                    <option value="">Selecione a Categoria</option>
-                                                    @foreach ($categorias as $categoria)
-                                                    <option value="{{$categoria->id}}" {{ (old('cat_pai') == $categoria->cat_pai ? 'selected' : '') }}>{{$categoria->titulo}}</option>
-                                                    @endforeach
-                                                </select>                                            
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4"> 
-                                        <div class="form-group">
-                                            <label class="labelforms text-muted"><b>Sub-categoria:</b></label>
-                                            <select class="form-control j_subcategory" name="categoria">
-                                                <option value="">Selecione a Categoria</option>
-                                            </select>
-                                        </div>
-                                    </div> 
-                                </div>
-                            </div>                            
+                            </div>                   
                         </div>                   
                     </div> 
 
@@ -172,47 +147,38 @@ $config = [
                                 <div class="form-group">
                                     <label class="labelforms"><b>Banner</b> - 300x250 pixels</label>
                                     <div class="thumb_user_admin">                                                    
-                                        <img id="preview1" src="" alt="" title=""/>
+                                        <img width="300" height="250" id="preview1" src="{{url(asset('backend/assets/images/image.jpg'))}}" alt="{{ old('titulo') }}" title="{{ old('titulo') }}"/>
                                         <input id="img-300x250" type="file" name="300x250">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-sm-6 col-lg-6"> 
                                 <div class="form-group">
-                                    <label class="labelforms"><b>Logomarca do Gerenciador</b> - {{env('LOGOMARCA_GERENCIADOR_WIDTH')}}x{{env('LOGOMARCA_GERENCIADOR_HEIGHT')}} pixels</label>
+                                    <label class="labelforms"><b>Banner</b> - 468x90 pixels</label>
                                     <div class="thumb_user_admin">                                                    
-                                        <img id="preview3" src="" alt="{{ old('dominio')  }}" title="{{ old('dominio')  }}"/>
-                                        <input id="img-logomarcaadmin" type="file" name="logomarca_admin">
+                                        <img width="468" height="90" id="preview2" src="{{url(asset('backend/assets/images/image.jpg'))}}" alt="{{ old('titulo') }}" title="{{ old('titulo') }}"/>
+                                        <input id="img-468x90" type="file" name="468x90">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-sm-6 col-lg-6"> 
                                 <div class="form-group">
-                                    <label class="labelforms"><b>Favicon</b> - {{env('FAVEICON_WIDTH')}}x{{env('FAVEICON_HEIGHT')}} pixels</label>
+                                    <label class="labelforms"><b>Banner</b> - 336x280 pixels</label>
                                     <div class="thumb_user_admin">                                                    
-                                        <img id="preview4" src="" alt="{{ old('dominio')  }}" title="{{ old('dominio')  }}"/>
-                                        <input id="img-favicon" type="file" name="favicon">
+                                        <img width="336" height="280" id="preview3" src="{{url(asset('backend/assets/images/image.jpg'))}}" alt="{{ old('titulo') }}" title="{{ old('titulo') }}"/>
+                                        <input id="img-336x280" type="file" name="336x280">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-sm-6 col-lg-6"> 
                                 <div class="form-group">
-                                    <label class="labelforms"><b>Marca D´agua</b> - {{env('MARCADAGUA_WIDTH')}}x{{env('MARCADAGUA_HEIGHT')}} pixels</label>
+                                    <label class="labelforms"><b>Banner</b> - 728x90 pixels</label>
                                     <div class="thumb_user_admin">                                                    
-                                        <img id="preview5" src="" alt="{{ old('dominio')  }}" title="{{ old('dominio')  }}"/>
-                                        <input id="img-marcadagua" type="file" name="marcadagua">
+                                        <img width="728" height="90" id="preview4" src="{{url(asset('backend/assets/images/image.jpg'))}}" alt="{{ old('titulo') }}" title="{{ old('titulo') }}"/>
+                                        <input id="img-728x90" type="file" name="728x90">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-12"> 
-                                <div class="form-group">
-                                    <label class="labelforms"><b>Topo do site</b> - {{env('IMGHEADER_WIDTH')}}x{{env('IMGHEADER_HEIGHT')}} pixels</label>
-                                    <div class="thumb_user_admin">
-                                        <img id="preview6" src="" alt="{{ old('dominio')  }}" title="{{ old('dominio')  }}"/>
-                                        <input id="img-imgheader" type="file" name="imgheader">
-                                    </div>
-                                </div>
-                            </div>
+                            </div> 
                         </div>
                     </div>
                 
@@ -293,29 +259,7 @@ $config = [
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        $('.j_subcategory').attr('disabled', true);
-        $('.j_category').on('change', function () {
-            var idCategoria = this.value;
-            $('.j_subcategory').html('Carregando...');
-            $.ajax({
-                url: "{{route('anuncios.categorias.fetchSubcategorias')}}",
-                type: "POST",
-                data: {
-                    cat_id: idCategoria,
-                    _token: '{{csrf_token()}}'
-                },
-                dataType: 'json',
-                success: function (res) {
-                    $('.j_subcategory').html('<option value="">Selecione a sub-categoria</option>');
-                    $('.j_subcategory').attr('disabled', false);
-                    $.each(res.values, function (key, value) {
-                        $('.j_subcategory').append('<option value="' + value.id + '">' + value.titulo + '</option>');
-                    });
-                }
-            });
-        });
-
+        
         function readImage300x250() {
             if (this.files && this.files[0]) {
                 var file = new FileReader();
@@ -325,13 +269,42 @@ $config = [
                 file.readAsDataURL(this.files[0]);
             }
         }
+
+        function readImage468x90() {
+            if (this.files && this.files[0]) {
+                var file = new FileReader();
+                file.onload = function(e) {
+                    document.getElementById("preview2").src = e.target.result;
+                };       
+                file.readAsDataURL(this.files[0]);
+            }
+        }
+
+        function readImage336x280() {
+            if (this.files && this.files[0]) {
+                var file = new FileReader();
+                file.onload = function(e) {
+                    document.getElementById("preview3").src = e.target.result;
+                };       
+                file.readAsDataURL(this.files[0]);
+            }
+        }
+
+        function readImage728x90() {
+            if (this.files && this.files[0]) {
+                var file = new FileReader();
+                file.onload = function(e) {
+                    document.getElementById("preview4").src = e.target.result;
+                };       
+                file.readAsDataURL(this.files[0]);
+            }
+        }
         
         document.getElementById("img-300x250").addEventListener("change", readImage300x250, false);
-
+        document.getElementById("img-468x90").addEventListener("change", readImage468x90, false);
+        document.getElementById("img-336x280").addEventListener("change", readImage336x280, false);
+        document.getElementById("img-728x90").addEventListener("change", readImage728x90, false);
         
-
-
-
         //tag input
         function onAddTag(tag) {
             alert("Adicionar uma Tag: " + tag);

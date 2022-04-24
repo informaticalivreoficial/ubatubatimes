@@ -54,6 +54,9 @@ class AdminController extends Controller
         //Notícias
         $noticiasAvailable = Post::postson()->where('tipo', 'noticia')->count();
         $noticiasUnavailable = Post::postsoff()->where('tipo', 'noticia')->count();
+        //Empresas
+        $empresasAvailable = Empresa::available()->count();
+        $empresasUnavailable = Empresa::unavailable()->count();
         //Notícias
         $artigosAvailable = Post::postson()->where('tipo', 'artigo')->count();
         $artigosUnavailable = Post::postsoff()->where('tipo', 'artigo')->count();
@@ -89,6 +92,9 @@ class AdminController extends Controller
             //Artigos
             'artigosAvailable' => $artigosAvailable,
             'artigosUnavailable' => $artigosUnavailable,
+            //Empresas
+            'empresasAvailable' => $empresasAvailable,
+            'empresasUnavailable' => $empresasUnavailable,
             //CHART PIZZA
             'postsArtigos' => $postsArtigos,
             'postsPaginas' => $postsPaginas,

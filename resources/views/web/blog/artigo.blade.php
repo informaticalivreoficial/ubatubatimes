@@ -176,13 +176,26 @@
       <div class="col-lg-4 col-md-12">
           <div class="sidebar utf_sidebar_right">  
             
-              <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
-                <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/tim.png'))}}" alt="" /> 
-              </div>
+            @if (!empty($positionSidebarNoticia) && $positionSidebarNoticia->count() > 0 && $post->tipo == 'noticia')
+                @foreach($positionSidebarNoticia as $p)
+                    <div class="widget text-center">                                    
+                        <a href="{{$p->link ?? '#'}}" target="_blank">
+                            <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->titulo}}" />
+                        </a>                                                                      
+                    </div>
+                @endforeach
+            @endif
 
-              <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
-                <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/anjosads.png'))}}" alt="" /> 
-              </div>
+            @if (!empty($positionSidebarArtigo) && $positionSidebarArtigo->count() > 0 && $post->tipo == 'artigo')
+                @foreach($positionSidebarArtigo as $p)
+                    <div class="widget text-center">                                    
+                        <a href="{{$p->link ?? '#'}}" target="_blank">
+                            <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->titulo}}" />
+                        </a>                                                                      
+                    </div>
+                @endforeach
+            @endif   
+              
 
               @if (!empty($postsMais) && $postsMais->count() > 0)
                   <div class="widget color-default">

@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Anuncio;
 use App\Models\CatPost;
+use App\Models\Empresa;
 use App\Models\NewsletterCat;
 use App\Models\Post;
+use App\Observers\EmpresaObserver;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -31,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Empresa::observe(EmpresaObserver::class);
+
         Schema::defaultStringLength(191);
         Blade::aliasComponent('admin.components.message', 'message');
 
@@ -57,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
                         ->first();
         View()->share('newsletterForm', $newsletter);
 
-        //Páginas no menu frontend
+        //Anúncio Topo Home 729x90
         $positionTopohome = Anuncio::where('posicao', 2)->available()->limit(1)->get();
         View()->share('positionTopohome', $positionTopohome);
 

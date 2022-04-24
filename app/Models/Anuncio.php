@@ -17,7 +17,6 @@ class Anuncio extends Model
 
     protected $fillable = [
         'empresa',
-        'categoria',
         'plan_id',
         '300x250',
         '728x90',
@@ -51,11 +50,6 @@ class Anuncio extends Model
     /**
      * Relacionamentos
     */
-    public function categoria()
-    {
-        return $this->hasOne(CatAnuncio::class, 'id', 'categoria');
-    }
-
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'empresa', 'id');
@@ -92,18 +86,18 @@ class Anuncio extends Model
         return $position;
     }
 
-    public function getPosicaoAttribute($value)
-    {
-        if (empty($value)) {
-            return null;
-        }
+    // public function getPosicaoAttribute($value)
+    // {
+    //     if (empty($value)) {
+    //         return null;
+    //     }
 
-        foreach($this->position() as $pos){
-            if($pos['id'] === $value){
-                return $pos['name'];
-            }
-        }
-    }
+    //     foreach($this->position() as $pos){
+    //         if($pos['id'] === $value){
+    //             return $pos['name'];
+    //         }
+    //     }
+    // }
 
     public function get300x250()
     {

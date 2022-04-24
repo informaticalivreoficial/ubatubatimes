@@ -26,10 +26,10 @@ class Empresa extends FormRequest
     {
         return [
             'responsavel' => 'required|min:3|max:191',
-            'responsavel_email' => 'required',
-            'email' => 'required',
+            //'responsavel_email' => 'required',
+            //'email' => 'required',
             'alias_name' => 'required', 
-            'celular' => 'required'
+            //'celular' => 'required'
         ];
     }
 }

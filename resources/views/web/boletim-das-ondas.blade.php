@@ -24,10 +24,16 @@
                             <div class="col-12">
                                 <h3>Atualização: <span>{{ Carbon\Carbon::parse($boletim->getContent()->atualizacao)->format('d/m/Y') }}</span></h3>    
                             </div>                      
-                            <div class="col-sm-12 col-md-4">                       
-                                <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;"> 
-                                    <img class="banner img-fluid" src="{{url(asset('frontend/assets/images/tim.png'))}}" alt="" /> 
-                                </div>                                      
+                            <div class="col-sm-12 col-md-4">   
+                                @if (!empty($positionSidebarhome) && $positionSidebarhome->count() > 0)
+                                    @foreach($positionSidebarhome as $p)
+                                        <div class="widget text-center">                                    
+                                            <a href="{{$p->link ?? '#'}}" target="_blank">
+                                                <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->titulo}}" />
+                                            </a>                                                                      
+                                        </div>
+                                    @endforeach
+                                @endif                              
                             </div>
                             <div class="col-sm-12 col-md-4">                       
                                 <h4 style="float: left" class="mr-2">Manhã:</h4>

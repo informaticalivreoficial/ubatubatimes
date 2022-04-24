@@ -63,7 +63,10 @@ $config = [
                 <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Dados Cadastrais</a>
-                    </li>                               
+                    </li>   
+                    <li class="nav-item">
+                        <a class="nav-link" id="custom-tabs-four-imagens-tab" data-toggle="pill" href="#custom-tabs-four-imagens" role="tab" aria-controls="custom-tabs-four-imagens" aria-selected="false">Imagens</a>
+                    </li>                            
                     <li class="nav-item">
                         <a class="nav-link" id="custom-tabs-four-redes-tab" data-toggle="pill" href="#custom-tabs-four-redes" role="tab" aria-controls="custom-tabs-four-redes" aria-selected="false">Redes Sociais</a>
                     </li>
@@ -85,22 +88,52 @@ $config = [
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="row mb-2">
-                                    <div class="col-12 col-md-4 col-lg-4"> 
+                                    <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>*Responsável Legal:</b></label>
                                             <input type="text" class="form-control" name="responsavel" value="{{ old('responsavel') }}">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4 col-lg-4"> 
+                                    <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>*Responsável Email:</b></label>
                                             <input type="text" class="form-control" name="responsavel_email" value="{{ old('responsavel_email') }}">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-4 col-lg-4"> 
+                                    <div class="col-12 col-md-4"> 
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>CPF</b></label>
                                             <input type="text" class="form-control cpfmask" name="responsavel_cpf" value="{{ old('responsavel_cpf') }}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Categoria:</b></label>
+                                            @if (!empty($categorias) && $categorias->count() > 0)
+                                                <select class="form-control j_category" name="cat_pai">
+                                                    <option value="">Selecione a Categoria</option>
+                                                    @foreach ($categorias as $categoria)
+                                                        <option value="{{$categoria->id}}" {{ (old('cat_pai') == $categoria->cat_pai ? 'selected' : '') }}>{{$categoria->titulo}}</option>
+                                                    @endforeach
+                                                </select>                                            
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Sub-categoria:</b></label>
+                                            <select class="form-control j_subcategory" name="categoria">
+                                                <option value="">Selecione a Categoria</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Exibir no Guia?</b></label>
+                                            <select name="exibirnoguia" class="form-control">
+                                                <option value="1" {{ (old('exibirnoguia') == '1' ? 'selected' : '') }}>Sim</option>
+                                                <option value="0" {{ (old('exibirnoguia') == '0' ? 'selected' : '') }}>Não</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -248,6 +281,20 @@ $config = [
                             </div>                                
                         </div>                           
                     </div> 
+
+                    <div class="tab-pane fade" id="custom-tabs-four-imagens" role="tabpanel" aria-labelledby="custom-tabs-four-imagens-tab">
+                        <div class="row mb-4">
+                            <div class="col-sm-12">                                        
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="exampleInputFile" name="files[]" multiple>
+                                        <label class="custom-file-label" for="exampleInputFile">Escolher Fotos</label>
+                                    </div>
+                                </div>                                        
+                                <div class="content_image"></div>
+                            </div>
+                        </div> 
+                    </div>
 
                     <div class="tab-pane fade" id="custom-tabs-four-redes" role="tabpanel" aria-labelledby="custom-tabs-four-redes-tab">
                         <div class="row mb-2 text-muted">
@@ -413,6 +460,41 @@ $config = [
     .thumb_user_admin img{
         width: 100%;            
     }
+    .property_image, .content_image {
+            width: 100%;
+            flex-basis: 100%;
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        .property_image .property_image_item, .content_image .property_image_item {
+            flex-basis: calc(25% - 20px) !important;
+            margin-bottom: 20px;
+            margin-right: 20px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .property_image .property_image_item img, .content_image .property_image_item img {
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+        }
+        .property_image .property_image_item .property_image_actions, .content_image .property_image_item .property_image_actions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+        }
 </style>
 @stop
 
@@ -444,6 +526,29 @@ $config = [
             }
         });
 
+        $('input[name="files[]"]').change(function (files) {
+
+            $('.content_image').text('');
+
+            $.each(files.target.files, function (key, value) {
+                var reader = new FileReader();
+                reader.onload = function (value) {
+                    $('.content_image').append(
+                        '<div id="list" class="property_image_item">' +
+                        '<div class="embed radius" style="background-image: url(' + value.target.result + '); background-size: cover; background-position: center center;"></div>' +
+                        '<div class="property_image_actions">' +
+                            '<a href="javascript:void(0)" class="btn btn-danger btn-xs image-remove px-2"><i class="nav-icon fas fa-times"></i> </a>' +
+                        '</div>' +
+                        '</div>');
+
+                    $('.image-remove').click(function(){
+                        $(this).closest('#list').remove()
+                    });
+                };
+                reader.readAsDataURL(value);
+            });
+        });
+
         function readImage() {
             if (this.files && this.files[0]) {
                 var file = new FileReader();
@@ -453,6 +558,28 @@ $config = [
                 file.readAsDataURL(this.files[0]);
             }
         }
+
+        $('.j_subcategory').attr('disabled', true);
+        $('.j_category').on('change', function () {
+            var idCategoria = this.value;
+            $('.j_subcategory').html('Carregando...');
+            $.ajax({
+                url: "{{route('empresas.categorias.fetchSubcategorias')}}",
+                type: "POST",
+                data: {
+                    cat_id: idCategoria,
+                    _token: '{{csrf_token()}}'
+                },
+                dataType: 'json',
+                success: function (res) {
+                    $('.j_subcategory').html('<option value="">Selecione a sub-categoria</option>');
+                    $('.j_subcategory').attr('disabled', false);
+                    $.each(res.values, function (key, value) {
+                        $('.j_subcategory').append('<option value="' + value.id + '">' + value.titulo + '</option>');
+                    });
+                }
+            });
+        });
 
         function readImageMetaImagem() {
             if (this.files && this.files[0]) {
