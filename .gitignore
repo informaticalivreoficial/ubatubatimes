@@ -14,3 +14,5 @@ yarn-error.log
 /.idea
 /.vscode
 /arquivos_locais
+error_log
+/public/error_log
