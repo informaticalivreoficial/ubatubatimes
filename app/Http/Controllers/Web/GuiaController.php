@@ -30,7 +30,7 @@ class GuiaController extends Controller
         $head = $this->seo->render('Guia de Ubatuba - ' . $this->configService->getConfig()->nomedosite ?? $this->configService->getConfig()->nomedosite,
             $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.guiaUbatuba'),
-            $this->configService->getMetaImg()
+            url(asset('frontend/assets/images/site-guia.png'))
         );
 
         return view('web.guia.index',[
@@ -56,7 +56,7 @@ class GuiaController extends Controller
         $head = $this->seo->render($empresa->alias_name ?? $this->configService->getConfig()->nomedosite,
             strip_tags($empresa->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.guiaEmpresa', [ 'slug' => $empresa->slug ]),
-            $empresa->getMetaImg() ?? $this->configService->getMetaImg()
+            $empresa->getMetaImg() ?? url(asset('frontend/assets/images/site-guia.png'))
         );
 
         return view('web.guia.empresa',[
@@ -78,7 +78,7 @@ class GuiaController extends Controller
         $head = $this->seo->render('Anúncios - ' . $categoria->titulo ?? $this->configService->getConfig()->nomedosite,
             strip_tags($categoria->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.guiaCategoria', [ 'slug' => $categoria->slug ]),
-            $this->configService->getMetaImg()
+            url(asset('frontend/assets/images/site-guia.png'))
         );
         
         return view('web.guia.categoria',[
@@ -100,7 +100,7 @@ class GuiaController extends Controller
         $head = $this->seo->render('Anúncios - ' . $subcategoria->titulo ?? $this->configService->getConfig()->nomedosite,
             strip_tags($subcategoria->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.guiaCategoria', [ 'slug' => $subcategoria->slug ]),
-            $this->configService->getMetaImg()
+            url(asset('frontend/assets/images/site-guia.png'))
         );
         
         return view('web.guia.subcategoria',[
