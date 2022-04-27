@@ -113,7 +113,7 @@ class WebController extends Controller
         $head = $this->seo->render('Boletim das Ondas para Ubatuba' ?? 'Informática Livre',
             'Boletim das Ondas para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.ondas'),
-            url(asset('frontend/assets/images/site-guia.png'))
+            url(asset('frontend/assets/images/ondas.png'))
         );
 
         return view('web.boletim-das-ondas',[
