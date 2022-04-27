@@ -16,3 +16,4 @@ yarn-error.log
 /arquivos_locais
 error_log
 /public/error_log
+/public/sitemap.xml
