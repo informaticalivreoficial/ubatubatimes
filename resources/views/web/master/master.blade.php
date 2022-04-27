@@ -5,6 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="theme-color" content="#ec0000">
+	<meta name="msvalidate.01" content="AB238289F13C246C5E386B6770D9F10E" />
 
     <meta name="copyright" content="{{$configuracoes->ano_de_inicio}} - {{$configuracoes->nomedosite}}">
     <meta name="language" content="pt-br" /> 
