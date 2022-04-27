@@ -27,7 +27,9 @@ class CreateEmpresasTable extends Migration
             $table->string('document_company')->nullable();
             $table->string('document_company_secondary')->nullable();
             $table->integer('status')->default('0');
+            $table->boolean('cliente')->nullable(); 
             $table->integer('exibirnoguia')->default('0');
+            $table->integer('email_send_count')->default('0');
             $table->bigInteger('views')->default(0);
             $table->string('logomarca')->nullable();
             $table->integer('ano_de_inicio')->nullable();

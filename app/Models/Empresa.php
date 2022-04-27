@@ -20,6 +20,7 @@ class Empresa extends Model
         'categoria',
         'views',
         'exibirnoguia',
+        'email_send_count',
         'responsavel',
         'responsavel_email',
         'responsavel_cpf',
@@ -29,6 +30,7 @@ class Empresa extends Model
         'document_company',
         'document_company_secondary',
         'status',
+        'cliente',
         'logomarca', 
         'ano_de_inicio',  
         'content',    
@@ -81,6 +83,11 @@ class Empresa extends Model
         return $this->hasOne(CatEmpresa::class, 'id', 'categoria');
     }
 
+    public function categoriaPaiObject()
+    {
+        return $this->hasOne(CatEmpresa::class, 'id', 'cat_pai');
+    }
+
     public function anuncios()
     {
         return $this->hasMany(Anuncio::class, 'empresa', 'id');
@@ -94,6 +101,11 @@ class Empresa extends Model
     /**
      * Accerssors and Mutators
      */
+    public function getContentWebAttribute()
+    {
+        return Str::words($this->content, '20', ' ...');
+    }
+    
     public function getmetaimg()
     {
         $image = $this->metaimg;        
@@ -153,6 +165,11 @@ class Empresa extends Model
         }
 
         return Storage::url($this->logomarca);
+    }
+
+    public function setClienteAttribute($value)
+    {
+        $this->attributes['cliente'] = ($value == true || $value == '1' ? 1 : 0);
     }
 
     public function setDocumentCompanyAttribute($value)

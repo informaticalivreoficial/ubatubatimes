@@ -261,7 +261,7 @@ class EmpresaController extends Controller
                     ->orderBy('status', 'ASC')
                     ->orderBy('created_at', 'DESC')
                     ->paginate(25);
-        return view('admin.anuncios.categorias',[
+        return view('admin.empresas.categorias',[
             'categorias' => $categorias
         ]);
     }
@@ -270,7 +270,7 @@ class EmpresaController extends Controller
     {        
         $catpai = CatEmpresa::where('id', $request->catpai)->first();
         
-        return view('admin.anuncios.categorias-create',[
+        return view('admin.empresas.categorias-create',[
             'catpai' => $catpai
         ]);
     }
@@ -289,11 +289,11 @@ class EmpresaController extends Controller
         $criarCategoria->setSlug();
         
         if($request->id_pai != null){
-            return Redirect::route('anuncios.categorias.edit', [
+            return Redirect::route('empresas.categorias.edit', [
                 'id' => $criarCategoria->id,
             ])->with(['color' => 'success', 'message' => 'Sub Categoria cadastrada com sucesso!']);
         }else{
-            return Redirect::route('anuncios.categorias.edit', [
+            return Redirect::route('empresas.categorias.edit', [
                 'id' => $criarCategoria->id,
             ])->with(['color' => 'success', 'message' => 'Categoria cadastrada com sucesso!']);
         }
@@ -307,7 +307,7 @@ class EmpresaController extends Controller
         }else{
             $catpai = 'null';
         }
-        return view('admin.anuncios.categorias-edit', [
+        return view('admin.empresas.categorias-edit', [
             'categoria' => $categoria,
             'catpai' => $catpai
         ]);
@@ -322,11 +322,11 @@ class EmpresaController extends Controller
         $categoria->setSlug();
         
         if($categoria->id_pai != null){
-            return Redirect::route('anuncios.categorias.edit', [
+            return Redirect::route('empresas.categorias.edit', [
                 'id' => $categoria->id,
             ])->with(['color' => 'success', 'message' => 'Sub Categoria atualizada com sucesso!']);
         }else{
-            return Redirect::route('anuncios.categorias.edit', [
+            return Redirect::route('empresas.categorias.edit', [
                 'id' => $categoria->id,
             ])->with(['color' => 'success', 'message' => 'Categoria atualizada com sucesso!']);
         }

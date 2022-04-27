@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Web\ParceiroSend;
 use App\Models\CatEmpresa;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
 use App\Services\ConfigService;
 use App\Support\Seo;
+use Illuminate\Support\Facades\Mail;
 
 class GuiaController extends Controller
 {
@@ -23,8 +25,16 @@ class GuiaController extends Controller
     public function guiaUbatuba()
     {
         $catEmpresas = CatEmpresa::orderBy('titulo', 'ASC')->available()->whereNull('id_pai')->get();
-        $empresas = Empresa::orderBy('created_at', 'DESC')->available()->get();
+        $empresas = Empresa::orderBy('cliente', 'DESC')->inRandomOrder()->available()->get();
+
+        $head = $this->seo->render('Guia de Ubatuba - ' . $this->configService->getConfig()->nomedosite ?? $this->configService->getConfig()->nomedosite,
+            $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+            route('web.guiaUbatuba'),
+            $this->configService->getMetaImg()
+        );
+
         return view('web.guia.index',[
+            'head' => $head,
             'catEmpresas' => $catEmpresas,
             'empresas' => $empresas,
         ]);
@@ -33,7 +43,7 @@ class GuiaController extends Controller
     public function guiaEmpresa($slug)
     {
         $empresa = Empresa::where('slug', $slug)->available()->first();
-        $empresas = Empresa::orderBy('created_at', 'DESC')
+        $empresas = Empresa::orderBy('cliente', 'DESC')
                 ->where('id', '!=', $empresa->id)
                 ->where('categoria', $empresa->categoria)
                 ->available()
@@ -43,10 +53,10 @@ class GuiaController extends Controller
         $empresa->views = $empresa->views + 1;
         $empresa->save();
 
-        $head = $this->seo->render($empresa->alias_name ?? 'Informática Livre',
+        $head = $this->seo->render($empresa->alias_name ?? $this->configService->getConfig()->nomedosite,
             strip_tags($empresa->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
-            route('web.home'),
-            $empresa->getMetaImg() ?? $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+            route('web.guiaEmpresa', [ 'slug' => $empresa->slug ]),
+            $empresa->getMetaImg() ?? $this->configService->getMetaImg()
         );
 
         return view('web.guia.empresa',[
@@ -54,5 +64,88 @@ class GuiaController extends Controller
             'empresa' => $empresa,
             'empresas' => $empresas,
         ]);
+    }
+
+    public function guiaCategoria($slug)
+    {
+        $categoria = CatEmpresa::where('slug', $slug)->available()->first();
+        $empresas = Empresa::orderBy('cliente', 'DESC')
+                ->where('cat_pai', $categoria->id)
+                ->available()
+                ->inRandomOrder()
+                ->paginate(30);
+
+        $head = $this->seo->render('Anúncios - ' . $categoria->titulo ?? $this->configService->getConfig()->nomedosite,
+            strip_tags($categoria->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+            route('web.guiaCategoria', [ 'slug' => $categoria->slug ]),
+            $this->configService->getMetaImg()
+        );
+        
+        return view('web.guia.categoria',[
+            'head' => $head,
+            'categoria' => $categoria,
+            'empresas' => $empresas,
+        ]);
+    }
+
+    public function guiaSubCategoria($slug)
+    {
+        $subcategoria = CatEmpresa::where('slug', $slug)->available()->first();
+        $empresas = Empresa::orderBy('cliente', 'DESC')
+                ->where('categoria', $subcategoria->id)
+                ->available()
+                ->inRandomOrder()
+                ->paginate(30);
+
+        $head = $this->seo->render('Anúncios - ' . $subcategoria->titulo ?? $this->configService->getConfig()->nomedosite,
+            strip_tags($subcategoria->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+            route('web.guiaCategoria', [ 'slug' => $subcategoria->slug ]),
+            $this->configService->getMetaImg()
+        );
+        
+        return view('web.guia.subcategoria',[
+            'head' => $head,
+            'subcategoria' => $subcategoria,
+            'empresas' => $empresas,
+        ]);
+    }
+
+    public function sendEmailEmpresa(Request $request)
+    {
+        $empresa = Empresa::where('id', $request->empresa_id)->first();
+        if($request->nome == ''){
+            $json = "Por favor preencha o campo <strong>Nome</strong>";
+            return response()->json(['error' => $json]);
+        }
+        if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
+            $json = "O campo <strong>Email</strong> está vazio ou não tem um formato válido!";
+            return response()->json(['error' => $json]);
+        }
+        if($request->mensagem == ''){
+            $json = "Por favor preencha sua <strong>Mensagem</strong>";
+            return response()->json(['error' => $json]);
+        }
+        if(!empty($request->bairro) || !empty($request->cidade)){
+            $json = "<strong>ERRO</strong> Você está praticando SPAM!"; 
+            return response()->json(['error' => $json]);
+        }else{
+
+            $data = [
+                'sitename' => $empresa->alias_name,
+                'siteemail' => $empresa->email,
+                'reply_name' => $request->nome,
+                'reply_email' => $request->email,
+                'mensagem' => $request->mensagem,
+                'config_site_name' => $this->configService->getConfig()->nomedosite,
+            ];
+
+            $empresa->email_send_count = $empresa->email_send_count + 1;
+            $empresa->save();
+            
+            Mail::send(new ParceiroSend($data));
+            
+            $json = 'Obrigado '.getPrimeiroNome($request->nome).' sua mensagem foi enviada para <b>'.$empresa->alias_name.'</b> com sucesso!'; 
+            return response()->json(['sucess' => $json]);
+        }
     }
 }

@@ -67,7 +67,7 @@
 					<div class="col-md-4 top-social text-lg-right text-md-center">
 						@php
 							// PEGA COTAÇÃO DO DOLAR VIA JSON
-							//$url = file_get_contents('https://economia.awesomeapi.com.br/json/USD-BRL/1');
+							$url = file_get_contents('https://economia.awesomeapi.com.br/json/USD-BRL/1');
 							if (!empty($url)) {
 								$json = json_decode($url, true);
 								$imprime = end($json);
@@ -155,8 +155,11 @@
 				</nav>        
 				<div class="utf_nav_search"> <span id="search"><i class="fa fa-search"></i></span> </div>        
 				<div class="utf_search_block" style="display: none;">
-				<input type="text" class="form-control" placeholder="Enter your keywords...">
-				<span class="utf_search_close">&times;</span> 
+					<form action="{{route('web.pesquisa')}}" method="post">
+						@csrf
+						<input type="text" class="form-control" name="search" value="{{$search ?? ''}}" placeholder="Pesquisar...">
+					</form>				
+					<span class="utf_search_close">&times;</span> 
 				</div>        
 			</div>
 			</div>    
@@ -220,6 +223,10 @@
 						<li>
 							<i class="fa fa-angle-double-right"></i>
 							<a href="{{route('web.blog.artigos')}}"><span class="catTitle">Blog</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="{{route('web.pesquisa')}}"><span class="catTitle">Pesquisar no site</span></a> 
 						</li>
 						<li>
 							<i class="fa fa-angle-double-right"></i>

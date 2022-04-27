@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\{
-    Portifolio,
+    Empresa,
     Post
 };
 
@@ -27,11 +27,17 @@ class RssFeedController extends Controller
                 ->postson()
                 ->limit(10)
                 ->get();
+        $empresas = Empresa::orderBy('views', 'DESC')
+                ->orderBy('cliente', 'DESC')
+                ->available()
+                ->limit(50)
+                ->get();
         
         return response()->view('web.feed', [
             'posts' => $posts,
             'paginas' => $paginas,
-            'noticias' => $noticias
+            'noticias' => $noticias,
+            'empresas' => $empresas,
         ])->header('Content-Type', 'application/xml');        
     }
 }

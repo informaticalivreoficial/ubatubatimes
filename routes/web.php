@@ -5,25 +5,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
     AdminController,
     AnunciosController,
-    CatPortifolioController,
     UserController,
     EmailController,
     PostController,
     CatPostController,
     ConfigController,
     EmpresaController,
-    ProdutoController,
-    CatProdutoController,
     NewsletterController,
-    OrcamentoController,
-    ParceiroController,
     PlanController,
-    PortifolioController,
     SitemapController,
     SlideController
 };
 use App\Http\Controllers\Web\{
-    ClienteController,
     GuiaController,
     RssFeedController,
     SendEmailController,
@@ -43,16 +36,10 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     //****************************** Guia ******************************/
     Route::get('/guia-ubatuba', [GuiaController::class, 'guiaUbatuba'])->name('guiaUbatuba');
     Route::get('/guia-ubatuba/{slug}', [GuiaController::class, 'guiaEmpresa'])->name('guiaEmpresa');
+    Route::get('/guia-ubatuba/categoria/{slug}', [GuiaController::class, 'guiaCategoria'])->name('guiaCategoria');
+    Route::get('/guia-ubatuba/categoria/subcategoria/{slug}', [GuiaController::class, 'guiaSubCategoria'])->name('guiaSubCategoria');
+    Route::get('/sendEmailEmpresa', [GuiaController::class, 'sendEmailEmpresa'])->name('sendEmailEmpresa');
     
-    //** Página Destaque */
-    Route::get('/destaque', 'WebController@spotlight')->name('spotlight');
-    
-    //** Página Inicial */
-    Route::match(['post', 'get'], '/filtro', 'WebController@filter')->name('filter');
-
-    //***************************** Cliente ********************************************/
-    Route::get('/cliente/login', [ClienteController::class, 'login'])->name('login');
-   
     //**************************** Emails ********************************************/
     Route::get('/atendimento', [WebController::class, 'atendimento'])->name('atendimento');
     Route::get('/sendEmail', [SendEmailController::class, 'sendEmail'])->name('sendEmail');
@@ -69,7 +56,7 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
     Route::get('/noticia/{slug}', [WebController::class, 'noticia'])->name('noticia');
     Route::get('/noticias', [WebController::class, 'noticias'])->name('noticias');
-    Route::get('/noticia/categoria/{slug}', [WebController::class, 'categoria'])->name('noticia.categoria');
+    Route::get('/noticias/categoria/{slug}', [WebController::class, 'categoria'])->name('noticia.categoria');
     
     //** Pesquisa */
     Route::match(['post', 'get'], '/pesquisa', [WebController::class, 'pesquisa'])->name('pesquisa');

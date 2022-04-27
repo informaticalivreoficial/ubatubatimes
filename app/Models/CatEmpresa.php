@@ -44,6 +44,11 @@ class CatEmpresa extends Model
         return $this->hasMany(CatEmpresa::class, 'id_pai', 'id');
     }
 
+    public function father()
+    {
+        return $this->hasMany(CatEmpresa::class, 'id', 'id_pai');
+    }
+
     /**
      * Accerssors and Mutators
      */

@@ -177,6 +177,12 @@ $config = [
                             
                             <div class="tab-pane fade" id="custom-tabs-imagens" role="tabpanel" aria-labelledby="custom-tabs-imagens-tab">
                                 <div class="row mb-4">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">   
+                                        <div class="form-group">
+                                            <label class="labelforms"><b>Legenda da Imagem de Capa</b></label>
+                                            <input type="text" class="form-control"  name="thumb_legenda" value="{{ old('thumb_legenda') ?? $post->thumb_legenda }}">
+                                        </div>                                                    
+                                    </div>
                                     <div class="col-sm-12">                                        
                                         <div class="form-group">
                                             <div class="custom-file">

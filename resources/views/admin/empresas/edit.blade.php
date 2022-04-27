@@ -93,6 +93,19 @@ $config = [
                     <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
                         <div class="row mb-4">
                             <div class="col-12">
+                                <div class="row mb-4">
+                                    <div class="col-12"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Cliente? </b></label>
+                                            <div class="form-check">
+                                                <input id="clientesim" class="form-check-input" type="radio" value="1" name="cliente" {{(old('cliente') == '1' ? 'checked' : ($empresa->cliente == '1' ? 'checked' : ''))}}>
+                                                <label for="clientesim" class="form-check-label mr-5">Sim</label>
+                                                <input id="clientenao" class="form-check-input" type="radio" value="0" name="cliente" {{(old('cliente') == '0' ? 'checked' : ($empresa->cliente == '0' ? 'checked' : ''))}}>
+                                                <label for="clientenao" class="form-check-label">Não</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row mb-2">
                                     <div class="col-12 col-md-4"> 
                                         <div class="form-group">

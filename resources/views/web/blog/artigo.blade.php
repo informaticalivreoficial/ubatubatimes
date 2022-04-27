@@ -8,7 +8,8 @@
             <div class="col-md-12">
                 <ul class="breadcrumb">
                     <li><a href="{{route('web.home')}}">Início</a></li>
-                    <li>{{($post->tipo == 'noticia' ? 'Notícia' : 'Blog - Artigo')}}</li>
+                    <li>{{($post->tipo == 'noticia' ? 'Notícia' : 'Blog')}}</li>
+                    <li>{{$post->titulo}}</li>
                 </ul>
             </div>
         </div>

@@ -261,9 +261,18 @@ return [
             ]
         ],
         [
-            'text' => 'Empresas',
-            'url'  => 'admin/empresas',
+            'text' => 'Empresas',            
             'icon' => 'fas fa-industry',
+            'submenu' => [
+                [
+                    'text' => 'Listar Empresas',
+                    'url'  => 'admin/empresas',
+                ],
+                [
+                    'text' => 'Categorias',
+                    'url'  => 'admin/empresas/categorias',
+                ]
+            ] 
         ],
         [
             'text' => 'Anúncios',            
@@ -276,11 +285,7 @@ return [
                 [
                     'text' => 'Cadastrar Anúncio',
                     'url'  => 'admin/anuncios/create',
-                ],
-                [
-                    'text' => 'Categorias',
-                    'url'  => 'admin/anuncios/categorias',
-                ],
+                ],                
                 [
                     'text' => 'Planos',
                     'url'  => 'admin/anuncios/planos',
@@ -379,7 +384,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

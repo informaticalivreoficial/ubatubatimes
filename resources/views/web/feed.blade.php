@@ -25,7 +25,7 @@
         @foreach($paginas as $pagina)
             <item>
                 <title><![CDATA[{{ $pagina->titulo }}]]></title>
-                <link>{{ url('blog/artigo/'.$pagina->slug) }}</link>
+                <link>{{ url('pagina/'.$pagina->slug) }}</link>
                 <image>{{ $pagina->cover() }}</image>
                 <description><![CDATA[{!! $pagina->getContentWebAttribute() !!}]]></description>
                 <category>{{ $pagina->categoriaObject->titulo }}</category>
@@ -47,5 +47,20 @@
                 <pubDate>{{ $noticia->created_at }}</pubDate>
             </item>
         @endforeach
+
+        @if (!empty($empresas) && $empresas->count() > 0)
+            @foreach($empresas as $empresa)
+                <item>
+                    <title><![CDATA[{{ $empresa->alias_name }}]]></title>
+                    <link>{{ url('guia-ubatuba/'.$empresa->slug) }}</link>
+                    <image>{{ $empresa->nologoCover() }}</image>
+                    <description><![CDATA[{!! $empresa->getContentWebAttribute() !!}]]></description>
+                    <category>{{ $empresa->categoriaObject->titulo }}</category>
+                    <author><![CDATA[{{ $empresa->alias_name }}]]></author>
+                    <guid>{{ $empresa->id }}</guid>
+                    <pubDate>{{ $empresa->created_at }}</pubDate>
+                </item>
+            @endforeach
+        @endif        
     </channel>
 </rss>

@@ -1,72 +1,53 @@
 @extends('web.master.master')
 
 @section('content')
-<section class="section section-30 section-xxl-40 section-xxl-66 section-xxl-bottom-90 novi-background bg-gray-dark page-title-wrap" style="background-image: url({{url(asset('frontend/assets/images/bg-search.jpg'))}});">
-  <div class="container">
-      <div class="page-title">
-      <h2>Pesquisa no site</h2>
-      </div>
-  </div>
-</section>
 
-<section class="section section-60 section-only-child">
+<div class="page-title">
     <div class="container">
-        <div class="row row-40 justify-content-lg-center">
-            <div class="col-lg-10">
-            <form class="rd-search rd-search-minimal" action="{{ route('web.pesquisa') }}" method="post" data-search-live-count="15">
-                @csrf
-                <div class="form-wrap">
-                <label class="form-label" for="rd-search-form-input-1"><span class="text-mobile">Pesquisar...</span><span class="text-default">Pesquisar no site</span></label>
-                <input class="form-input" id="rd-search-form-input-1" type="text" name="search" value="{{$search ?? ''}}">
-                </div>
-                <button class="btn-icon-only btn-icon-only-primary" type="submit"><span class="novi-icon icon icon-sm material-icons-keyboard_return"></span></button>
-            </form>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    <li><a href="{{route('web.home')}}">Início</a></li>
+                    <li><a href="{{route('web.pesquisa')}}">Pesquisa no site</a></li>
+                </ul>
             </div>
-            <div class="col-md-11">
-                <div class="rd-search-results"></div>
-            </div>
+        </div>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <form action="{{ route('web.pesquisa') }}" method="post">
+                    @csrf
+                    <div class="input-group input-group-lg mb-2">                        
+                        <input class="form-control" type="text" name="search" value="{{$search ?? ''}}">
+                    </div>
+                    <button class="btn btn-block btn-primary" type="submit">Pesquisar</button>
+                </form>
+            </div>            
         </div>
     </div>
 </section>
 
-<section class="section section-md-bottom-60">
+<section class="section">
     <div class="container">        
-        @if (!empty($paginas) && $paginas->count() > 0)
-            @foreach ($paginas as $pagina)
-                <div class="row" style="margin-top: 15px;">
-                    <h5>Página: <a class="linksearch" href="{{route('web.pagina',['slug' => $pagina->slug])}}">{{$pagina->titulo}}</a></h5>
+        @if ($search && !empty($data) && count($data) > 0)
+            @foreach ($data as $item)
+                <div class="row">                    
                     <div class="col-12">
-                        <div class="inset-lg-right-15 inset-xl-right-0">
-                            {!!$pagina->content_web!!}
-                        </div>
+                        <h5>{{$item['tipo']}}: <a class="linksearch" href="{{$item['link']}}">{{$item['titulo']}}</a></h5>
+                        <p>
+                        {!! Words($item['desc'], 30) !!}
+                        </p>
                     </div>
                 </div>
             @endforeach
-        @endif
-        @if (!empty($artigos) && $artigos->count() > 0)
-            @foreach ($artigos as $artigo)
-                <div class="row" style="margin-top: 15px;">
-                    <h5>Blog: <a class="linksearch" href="{{route('web.blog.artigo',['slug' => $artigo->slug])}}">{{$artigo->titulo}}</a></h5>
-                    <div class="col-12">
-                        <div class="inset-lg-right-15 inset-xl-right-0">
-                            {!!$artigo->content_web!!}
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        @endif
-        @if (!empty($projetos) && $projetos->count() > 0)
-            @foreach ($projetos as $projeto)
-                <div class="row" style="margin-top: 15px;">
-                    <h5>Projetos: <a class="linksearch" href="{{route('web.projeto',['slug' => $projeto->slug])}}">{{$projeto->name}}</a></h5>
-                    <div class="col-12">
-                        <div class="inset-lg-right-15 inset-xl-right-0">
-                            {!!$projeto->content_web!!}
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        @endif
+            <div class="paging">
+                {{$data->links()}}                            
+            </div>
+        @endif        
     </div>
 </section>
 
@@ -74,6 +55,33 @@
 
 @section('css')
 <style>
+    .pagination-custom{
+            margin: 0;
+            display: -ms-flexbox;
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 0.25rem;
+        }
+        .pagination-custom li a {
+            border-radius: 30px;
+            margin-right: 8px;
+            color:#7c7c7c;
+            border: 1px solid #ddd;
+            position: relative;
+            float: left;
+            padding: 6px 12px;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 25px;
+            font-weight: 600;
+        }
+        .pagination-custom>.active>a, .pagination-custom>.active>a:hover, .pagination-custom>li>a:hover {
+            color: #fff;
+            background: #ec0000;
+            border: 1px solid transparent;
+        }
     .linksearch{
         color: #2083f4;
     }
