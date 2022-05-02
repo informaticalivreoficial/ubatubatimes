@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //Commands\NoticiaUbatubaCreate::class,
+        //Commands\SitemapUpdate::class,
     ];
 
     /**
@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('noticiacaragua:create')->everyMinute()->withoutOverlapping();                
         $schedule->command('noticiasaosebastiao:create')->everyMinute()->withoutOverlapping();                
         $schedule->command('noticiailhabela:create')->everyMinute()->withoutOverlapping();                
+        $schedule->command('sitemap:update')->everyMinute()->withoutOverlapping();                
     }
 
     /**

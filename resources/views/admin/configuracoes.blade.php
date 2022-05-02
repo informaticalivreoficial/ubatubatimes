@@ -464,7 +464,15 @@ $config1 = [
                                         <h5><b>Configurações SEO</b></h5>  
                                         <p>Aqui você pode configurar a otimização para as aplicações de Buscas</p>                                          
                                     </div>
-                                </div>                                        
+                                </div>  
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <h5><b>Sitemap</b></h5>  
+                                        <p>Caminho: <a target="_blank" href="{{route('web.home')}}/sitemap.xml">{{route('web.home')}}/sitemap.xml</a></p>                                          
+                                        <h5><b>Feed/RSS</b></h5>  
+                                        <p>Caminho: <a target="_blank" href="{{route('web.feed')}}">{{route('web.feed')}}</a></p>                                          
+                                    </div>
+                                </div>                                      
                                 <div class="col-12 mb-1 acoes text-right py-2"> 
                                     <a data-id="{{$config->id}}" href="javascript:void(0)" class="btn {{ ($diferenca >= 30 ? 'btn-warning' : 'btn-success disabled') }} btn-flat btn_sitemap">{!! ($diferenca >= 30 ? '<i class="fas fa-exclamation-triangle"></i> Sitemap Desatualizado' : '<i class="fas fa-check"></i> Sitemap Atualizado') !!}</a>
                                 </div>
@@ -604,35 +612,35 @@ $config1 = [
         });
 
         // BOTÃO SITEMAP
-        $('.btn_sitemap').click(function(){ 
-            //var button = $(this);
-            var conf_id = $(this).data('id'); 
-            $.ajax({
-                type: 'GET',
-                dataType: 'JSON',
-                url: "{{ route('admin.gerarxml') }}",
-                data: {
-                   'id': conf_id
-                },
-                beforeSend: function(){
-                    $('.btn_sitemap').html("Carregando...");                        
-                },
-                complete: function(){
-                    $('.btn_sitemap').html("<i class=\"fas fa-check\"></i> Sitemap Atualizado");               
-                },
-                success:function(response) {
-                    if (response.success === true) {
-                        $('.btn_sitemap').removeClass('btn-warning');
-                        $('.btn_sitemap').addClass('btn-success');
-                        $('.btn_sitemap').addClass('disabled');                
-                        toastr.success('Sitemap Atualizado');                            
-                    }else{
-                        toastr.error('Erro ao atualizar!'); 
-                    }
-                }
-            });
-            return false;
-        });
+        // $('.btn_sitemap').click(function(){ 
+        //     //var button = $(this);
+        //     var conf_id = $(this).data('id'); 
+        //     $.ajax({
+        //         type: 'GET',
+        //         dataType: 'JSON',
+        //         url: "{{ route('admin.gerarxml') }}",
+        //         data: {
+        //            'id': conf_id
+        //         },
+        //         beforeSend: function(){
+        //             $('.btn_sitemap').html("Carregando...");                        
+        //         },
+        //         complete: function(){
+        //             $('.btn_sitemap').html("<i class=\"fas fa-check\"></i> Sitemap Atualizado");               
+        //         },
+        //         success:function(response) {
+        //             if (response.success === true) {
+        //                 $('.btn_sitemap').removeClass('btn-warning');
+        //                 $('.btn_sitemap').addClass('btn-success');
+        //                 $('.btn_sitemap').addClass('disabled');                
+        //                 toastr.success('Sitemap Atualizado');                            
+        //             }else{
+        //                 toastr.error('Erro ao atualizar!'); 
+        //             }
+        //         }
+        //     });
+        //     return false;
+        // });
 
         // FORM DE SUPORTE NO ADMIN
         $('.btn_suporte').submit(function(){ 
