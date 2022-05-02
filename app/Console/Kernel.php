@@ -27,8 +27,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('noticiaubatuba:create')->everyMinute()->withoutOverlapping();                
         $schedule->command('noticiacaragua:create')->everyMinute()->withoutOverlapping();                
         $schedule->command('noticiasaosebastiao:create')->everyMinute()->withoutOverlapping();                
-        $schedule->command('noticiailhabela:create')->everyMinute()->withoutOverlapping();                
-        $schedule->command('sitemap:update')->everyMinute()->withoutOverlapping();                
+        $schedule->command('noticiailhabela:create')->everyMinute()->withoutOverlapping();      
     }
 
     /**

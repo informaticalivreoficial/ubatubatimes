@@ -612,35 +612,35 @@ $config1 = [
         });
 
         // BOTÃO SITEMAP
-        // $('.btn_sitemap').click(function(){ 
-        //     //var button = $(this);
-        //     var conf_id = $(this).data('id'); 
-        //     $.ajax({
-        //         type: 'GET',
-        //         dataType: 'JSON',
-        //         url: "{{ route('admin.gerarxml') }}",
-        //         data: {
-        //            'id': conf_id
-        //         },
-        //         beforeSend: function(){
-        //             $('.btn_sitemap').html("Carregando...");                        
-        //         },
-        //         complete: function(){
-        //             $('.btn_sitemap').html("<i class=\"fas fa-check\"></i> Sitemap Atualizado");               
-        //         },
-        //         success:function(response) {
-        //             if (response.success === true) {
-        //                 $('.btn_sitemap').removeClass('btn-warning');
-        //                 $('.btn_sitemap').addClass('btn-success');
-        //                 $('.btn_sitemap').addClass('disabled');                
-        //                 toastr.success('Sitemap Atualizado');                            
-        //             }else{
-        //                 toastr.error('Erro ao atualizar!'); 
-        //             }
-        //         }
-        //     });
-        //     return false;
-        // });
+        $('.btn_sitemap').click(function(){ 
+            //var button = $(this);
+            var conf_id = $(this).data('id'); 
+            $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                url: "{{ route('admin.gerarxml') }}",
+                data: {
+                   'id': conf_id
+                },
+                beforeSend: function(){
+                    $('.btn_sitemap').html("Carregando...");                        
+                },
+                complete: function(){
+                    $('.btn_sitemap').html("<i class=\"fas fa-check\"></i> Sitemap Atualizado");               
+                },
+                success:function(response) {
+                    if (response.success === true) {
+                        $('.btn_sitemap').removeClass('btn-warning');
+                        $('.btn_sitemap').addClass('btn-success');
+                        $('.btn_sitemap').addClass('disabled');                
+                        toastr.success('Sitemap Atualizado');                            
+                    }else{
+                        toastr.error('Erro ao atualizar!'); 
+                    }
+                }
+            });
+            return false;
+        });
 
         // FORM DE SUPORTE NO ADMIN
         $('.btn_suporte').submit(function(){ 

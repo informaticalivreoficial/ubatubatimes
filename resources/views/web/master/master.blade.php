@@ -68,8 +68,8 @@
 					<div class="col-md-4 top-social text-lg-right text-md-center">
 						@php
 							// PEGA COTAÇÃO DO DOLAR VIA JSON
-							$url = file_get_contents('https://economia.awesomeapi.com.br/json/USD-BRL/1');
-							if (empty($url)) {
+							$url = @file_get_contents('https://economia.awesomeapi.com.br/json/USD-BRL/1');
+							if ($url !== false && !empty($url)) {
 								$json = json_decode($url, true);
 								$imprime = end($json);
 								$cor = ($imprime['pctChange'] < '0' ? 'pos' :
