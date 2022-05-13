@@ -140,6 +140,112 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-6">
+        @if(!empty($empresasTop) && $empresasTop->count() > 0)
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Empresas mais visitadas</h3>
+                </div>
+                <div class="card-body p-0">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                            <th>Foto</th>
+                            <th>Empresa</th>
+                            <th></th>
+                            <th class="text-center">Visitas</th>
+                    </tr>
+                    </thead>
+                    <tbody>                            
+                        @foreach($empresasTop as $empresatop)
+                        @php
+                            //REALIZA PORCENTAGEM DE VISITAS!
+                            if($empresatop->views == 0){
+                                $percent = 1;
+                            }else{
+                                $percent = substr(( $empresatop->views / $empresastotalviews ) * 100, 0, 5);
+                            }                    
+                            $percenttag = str_replace(",", ".", $percent);
+                        @endphp
+                        <tr>
+                            <td>
+                                <a href="{{url($empresatop->nologoCover())}}" data-title="{{$empresatop->alias_name}}" data-toggle="lightbox"> 
+                                    <img src="{{url($empresatop->logoCover())}}" alt="{{$empresatop->alias_name}}" class="img-size-50">
+                                </a>
+                            </td>
+                            <td>{{$empresatop->alias_name}}</td>
+                            <td style="width:10%;">
+                            <div class="progress progress-md progress-striped active">
+                                <div class="progress-bar bg-success" style="width: {{$percenttag}}%" title="{{$percenttag}}%"></div>
+                            </div>
+                            </td>
+                            <td class="text-center">
+                            <span class="badge bg-success">{{$empresatop->views}}</span>
+                            <a data-toggle="tooltip" data-placement="top" title="Editar Notícia" href="{{route('posts.edit', ['id' => $empresatop->id])}}" class="btn btn-xs btn-default ml-2"><i class="fas fa-pen"></i></a>
+                            <a target="_blank" href="{{route('web.guiaEmpresa',['slug' => $empresatop->slug])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
+                            </td>
+                        </tr>
+                        @endforeach                            
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        @endif
+    </div>
+</div>
+
+@if(!empty($noticiasTop) && $noticiasTop->count() > 0)
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Notícias mais visitadas</h3>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                    <th>Foto</th>
+                    <th>Título</th>
+                    <th></th>
+                    <th class="text-center">Visitas</th>
+              </tr>
+            </thead>
+            <tbody>                            
+                @foreach($noticiasTop as $noticiatop)
+                @php
+                    //REALIZA PORCENTAGEM DE VISITAS!
+                    if($noticiatop->views == 0){
+                        $percent = 1;
+                    }else{
+                        $percent = substr(( $noticiatop->views / $noticiastotalviews ) * 100, 0, 5);
+                    }                    
+                    $percenttag = str_replace(",", ".", $percent);
+                @endphp
+                <tr>
+                    <td>
+                        <a href="{{url($noticiatop->nocover())}}" data-title="{{$noticiatop->titulo}}" data-toggle="lightbox"> 
+                            <img src="{{url($noticiatop->cover())}}" alt="{{$noticiatop->titulo}}" class="img-size-50">
+                        </a>
+                    </td>
+                    <td>{{$noticiatop->titulo}}</td>
+                    <td style="width:10%;">
+                      <div class="progress progress-md progress-striped active">
+                        <div class="progress-bar bg-success" style="width: {{$percenttag}}%" title="{{$percenttag}}%"></div>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <span class="badge bg-success">{{$noticiatop->views}}</span>
+                      <a data-toggle="tooltip" data-placement="top" title="Editar Notícia" href="{{route('posts.edit', ['id' => $noticiatop->id])}}" class="btn btn-xs btn-default ml-2"><i class="fas fa-pen"></i></a>
+                      <a target="_blank" href="{{route('web.noticia',['slug' => $noticiatop->slug])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
+                    </td>
+                </tr>
+                @endforeach                            
+            </tbody>
+          </table>
+        </div>
+    </div>
+@endif
+
 @if(!empty($artigosTop) && $artigosTop->count() > 0)
     <div class="card">
         <div class="card-header">
@@ -159,10 +265,10 @@
                 @foreach($artigosTop as $artigotop)
                 @php
                     //REALIZA PORCENTAGEM DE VISITAS!
-                    if($artigotop->views == '0'){
+                    if($artigotop->views == 0){
                         $percent = 1;
                     }else{
-                        $percent = substr(( $artigotop['views'] / $artigostotalviews ) * 100, 0, 5);
+                        $percent = substr(( $artigotop->views / $artigostotalviews ) * 100, 0, 5);
                     }
                     
                     $percenttag = str_replace(",", ".", $percent);
@@ -214,7 +320,7 @@
                     if($paginatop->views == '0'){
                         $percent = 1;
                     }else{
-                        $percent = substr(( $paginatop['views'] / $paginastotalviews ) * 100, 0, 5);
+                        $percent = substr(( $paginatop->views / $paginastotalviews ) * 100, 0, 5);
                     }
                     
                     $percenttag = str_replace(",", ".", $percent);

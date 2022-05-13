@@ -30,27 +30,49 @@ class AdminController extends Controller
         $postsArtigos = CatPost::where('tipo', 'artigo')->count();
         $postsPaginas = CatPost::where('tipo', 'pagina')->count();
         $postsNoticias = CatPost::where('tipo', 'noticia')->count();
-        $artigosTop = Post::where(DB::raw('YEAR(created_at)'), '=', date('Y'))
+        $artigosTop = Post::orderBy('views', 'DESC')
                 ->where('tipo', 'artigo')
                 ->limit(6)
                 ->postson()   
-                ->get()            
-                ->sortByDesc('views');                
-        $totalViewsArtigos = Post::selectRaw('SUM(views) AS VIEWS')
+                ->get();                
+        $totalViewsArtigos = Post::orderBy('views', 'DESC')
                 ->where('tipo', 'artigo')
-                ->where( DB::raw('YEAR(created_at)'), '=', date('Y') )
                 ->postson()
-                ->first();
-        $paginasTop = Post::where('tipo', 'pagina')
-                ->limit(4)
-                ->postson()
+                ->limit(6)
                 ->get()
-                ->sortByDesc('views');
-        $totalViewsPaginas = Post::selectRaw('SUM(views) AS VIEWS')
+                ->sum('views');
+        $noticiasTop = Post::orderBy('views', 'DESC')
+                ->where('tipo', 'noticia')
+                ->limit(6)
+                ->postson()   
+                ->get();                
+        $totalViewsNoticias = Post::orderBy('views', 'DESC')
+                ->where('tipo', 'noticia')
+                ->postson()
+                ->limit(6)
+                ->get()
+                ->sum('views');
+        $paginasTop = Post::orderBy('views', 'DESC')
+                ->where('tipo', 'pagina')
+                ->limit(6)
+                ->postson()   
+                ->get();
+        $totalViewsPaginas = Post::orderBy('views', 'DESC')
                 ->where('tipo', 'pagina')
                 ->postson()
-                ->first();
-
+                ->limit(6)
+                ->get()
+                ->sum('views');
+        $empresasTop = Empresa::orderBy('views', 'DESC')
+                ->limit(6)
+                ->available()   
+                ->get();
+        $totalViewsEmpresas = Empresa::orderBy('views', 'DESC')
+                ->available()
+                ->limit(6)
+                ->get()
+                ->sum('views');
+                
         //Notícias
         $noticiasAvailable = Post::postson()->where('tipo', 'noticia')->count();
         $noticiasUnavailable = Post::postsoff()->where('tipo', 'noticia')->count();
@@ -60,13 +82,7 @@ class AdminController extends Controller
         //Notícias
         $artigosAvailable = Post::postson()->where('tipo', 'artigo')->count();
         $artigosUnavailable = Post::postsoff()->where('tipo', 'artigo')->count();
-        //Roteiros Mais
-        // $roteirosTop = Roteiro::where(DB::raw('YEAR(created_at)'), '=', date('Y'))
-        //         ->limit(4)->available()->get()->sortByDesc('views');
-        // $totalviewsroteiros = Roteiro::selectRaw('SUM(views) AS VIEWS')
-        //         ->available()
-        //         ->where( DB::raw('YEAR(created_at)'), '=', date('Y') )
-        //         ->first();     
+        
         
         //Analitcs
         $visitasHoje = Analytics::fetchMostVisitedPages(Period::days(1));
@@ -89,20 +105,25 @@ class AdminController extends Controller
             //Notícias
             'noticiasAvailable' => $noticiasAvailable,
             'noticiasUnavailable' => $noticiasUnavailable,
+            'noticiasTop' => $noticiasTop,
+            'noticiastotalviews' => $totalViewsNoticias,
             //Artigos
             'artigosAvailable' => $artigosAvailable,
             'artigosUnavailable' => $artigosUnavailable,
+            'artigosTop' => $artigosTop,
+            'artigostotalviews' => $totalViewsArtigos,
             //Empresas
             'empresasAvailable' => $empresasAvailable,
             'empresasUnavailable' => $empresasUnavailable,
+            'empresasTop' => $empresasTop,
+            'empresastotalviews' => $totalViewsEmpresas,
             //CHART PIZZA
             'postsArtigos' => $postsArtigos,
             'postsPaginas' => $postsPaginas,
             'postsNoticias' => $postsNoticias,
-            'artigosTop' => $artigosTop,
-            'artigostotalviews' => $totalViewsArtigos->VIEWS,
+            
             'paginasTop' => $paginasTop,
-            'paginastotalviews' => $totalViewsPaginas->VIEWS,
+            'paginastotalviews' => $totalViewsPaginas,
             //Analytics
             'visitasHoje' => $visitasHoje,
             //'visitas365' => $visitas365,
