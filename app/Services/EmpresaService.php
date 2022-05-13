@@ -13,10 +13,31 @@ class EmpresaService
         $this->empresaRepository = $empresaRepository;
     }
 
-    public function listEmpresas()
+    public function listEmpresas($paginate = null)
     {
-        $empresas = $this->empresaRepository->getEmpresas();
+        $empresas = $this->empresaRepository->getEmpresas($paginate);
         return $empresas;
+    }
+
+    public function listCategorias($paginate = null)
+    {
+        $categorias = $this->empresaRepository->getCategorias($paginate);
+        return $categorias;
+    }
+
+    public function getEmpresaById(int $id)
+    {
+        $empresa = $this->empresaRepository->getById($id);
+        return $empresa;
+    }
+
+    public function setStatus(int $id, int $status)
+    {      
+        $data['status'] = $status;
+        $empresa = $this->empresaRepository->update($data, $id);
+        if($empresa){
+            return ['success' => true];
+        }
     }
 
     public function setCover(int $gbId)

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\CatEmpresa;
 use App\Models\Empresa;
 use App\Models\EmpresaGb;
 use App\Support\Cropper;
@@ -9,18 +10,44 @@ use Illuminate\Support\Facades\Storage;
 
 class EmpresaRepository
 {
-    private $model, $modelGb;
+    private $model, $modelGb, $modelCategorias, $paginate = 25;
 
-    public function __construct(Empresa $model, EmpresaGb $modelGb)
+    public function __construct(Empresa $model, EmpresaGb $modelGb, CatEmpresa $modelCategorias)
     {
         $this->model = $model;
         $this->modelGb = $modelGb;
+        $this->modelCategorias = $modelCategorias;
     }
 
-    public function getEmpresas()
+    public function getEmpresas($paginate)
     {
-        $empresas = $this->model->latest()->get();
+        $paginate = ($paginate == null ? $this->paginate : $paginate);
+        $empresas = $this->model->latest()->orderBy('status', 'ASC')->paginate($paginate);
         return $empresas;
+    }
+
+    public function getById(int $id)
+    {
+        $empresa = $this->model->where('id', $id)->first();
+        return $empresa;
+    }
+
+    public function create(array $data)
+    {
+        return $this->model->create($data);
+    }
+
+    public function update(array $data, int $id)
+    {
+        $empresa = $this->getById($id);
+        $empresa->fill($data);
+        $empresa->save(); 
+        return $this->entity->where('id', $id)->firstOrfail();
+    }
+
+    public function getCategorias()
+    {
+        //
     }
 
     public function getGb(int $fk)

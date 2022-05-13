@@ -34,7 +34,7 @@ class EmpresaController extends Controller
 
     public function index()
     {
-        $empresas = Empresa::orderBy('created_at', 'DESC')->orderBy('status', 'ASC')->paginate(25);        
+        $empresas = $this->empresaService->listEmpresas(50);
         return view('admin.empresas.index', [
             'empresas' => $empresas,
         ]);
@@ -97,7 +97,7 @@ class EmpresaController extends Controller
     
     public function edit($id)
     {
-        $empresa = Empresa::where('id', $id)->first();
+        $empresa = $this->empresaService->getEmpresaById($id);
         $anuncios = Anuncio::orderBy('created_at', 'DESC')->where('empresa', $empresa->id)->get();
         $categorias = CatEmpresa::whereNull('id_pai')
                     ->orderBy('titulo', 'ASC')
@@ -121,7 +121,7 @@ class EmpresaController extends Controller
    
     public function update(EmpresaRequest $request, $id)
     {
-        $empresa = Empresa::where('id', $id)->first();        
+        $empresa = $this->empresaService->getEmpresaById($id);        
 
         if(!empty($request->file('logomarca'))){
             Storage::delete($empresa->logomarca);
@@ -175,16 +175,14 @@ class EmpresaController extends Controller
     }
 
     public function empresaSetStatus(Request $request)
-    {        
-        $empresa = Empresa::find($request->id);
-        $empresa->status = $request->status;
-        $empresa->save();
-        return response()->json(['success' => true]);
+    {  
+        $empresa = $this->empresaService->setStatus($request->id, $request->status);
+        return response()->json($empresa);
     }
 
     public function delete(Request $request)
     {
-        $empresa = Empresa::where('id', $request->id)->first();
+        $empresa = $this->empresaService->getEmpresaById($request->id);
         $empresaGb = EmpresaGb::where('empresa', $empresa->id)->first();
         $nome = getPrimeiroNome(Auth::user()->name);
 
@@ -204,7 +202,7 @@ class EmpresaController extends Controller
 
     public function deleteon(Request $request)
     {
-        $empresa = Empresa::where('id', $request->empresa_id)->first();
+        $empresa = $this->empresaService->getEmpresaById($request->empresa_id);
         $imageDelete = EmpresaGb::where('empresa', $empresa->id)->first();
         $anuncio = Anuncio::where('empresa', $empresa->id)->first();
         $postR = $empresa->alias_name;
