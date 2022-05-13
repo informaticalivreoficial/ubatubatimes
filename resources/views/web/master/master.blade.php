@@ -303,12 +303,12 @@
     @endif
 
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N886VV2RRF"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-64800363-12"></script>
     <script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
-		gtag('config', 'G-N886VV2RRF');
+		gtag('config', 'UA-64800363-12');
     </script>
 </body>
 </html>
