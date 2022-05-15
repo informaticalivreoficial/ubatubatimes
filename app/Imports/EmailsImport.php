@@ -77,7 +77,7 @@ class EmailsImport implements
         $id = $this->lista;
 
         return [
-            '*.email' => ['email', 'unique:newsletter,email,']//"unique:newsletter,email,{$id},categoria"
+            '*.email' => ['email', 'unique:newsletter,email']//"unique:newsletter,email,{$id},categoria"
         ];
     }
 
