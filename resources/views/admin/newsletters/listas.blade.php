@@ -24,13 +24,48 @@
     <!-- /.card-header -->
     <div class="card-body">
         <div class="row">
-            <div class="col-12">                
+            <div class="col-12">
+                @if($errors->all())
+                    @foreach($errors->all() as $error)
+                        @message(['color' => 'danger'])
+                            {{ $error }}
+                        @endmessage
+                    @endforeach
+                 @endif 
+                 
                 @if(session()->exists('message'))
                     @message(['color' => session()->get('color')])
                         {{ session()->get('message') }}
                     @endmessage
                 @endif
-            </div>           
+
+                @if(session()->has('failures'))
+                    <table class="table table-danger">
+                        <thead>
+                            <tr>
+                                <th>Linha</th>
+                                <th>Atributo</th>
+                                <th>Erro</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        @foreach (session()->get('failures') as $validation)
+                            <tr>
+                                <td>{{$validation->row()}}</td>
+                                <td>{{$validation->attribute()}}</td>
+                                <td>
+                                    <ul>
+                                        @foreach ($validation->errors() as $e)
+                                            <li>{{$e}}</li>
+                                        @endforeach
+                                    </ul>    
+                                </td>
+                                <td>{{$validation->values()[$validation->attribute()]}}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                @endif
+             </div>            
         </div>
         @if(!empty($listas) && $listas->count() > 0)
             <table class="table table-bordered table-striped projects">
@@ -50,8 +85,8 @@
                         <td class="text-center">{{$lista->created_at}}</td>                           
                         <td class="acoes">
                             <a title="Marcar como Padrão" class="btn btn-xs {{ ($lista->sistema == true ? 'btn-warning' : 'btn-secondary') }} icon-notext j_padrao" data-action="{{ route('listas.padrao', ['id' => $lista->id]) }}"><i class="fas fa-magnet"></i></a>
-                            <a class="btn btn-secondary btn-xs" href=""><i class="fa fa-download"></i> Exportar csv</a>
-                            <a class="btn btn-secondary btn-xs" href=""><i class="fa fa-download"></i> Exportar excel</a>
+                            <a class="btn btn-secondary btn-xs" href="{{route('listas.emailExportCsv', [ 'lista' => $lista->id ])}}"><i class="fa fa-download"></i> Exportar csv</a>
+                            <button type="button" class="btn btn-secondary btn-xs j_modal_importar_email" data-toggle="modal" data-target="#exampleModal" data-id="{{ $lista->id }}"><i class="fa fa-upload"></i> Importar csv</button>
                             <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $lista->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $lista->status == true ? 'checked' : ''}}>
                             <a data-toggle="tooltip" data-placement="top" title="Editar Lista" href="{{route('listas.edit',[ 'id' => $lista->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
                             <a href="{{route('lista.newsletters',[ 'categoria' => $lista->id ])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
@@ -97,10 +132,35 @@
                     <button type="submit" class="btn btn-primary">Excluir Agora</button>
                 </div>
             </form>
+        </div>        
+    </div>    
+</div>
+
+<!-- Modal Importar CSV -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Importar CSV</h5>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" id="frm1" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <div class="custom-file">
+                                <input type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                                <label class="custom-file-label" for="exampleInputFile">Escolher Arquivo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">           
+                        <button class="btn btn-block btn-primary" type="submit">Importar Agora</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
 @stop
 
@@ -140,6 +200,11 @@
                         toastr.error(data.error);
                     }
                 }, 'json');
+            });
+
+            $('.j_modal_importar_email').click(function() {
+                var lista_id = $(this).data('id');    
+                $('#frm1').prop('action',"{{ route('listas')}}/import/" + lista_id);
             });
            
             //FUNÇÃO PARA EXCLUIR

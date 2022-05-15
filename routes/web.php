@@ -80,6 +80,8 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::post('listas/store', [NewsletterController::class, 'listasStore'])->name('listas.store');
     Route::get('listas', [NewsletterController::class, 'listas'])->name('listas');
 
+    Route::get('listas/export/{lista}', [NewsletterController::class, 'emailExportCsv'])->name('listas.emailExportCsv');
+    Route::post('listas/import/{lista}', [NewsletterController::class, 'emailImportCsv'])->name('listas.emailImportCsv');
     Route::put('listas/email/{id}', [NewsletterController::class, 'newsletterUpdate'])->name('listas.newsletter.update');
     Route::get('listas/email/set-status', [NewsletterController::class, 'emailSetStatus'])->name('emails.emailSetStatus');
     Route::get('listas/email/delete', [NewsletterController::class, 'emailDelete'])->name('emails.delete');

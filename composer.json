@@ -11,15 +11,16 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jeroennoten/laravel-adminlte": "^3.7",
+        "laravel/cashier": "^13.8",
         "laravel/framework": "^8.54",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
+        "maatwebsite/excel": "^3.1",
         "simplesoftwareio/simple-qrcode": "~2",
         "spatie/laravel-analytics": "^3.11",
         "spatie/laravel-sitemap": "^5.9",
-        "weidner/goutte": "^2.1",
-        "laravel/cashier": "^13.8"
+        "weidner/goutte": "^2.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

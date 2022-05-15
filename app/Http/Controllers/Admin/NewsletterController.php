@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\EmailsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\NewsletterCatRequest;
 use App\Http\Requests\Admin\NewsletterRequest;
+use App\Imports\EmailsImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 use App\Models\Newsletter;
 use App\Models\NewsletterCat;
 use Illuminate\Http\Request;
@@ -157,6 +161,27 @@ class NewsletterController extends Controller
             'color' => 'success', 
             'message' => 'A Inscrição de '.$newsletterUpdate->nome.' foi alualizada com sucesso!'
         ]);
+    }
+
+    public function emailExportCsv($lista)
+    {
+        $lista = NewsletterCat::where('id', $lista)->first();
+        $export = Excel::download(new EmailsExport, Str::slug($lista->titulo) . '.csv');
+        return $export;
+    }
+
+    public function emailImportCsv($lista)
+    {
+        $lista = NewsletterCat::where('id', $lista)->first();
+        $file = request()->file('file');
+        $import = new EmailsImport($lista->id);
+        $import->import($file); 
+
+        if($import->failures()->isNotEmpty()){
+            return back()->withFailures($import->failures());
+        }
+        //dd($import->failures()); 
+        return Redirect::route('listas')->with('success','Lista Importada com sucesso!!!');
     }
 
     public function emailSetStatus(Request $request)
