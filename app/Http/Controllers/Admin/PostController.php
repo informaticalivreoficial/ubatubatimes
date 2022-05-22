@@ -99,6 +99,56 @@ class PostController extends Controller
         });                
     }
 
+    public function crowlerFundartUbatuba()
+    {
+        $urlFundartUbatuba  = 'https://fundart.com.br/noticias';
+        $pageFundartUbatuba = $this->crowler->request('GET', $urlFundartUbatuba); 
+                
+            $resultFundartUbatuba = [                 
+                'tipo' => 'noticia',
+                'autor' => 1,
+                'titulo' => $pageFundartUbatuba->filter('.archive-posts .row h2')->text(),
+                'slug' => Str::slug($pageFundartUbatuba->filter('.archive-posts .row h2')->text()),
+                'cat_pai' => 14,
+                'categoria' => 15,
+                'status' => 1,
+                'thumb_legenda' => 'Foto: Divulgação Fundação de Arte e Cultura de Ubatuba – FundArt',
+                'url' => $pageFundartUbatuba->filter('.archive-posts .row a')->attr('href'),
+                'created_at' => now(),
+                'publish_at' => now(),
+            ]; 
+            
+            $post = Post::where('titulo', $resultFundartUbatuba['titulo'])->first();
+            if(empty($post)){
+                $link = $resultFundartUbatuba['url'];
+                $linkContent = $this->crowler->request('GET', $link);            
+                $resultFundartUbatuba['content'] = $linkContent->filter('.single-content p')->eq(2)->html() . '<br>Fonte: <a target="_blank" href="https://fundart.com.br">Divulgação Fundação de Arte e Cultura de Ubatuba – FundArt</a>';
+                $resultFundartUbatuba['img'] = $linkContent->filter('.single-content img')->attr('src');
+                
+                $imgurl = $resultFundartUbatuba['img'];
+                $imgurl = explode('300x300', $imgurl);                
+                $imgurl = $imgurl[0] . '768x769' . $imgurl[1];
+                $contents = file_get_contents($imgurl);
+                $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+                
+                unset($resultFundartUbatuba['img']);
+                unset($resultFundartUbatuba['url']);
+                $criarPost = DB::table('posts')->updateOrInsert($resultFundartUbatuba);
+                $id = DB::getPdo()->lastInsertId();
+                Storage::put('noticias/' . $id . '/' . $name, $contents);
+                
+                $postGb = new PostGb();
+                $postGb->post = $id;
+                $postGb->path = 'noticias/' . $id . '/' . $name;
+                $postGb->save();
+                unset($postGb);
+
+                $post = Post::find($id);
+                $autor = User::find($post->autor);
+                $autor->notify(new PostCreatedUpdated($post));
+            }    
+    }
+
     public function crowlerNoticiasCaraguatatuba()
     {
         $urlCaragua  = 'https://www.caraguatatuba.sp.gov.br/pmc/';
