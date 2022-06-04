@@ -22,7 +22,7 @@
             </item>
         @endforeach
 
-        @if (!empty($empresas) && $empresas->count() > 0)
+        {{-- @if (!empty($empresas) && $empresas->count() > 0)
             @foreach($empresas as $empresa)
                 <item>
                     <title><![CDATA[{{ $empresa->alias_name }}]]></title>
@@ -35,7 +35,7 @@
                     <pubDate>{{ $empresa->created_at }}</pubDate>
                 </item>
             @endforeach
-        @endif   
+        @endif    --}}
         
         @foreach($posts as $post)
             <item>
