@@ -42,29 +42,29 @@ class AppServiceProvider extends ServiceProvider
         // View()->share('configuracoes', $configuracoes);
 
         //Região Categorias de Notícias
-        $catnoticias = CatPost::where('tipo', 'noticia')
-                        ->available()
-                        ->whereNotNull('id_pai')
-                        ->get();
-        View()->share('catnoticias', $catnoticias);
+        // $catnoticias = CatPost::where('tipo', 'noticia')
+        //                 ->available()
+        //                 ->whereNotNull('id_pai')
+        //                 ->get();
+        // View()->share('catnoticias', $catnoticias);
 
         //Colunas Categorias
-        $catcolunas = CatPost::where('tipo', 'artigo')
-                        ->available()
-                        ->whereNotNull('id_pai')
-                        ->get();
-        View()->share('catcolunas', $catcolunas);
+        // $catcolunas = CatPost::where('tipo', 'artigo')
+        //                 ->available()
+        //                 ->whereNotNull('id_pai')
+        //                 ->get();
+        // View()->share('catcolunas', $catcolunas);
 
         //Newsletter
-        $newsletter = NewsletterCat::whereNotNull('sistema')
-                        ->available()
-                        ->first();
-        View()->share('newsletterForm', $newsletter);
+        // $newsletter = NewsletterCat::whereNotNull('sistema')
+        //                 ->available()
+        //                 ->first();
+        // View()->share('newsletterForm', $newsletter);
 
         //Anúncio Topo Home 729x90
-        $positionTopohome = Anuncio::where('posicao', 2)->available()->limit(1)->get();
-        View()->share('positionTopohome', $positionTopohome);
+        // $positionTopohome = Anuncio::where('posicao', 2)->available()->limit(1)->get();
+        // View()->share('positionTopohome', $positionTopohome);
 
-        Paginator::useBootstrap();
+        // Paginator::useBootstrap();
     }
 }
