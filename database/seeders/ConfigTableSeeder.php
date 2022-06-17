@@ -21,6 +21,9 @@ class ConfigTableSeeder extends Seeder
             'sitemap' => 'teste',
             'rss_data' => now(),
             'sitemap_data' => now(),
+
+            'uf' => '25',
+            'cidade' => '5351',
             
             'telefone1' => '(XX) XXXX-XXXX',
             'telefone2' => '(XX) XXXXX-XXXX',
