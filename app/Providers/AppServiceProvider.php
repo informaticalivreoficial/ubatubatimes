@@ -33,14 +33,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Empresa::observe(EmpresaObserver::class);
+        // Empresa::observe(EmpresaObserver::class);
 
-        Schema::defaultStringLength(191);
-        Blade::aliasComponent('admin.components.message', 'message');
+        // Schema::defaultStringLength(191);
+        // Blade::aliasComponent('admin.components.message', 'message');
 
-        // $configuracoes = \App\Models\Configuracoes::find(1); 
+        /// $configuracoes = \App\Models\Configuracoes::find(1); 
         // View()->share('configuracoes', $configuracoes);
-
+//
         //Região Categorias de Notícias
         // $catnoticias = CatPost::where('tipo', 'noticia')
         //                 ->available()
