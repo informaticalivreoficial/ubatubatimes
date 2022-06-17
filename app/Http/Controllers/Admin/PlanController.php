@@ -36,7 +36,7 @@ class PlanController extends Controller
     public function edit($id)
     {
         $plan = Plan::where('id', $id)->first();
-        return view('admin.plans.edit',[
+        return view('admin.anuncios.plans.edit',[
             'plan' => $plan
         ]);
     }

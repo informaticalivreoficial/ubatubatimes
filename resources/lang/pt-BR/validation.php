@@ -203,6 +203,9 @@ return [
 
         'uf' => 'estado',
         'cidade' => 'cidade',
+
+        //Planos
+        'plan_id' => 'plano',
         
     ],
 

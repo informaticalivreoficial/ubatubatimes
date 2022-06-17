@@ -16,11 +16,11 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('stripe_id')->unique();
             $table->text('content')->nullable();
             $table->string('slug')->nullable();
             $table->integer('status')->nullable();
             $table->integer('avaliacao')->nullable();
+            $table->integer('tipo_pagamento')->nullable();
 
             /** pricing and values */
             $table->boolean('exibivalores')->nullable();

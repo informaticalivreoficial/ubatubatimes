@@ -56,7 +56,7 @@ class AnunciosController extends Controller
                 'message' => 'Todas as imagens devem ser do tipo jpg, jpeg ou png.',
             ]);
         }
-
+        //dd($data);
         if(!empty($request->file('300x250'))){
             $anuncioCreate['300x250'] = $request->file('300x250')->storeAs('anuncios', '300x250-'.Str::slug($request->titulo)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('300x250')->extension());
             $anuncioCreate->save();

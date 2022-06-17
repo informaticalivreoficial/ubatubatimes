@@ -73,7 +73,18 @@ $config = [
             <div class="card-body">
                 <div class="tab-content" id="custom-tabs-four-tabContent">
                     <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                        <div class="row mb-4">
+                        <div class="row mb-4">                            
+                            <div class="col-12"> 
+                                <div class="form-group">
+                                    <label class="labelforms text-muted"><b>Criar Assinatura? </b></label>
+                                    <div class="form-check">
+                                        <input id="cria_assinaturasim" class="form-check-input" type="radio" value="1" name="cria_assinatura" {{(old('cria_assinatura') == '1' ? 'checked' : '')}}>
+                                        <label for="cria_assinaturasim" class="form-check-label mr-5">Sim</label>
+                                        <input id="cria_assinaturanao" class="form-check-input" type="radio" value="0" name="cria_assinatura" {{(old('cria_assinatura') == '0' ? 'checked' : '')}}>
+                                        <label for="cria_assinaturanao" class="form-check-label">Não</label>
+                                    </div>
+                                </div>
+                            </div>                            
                             <div class="col-12">
                                 <div class="row mb-2">
                                     <div class="col-12 col-md-4">
@@ -116,6 +127,7 @@ $config = [
                                         <div class="form-group">
                                             <label class="labelforms text-muted"><b>Posição:</b></label>
                                             <select class="form-control" name="posicao">
+                                                <option value="">Selecione a Posição</option>
                                                 <option value="1">Home Sidebar 300x250</option>
                                                 <option value="2">Topo home 728x90</option>
                                                 <option value="3">Artigo Sidebar 300x250</option>

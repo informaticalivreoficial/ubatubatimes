@@ -53,7 +53,6 @@
                             <td>
                                 <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $plan->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $plan->status == true ? 'checked' : ''}}>
                                 <a href="{{ route('plans.edit', [ 'id' => $plan->id ]) }}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
-                                <a target="_blank" href="{{--route('web.plano',['slug' => $plan->slug])--}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
                                 <button type="button" class="btn btn-xs btn-danger text-white j_modal_btn" data-id="{{$plan->id}}" data-toggle="modal" data-target="#modal-default"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>                            

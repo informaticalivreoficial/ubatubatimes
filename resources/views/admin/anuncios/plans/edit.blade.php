@@ -79,7 +79,45 @@ $config = [
                         @method('PUT')  
                         <div class="tab-content" id="custom-tabs-four-tabContent">
                             <div class="tab-pane fade show active" id="custom-tabs-conteudo" role="tabpanel" aria-labelledby="custom-tabs-conteudo-tab">
-                                                       
+                                <div class="row mb-2">
+                                    <div class="col-12"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>Tipo de pagamento</b></label>
+                                            <div class="form-check">
+                                                <input id="tipounico" class="form-check-input" type="radio" value="1" name="tipo_pagamento" {{(old('tipo_pagamento') == '1' ? 'checked' : ( $plan->tipo_pagamento == '1' ? 'checked' : ''))}}>
+                                                <label for="tipounico" class="form-check-label mr-5">Único</label>
+                                                <input id="tiporecorrente" class="form-check-input" type="radio" value="0" name="tipo_pagamento" {{(old('tipo_pagamento') == '0' ? 'checked' : ( $plan->tipo_pagamento == '0' ? 'checked' : '') )}}>
+                                                <label for="tiporecorrente" class="form-check-label">Recorrente</label>
+                                            </div>
+                                        </div>
+                                    </div>                        
+                                </div> 
+                                <div class="row mb-2">
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-2">
+                                        <label class="labelforms text-muted"><b>Valor</b></label>
+                                        <input type="text" class="form-control mask-money v" name="valor" value="{{ old('valor') ?? $plan->valor }}">
+                                    </div>
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-2">
+                                        <label class="labelforms text-muted"><b>Mensal</b></label>
+                                        <input type="text" class="form-control mask-money m" name="valor_mensal" value="{{ old('valor_mensal') ?? $plan->valor_mensal }}">
+                                    </div>
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-2">
+                                        <label class="labelforms text-muted"><b>Trimestral</b></label>
+                                        <input type="text" class="form-control mask-money t" name="valor_trimestral" value="{{ old('valor_trimestral') ?? $plan->valor_trimestral }}">
+                                    </div>
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-2">
+                                        <label class="labelforms text-muted"><b>Semestral</b></label>
+                                        <input type="text" class="form-control mask-money s" name="valor_semestral" value="{{ old('valor_semestral') ?? $plan->valor_semestral }}">
+                                    </div>
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-2">
+                                        <label class="labelforms text-muted"><b>Anual</b></label>
+                                        <input type="text" class="form-control mask-money a" name="valor_anual" value="{{ old('valor_anual') ?? $plan->valor_anual }}">
+                                    </div>
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-2">
+                                        <label class="labelforms text-muted"><b>Bi-anual</b></label>
+                                        <input type="text" class="form-control mask-money b" name="valor_bianual" value="{{ old('valor_bianual') ?? $plan->valor_bianual }}">
+                                    </div>
+                                </div>                      
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -134,13 +172,48 @@ $config = [
 @stop
 
 @section('js')
+    <script src="{{url(asset('backend/assets/js/jquery.mask.js'))}}"></script>
     <script>
-        $(function () {            
+        $(document).ready(function () { 
+        var $money = $(".mask-money");
+            $money.mask('R$ 000.000.000.000.000,00', {reverse: true, placeholder: "R$ 0,00"});
+        });
+    </script>
+    <script>
+        $(function () {     
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            });             
+            });  
+            
+            function tipoPagamento() {
+                if ($('#tipounico').prop('checked')) {
+                    $('.m, .t, .s, .a, .b').prop('disabled', true);
+                    $('.v').prop('disabled', false);
+                }else if($('#tiporecorrente').prop('checked')){
+                    $('.m, .t, .s, .a, .b').prop('disabled', false);
+                    $('.v').prop('disabled', true);
+                }else{
+                    $('.v, .m, .t, .s, .a, .b').prop('disabled', true);
+                }
+            } 
+
+            tipoPagamento();
+
+            $('#tipounico').change( function(){
+                if(this.checked){
+                    $('.m, .t, .s, .a, .b').prop('disabled', true);
+                    $('.v').prop('disabled', false);
+                }
+            });
+            $('#tiporecorrente').change( function(){
+                if(this.checked){
+                    $('.v').prop('disabled', true);
+                    $('.m, .t, .s, .a, .b').prop('disabled', false);
+                }
+            });
         });
     </script>
 @stop

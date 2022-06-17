@@ -18,7 +18,7 @@ class Seo
     {
         $this->optimizer = new Optimizer();
         $this->optimizer->openGraph(
-            'Informática Livre',
+            'Ubatuba Times',
             'pt_BR',
             'article'
         )->publisher(

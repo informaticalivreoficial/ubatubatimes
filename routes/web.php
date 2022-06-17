@@ -139,7 +139,7 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('anuncios/planos/{id}/edit', [PlanController::class, 'edit'])->name('plans.edit');
     Route::get('anuncios/planos/create', [PlanController::class, 'create'])->name('plans.create');
     Route::post('anuncios/planos/store', [PlanController::class, 'store'])->name('plans.store');
-    Route::get('/anuncios/planos', [PlanController::class, 'index'])->name('plans.index');
+    Route::get('/anuncios/planos', [PlanController::class, 'index'])->name('plans');
 
     //******************** Sitemap *********************************************/
     Route::get('gerarxml', [SitemapController::class, 'gerarxml'])->name('admin.gerarxml');
