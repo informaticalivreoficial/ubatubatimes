@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
         "maatwebsite/excel": "^3.1",
+        "nao-pon/flysystem-google-drive": "~1.1",
         "simplesoftwareio/simple-qrcode": "~2",
         "spatie/laravel-analytics": "^3.11",
         "spatie/laravel-sitemap": "^5.9",

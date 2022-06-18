@@ -22,6 +22,11 @@ use App\Http\Controllers\Web\{
     SendEmailController,
     WebController
 };
+use Illuminate\Support\Facades\Storage;
+
+Route::get('test', function() {
+    Storage::disk('google')->put('test.txt', 'Hello World');
+});
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
