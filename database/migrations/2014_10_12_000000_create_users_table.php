@@ -81,6 +81,11 @@ class CreateUsersTable extends Migration
             $table->string('soundclound')->nullable();
             $table->string('snapchat')->nullable();
 
+            $table->string('stripe_id')->nullable();
+            $table->string('pm_type')->nullable();
+            $table->string('pm_last_four')->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
+
             /** access */
             $table->boolean('admin')->nullable();
             $table->boolean('client')->nullable();
