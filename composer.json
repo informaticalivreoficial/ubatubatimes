@@ -19,6 +19,7 @@
         "nao-pon/flysystem-google-drive": "~1.1",
         "simplesoftwareio/simple-qrcode": "~2",
         "spatie/laravel-analytics": "^3.11",
+        "spatie/laravel-google-cloud-storage": "^1.0",
         "spatie/laravel-sitemap": "^5.9",
         "weidner/goutte": "^2.1"
     },

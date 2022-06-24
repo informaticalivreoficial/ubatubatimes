@@ -108,7 +108,7 @@ class Configuracoes extends Model
         $image = $this->marcadagua;        
         if(empty($this->marcadagua) || !File::exists('../public/storage/' . $image)) {
             return url(asset('backend/assets/images/image.jpg'));
-        } 
+        }         
         return Storage::url(Cropper::thumb($this->marcadagua, env('MARCADAGUA_WIDTH'), env('MARCADAGUA_HEIGHT')));
     }
     

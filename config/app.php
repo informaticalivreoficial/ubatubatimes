@@ -163,7 +163,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-        App\Providers\GoogleDriveServiceProvider::class,
 
         /*
          * Package Service Providers...
