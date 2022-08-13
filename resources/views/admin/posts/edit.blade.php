@@ -196,8 +196,8 @@ $config = [
                                         <div class="property_image">
                                             @foreach($post->images()->get() as $image)
                                             <div class="property_image_item">
-                                                <a href="{{ $image->getUrlImageAttribute() }}" data-toggle="lightbox" data-gallery="property-gallery" data-type="image">
-                                                <img src="{{ $image->url_cropped }}" alt="">
+                                                <a href="{{ $image->url_image }}" data-toggle="lightbox" data-gallery="property-gallery" data-type="image">
+                                                    <img src="{{ $image->url_image }}" alt="{{$post->titulo}}">
                                                 </a>
                                                 <div class="property_image_actions">
                                                     <a href="javascript:void(0)" class="btn btn-xs {{ ($image->cover == true ? 'btn-success' : 'btn-default') }} icon-notext image-set-cover px-2" data-action="{{ route('posts.imageSetCover', ['image' => $image->id]) }}"><i class="nav-icon fas fa-check"></i> </a>
@@ -312,7 +312,9 @@ $config = [
                 }
             });     
 
-            // Função para chamar as categorias do Post            
+            
+
+            // Função para chamar as categorias do Post           
 
             $('.tipo_post').on('change', function (){
                 var categoria = this.value;

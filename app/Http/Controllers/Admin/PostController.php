@@ -338,6 +338,9 @@ class PostController extends Controller
 
     public function edit($id)
     {
+        // $url = 'https://s3.' . env('AWS_DEFAULT_REGION') . '.amazonaws.com/' . env('AWS_BUCKET') . '/';
+        // $s3 = Storage::disk('s3')->getAdapter()->getClient();
+        // dd($s3->getObjectUrl( env('AWS_BUCKET'), 'cache' ));
         $categorias = CatPost::orderBy('titulo', 'ASC')->where('id_pai', null)->get();
         $editarPost = Post::where('id', $id)->first();
         $users = User::where('admin', '=', '1')->orWhere('editor', '=', '1')->orWhere('superadmin', '=', '1')->get();
