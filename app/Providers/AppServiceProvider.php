@@ -65,6 +65,6 @@ class AppServiceProvider extends ServiceProvider
         // $positionTopohome = Anuncio::where('posicao', 2)->available()->limit(1)->get();
         // View()->share('positionTopohome', $positionTopohome);
 
-        // Paginator::useBootstrap();
+        Paginator::useBootstrap();
     }
 }
