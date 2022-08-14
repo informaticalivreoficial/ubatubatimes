@@ -109,10 +109,11 @@ class Empresa extends Model
     public function getmetaimg()
     {
         $image = $this->metaimg;        
-        if(empty($this->metaimg) || !File::exists('../public/storage/' . $image)) {
+        if(empty($this->metaimg) || !Storage::disk()->exists(env('AWS_PASTA') . $image)) {
             return url(asset('backend/assets/images/image.jpg'));
         } 
-        return Storage::url(Cropper::thumb($this->metaimg, env('METAIMG_WIDTH'), env('METAIMG_HEIGHT')));
+        //return Storage::url(Cropper::thumb($this->metaimg, env('METAIMG_WIDTH'), env('METAIMG_HEIGHT')));
+        return Storage::url($this->metaimg);
     }
 
     public function cover()
@@ -125,11 +126,11 @@ class Empresa extends Model
             $cover = $images->first(['path']);
         }
 
-        if(empty($cover['path']) || !File::exists('../public/storage/' . $cover['path'])) {
+        if(empty($cover['path']) || !Storage::disk()->exists(env('AWS_PASTA') . $cover['path'])) {
             return $this->nologoCover();
         }
-
-        return Storage::url(Cropper::thumb($cover['path'], 720, 480));
+        //return Storage::url(Cropper::thumb($cover['path'], 720, 480));
+        return Storage::url($cover['path']);
     }
 
     public function nocover()
@@ -142,7 +143,7 @@ class Empresa extends Model
             $cover = $images->first(['path']);
         }
 
-        if(empty($cover['path']) || !File::exists('../public/storage/' . $cover['path'])) {
+        if(empty($cover['path']) || !Storage::disk()->exists(env('AWS_PASTA') . $cover['path'])) {
             return $this->nologoCover();
         }
 
@@ -151,16 +152,17 @@ class Empresa extends Model
     
     public function logoCover()
     {       
-        if(empty($this->logomarca) || !File::exists('../public/storage/' . $this->logomarca)) {
+        if(empty($this->logomarca) || !Storage::disk()->exists(env('AWS_PASTA') . $this->logomarca)) {
             return url(asset('backend/assets/images/image.jpg'));
         }
 
-        return Storage::url(Cropper::thumb($this->logomarca, 300, 300));
+        //return Storage::url(Cropper::thumb($this->logomarca, 300, 300));
+        return Storage::url($this->logomarca);
     }
 
     public function nologoCover()
     {       
-        if(empty($this->logomarca) || !File::exists('../public/storage/' . $this->logomarca)) {
+        if(empty($this->logomarca) || !Storage::disk()->exists(env('AWS_PASTA') . $this->logomarca)) {
             return url(asset('backend/assets/images/image.jpg'));
         }
 
