@@ -109,7 +109,7 @@ class Empresa extends Model
     public function getmetaimg()
     {
         $image = $this->metaimg;        
-        if(empty($this->metaimg) || !Storage::disk()->exists(env('AWS_PASTA') . $image)) {
+        if(empty($this->metaimg) || !Storage::disk()->exists($image)) {
             return url(asset('backend/assets/images/image.jpg'));
         } 
         //return Storage::url(Cropper::thumb($this->metaimg, env('METAIMG_WIDTH'), env('METAIMG_HEIGHT')));
@@ -126,7 +126,7 @@ class Empresa extends Model
             $cover = $images->first(['path']);
         }
 
-        if(empty($cover['path']) || !Storage::disk()->exists(env('AWS_PASTA') . $cover['path'])) {
+        if(empty($cover['path']) || !Storage::disk()->exists($cover['path'])) {
             return $this->nologoCover();
         }
         //return Storage::url(Cropper::thumb($cover['path'], 720, 480));
@@ -143,7 +143,7 @@ class Empresa extends Model
             $cover = $images->first(['path']);
         }
 
-        if(empty($cover['path']) || !Storage::disk()->exists(env('AWS_PASTA') . $cover['path'])) {
+        if(empty($cover['path']) || !Storage::disk()->exists($cover['path'])) {
             return $this->nologoCover();
         }
 
@@ -152,7 +152,7 @@ class Empresa extends Model
     
     public function logoCover()
     {       
-        if(empty($this->logomarca) || !Storage::disk()->exists(env('AWS_PASTA') . $this->logomarca)) {
+        if(empty($this->logomarca) || !Storage::disk()->exists($this->logomarca)) {
             return url(asset('backend/assets/images/image.jpg'));
         }
 
@@ -162,7 +162,7 @@ class Empresa extends Model
 
     public function nologoCover()
     {       
-        if(empty($this->logomarca) || !Storage::disk()->exists(env('AWS_PASTA') . $this->logomarca)) {
+        if(empty($this->logomarca) || !Storage::disk()->exists($this->logomarca)) {
             return url(asset('backend/assets/images/image.jpg'));
         }
 

@@ -102,7 +102,7 @@ class Anuncio extends Model
     public function get300x250()
     {
         $image = $this['300x250'];        
-        if(empty($this['300x250']) || !Storage::disk()->exists(env('AWS_PASTA') . $image)) {
+        if(empty($this['300x250']) || !Storage::disk()->exists($image)) {
             return url(asset('backend/assets/images/image.jpg'));
         } 
         //return Storage::url(Cropper::thumb($this['300x250'], 300, 250));
@@ -112,7 +112,7 @@ class Anuncio extends Model
     public function get468x90()
     {
         $image = $this['468x90'];        
-        if(empty($this['468x90']) || !Storage::disk()->exists(env('AWS_PASTA') . $image)) {
+        if(empty($this['468x90']) || !Storage::disk()->exists($image)) {
             return url(asset('backend/assets/images/image.jpg'));
         } 
         //return Storage::url(Cropper::thumb($this['468x90'], 468, 90));
@@ -122,7 +122,7 @@ class Anuncio extends Model
     public function get336x280()
     {
         $image = $this['336x280'];        
-        if(empty($this['336x280']) || !Storage::disk()->exists(env('AWS_PASTA') . $image)) {
+        if(empty($this['336x280']) || !Storage::disk()->exists($image)) {
             return url(asset('backend/assets/images/image.jpg'));
         } 
         //return Storage::url(Cropper::thumb($this['336x280'], 336, 280));
@@ -132,7 +132,7 @@ class Anuncio extends Model
     public function get728x90()
     {
         $image = $this['728x90'];        
-        if(empty($this['728x90']) || !Storage::disk()->exists(env('AWS_PASTA') . $image)) {
+        if(empty($this['728x90']) || !Storage::disk()->exists($image)) {
             return url(asset('backend/assets/images/image.jpg'));
         } 
         //return Storage::url(Cropper::thumb($this['728x90'], 728, 90));
