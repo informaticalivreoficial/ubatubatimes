@@ -27,9 +27,9 @@ class AdminController extends Controller
         $usersAvailable = User::where('client', 1)->available()->count();
         $usersUnavailable = User::where('client', 1)->unavailable()->count();
         //CHART PIZZA
-        $postsArtigos = CatPost::where('tipo', 'artigo')->count();
-        $postsPaginas = CatPost::where('tipo', 'pagina')->count();
-        $postsNoticias = CatPost::where('tipo', 'noticia')->count();
+        $postsArtigos = Post::where('tipo', 'artigo')->count();
+        $postsPaginas = Post::where('tipo', 'pagina')->count();
+        $postsNoticias = Post::where('tipo', 'noticia')->count();
         $artigosTop = Post::orderBy('views', 'DESC')
                 ->where('tipo', 'artigo')
                 ->limit(6)

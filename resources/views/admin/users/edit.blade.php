@@ -69,8 +69,8 @@
                                             <div class="form-group">
                                                 <div class="thumb_user_admin">
                                                     @php
-                                                        if(!empty($user->avatar) && env('AWS_PASTA') . \Illuminate\Support\Facades\Storage::exists($user->avatar)){
-                                                            $cover = \Illuminate\Support\Facades\Storage::url($user->avatar);
+                                                        if(!empty($slide->imagem) && \Illuminate\Support\Facades\Storage::disk()->exists($slide->imagem)){
+                                                            $cover = \Illuminate\Support\Facades\Storage::url($slide->imagem);
                                                         } else {
                                                             $cover = url(asset('backend/assets/images/image.jpg'));
                                                         }
