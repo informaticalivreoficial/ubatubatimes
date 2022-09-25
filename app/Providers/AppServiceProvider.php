@@ -8,11 +8,11 @@ use App\Models\Empresa;
 use App\Models\NewsletterCat;
 use App\Models\Post;
 use App\Observers\EmpresaObserver;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
