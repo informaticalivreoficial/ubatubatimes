@@ -75,7 +75,7 @@ class EmpresaRepository
     {      
         $imageDelete = $this->modelGb->where('id', $id)->first();
         Storage::delete($imageDelete->path);
-        Cropper::flush($imageDelete->path);
+        //Cropper::flush($imageDelete->path);
         $imageDelete->delete();
         return true;          
     }
