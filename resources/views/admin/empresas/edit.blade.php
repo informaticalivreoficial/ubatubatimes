@@ -171,7 +171,7 @@ $config = [
                                 <div class="form-group">
                                     <div class="thumb_user_admin">
                                         @php
-                                            if(!empty($empresa->logomarca) && \Illuminate\Support\Facades\File::exists(public_path() . '/storage/' . $empresa->logomarca)){
+                                            if(!empty($empresa->logomarca) && \Illuminate\Support\Facades\Storage::exists($empresa->logomarca)){
                                                 $cover = $empresa->logoCover();
                                             } else {
                                                 $cover = url(asset('backend/assets/images/image.jpg'));
