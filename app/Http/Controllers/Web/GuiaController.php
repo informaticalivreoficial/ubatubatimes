@@ -111,7 +111,7 @@ class GuiaController extends Controller
     }
 
     public function sendEmailEmpresa(Request $request)
-    {
+    {        
         $empresa = Empresa::where('id', $request->empresa_id)->first();
         if($request->nome == ''){
             $json = "Por favor preencha o campo <strong>Nome</strong>";
@@ -129,16 +129,16 @@ class GuiaController extends Controller
             $json = "<strong>ERRO</strong> Você está praticando SPAM!"; 
             return response()->json(['error' => $json]);
         }else{
-
+            
             $data = [
-                'sitename' => $empresa->alias_name,
-                'siteemail' => $empresa->email,
+                'sitename' => $this->configService->getConfig()->nomedosite,
+                'siteemail' => env('MAIL_FROM_ADDRESS'),
                 'reply_name' => $request->nome,
                 'reply_email' => $request->email,
                 'mensagem' => $request->mensagem,
                 'config_site_name' => $this->configService->getConfig()->nomedosite,
             ];
-
+            //dd($data);
             $empresa->email_send_count = $empresa->email_send_count + 1;
             $empresa->save();
             
