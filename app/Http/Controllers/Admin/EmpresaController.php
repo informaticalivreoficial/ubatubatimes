@@ -60,7 +60,7 @@ class EmpresaController extends Controller
         $criarEmpresa->fill($request->all());
 
         if(!empty($request->file('logomarca'))){
-            $criarEmpresa->logomarca = $request->file('logomarca')->storeAs('empresas/'. $criarEmpresa->uuid . '/', 'logomarca-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
+            $criarEmpresa->logomarca = $request->file('logomarca')->storeAs(env('AWS_PASTA') . 'empresas/'. $criarEmpresa->uuid . '/', 'logomarca-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
             $criarEmpresa->save();
         }
 
@@ -84,7 +84,7 @@ class EmpresaController extends Controller
             foreach ($request->allFiles()['files'] as $image) {
                 $empresaImage = new EmpresaGb();
                 $empresaImage->empresa = $criarEmpresa->id;
-                $empresaImage->path = $image->storeAs('empresas/'. $criarEmpresa->uuid . '/' . $criarEmpresa->id, Str::slug($request->alias_name) . '-' . str_replace('.', '', microtime(true)) . '.' . $image->extension());
+                $empresaImage->path = $image->storeAs(env('AWS_PASTA') . 'empresas/'. $criarEmpresa->uuid . '/' . $criarEmpresa->id, Str::slug($request->alias_name) . '-' . str_replace('.', '', microtime(true)) . '.' . $image->extension());
                 $empresaImage->save();
                 unset($empresaImage);
             }
@@ -138,7 +138,7 @@ class EmpresaController extends Controller
         $empresa->fill($request->all());
 
         if(!empty($request->file('logomarca'))){
-            $empresa->logomarca = $request->file('logomarca')->storeAs('empresas/'. $empresa->uuid . '/', 'logomarca-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
+            $empresa->logomarca = $request->file('logomarca')->storeAs(env('AWS_PASTA') . 'empresas/'. $empresa->uuid . '/', 'logomarca-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
             $empresa->save();
         }
 
@@ -163,7 +163,7 @@ class EmpresaController extends Controller
             foreach ($request->allFiles()['files'] as $image) {
                 $empresaImage = new EmpresaGb();
                 $empresaImage->empresa = $empresa->id;
-                $empresaImage->path = $image->storeAs('empresas/'. $empresa->uuid . '/' . $empresa->id, Str::slug($request->alias_name) . '-' . str_replace('.', '', microtime(true)) . '.' . $image->extension());
+                $empresaImage->path = $image->storeAs(env('AWS_PASTA') . 'empresas/'. $empresa->uuid . '/' . $empresa->id, Str::slug($request->alias_name) . '-' . str_replace('.', '', microtime(true)) . '.' . $image->extension());
                 $empresaImage->save();
                 unset($empresaImage);
             }
@@ -210,11 +210,11 @@ class EmpresaController extends Controller
         if(!empty($empresa)){
             Storage::delete($empresa->logomarca);
             Storage::delete($empresa->metaimg);
-            Cropper::flush($empresa->logomarca);            
-            Cropper::flush($empresa->metaimg);
+            // Cropper::flush($empresa->logomarca);            
+            // Cropper::flush($empresa->metaimg);
             if(!empty($imageDelete)){
                 Storage::delete($imageDelete->path);
-                Cropper::flush($imageDelete->path);
+               //Cropper::flush($imageDelete->path);
                 $imageDelete->delete();
                 Storage::deleteDirectory('empresas/' . $empresa->uuid . '/' . $empresa->id);
                 Storage::deleteDirectory('empresas/' . $empresa->uuid);
@@ -224,10 +224,10 @@ class EmpresaController extends Controller
                 Storage::delete($anuncio['468x90']);
                 Storage::delete($anuncio['336x280']);
                 Storage::delete($anuncio['728x90']);
-                Cropper::flush($anuncio['300x250']);
-                Cropper::flush($anuncio['468x90']);
-                Cropper::flush($anuncio['336x280']);
-                Cropper::flush($anuncio['728x90']);
+                // Cropper::flush($anuncio['300x250']);
+                // Cropper::flush($anuncio['468x90']);
+                // Cropper::flush($anuncio['336x280']);
+                // Cropper::flush($anuncio['728x90']);
                 Storage::deleteDirectory('anuncios/' . $anuncio->id);
                 $anuncio->delete();
             }
@@ -361,38 +361,5 @@ class EmpresaController extends Controller
         }        
     }
 
-    // public function deleteon(Request $request)
-    // {
-    //     $categoria = CatAnuncio::where('id', $request->categoria_id)->first();  
-    //     $anuncio = Anuncio::where('categoria', $request->id)->first();
-        
-    //     $categoriaR = $categoria->titulo;
-
-    //     if(!empty($categoria)){
-    //         if(!empty($anuncio)){
-    //             $anunciogb = PortifolioGb::where('portifolio', $anuncio->id)->first();
-    //             if(!empty($produtogb)){
-    //                 Storage::delete($anuncioliogb->path);
-    //                 Cropper::flush($anuncioliogb->path);
-    //                 $produtogb->delete();
-    //             }
-                
-    //             Storage::deleteDirectory('portifolio/'.$anuncio->id);
-    //             $categoria->delete();
-    //         }
-    //         $categoria->delete();
-    //     }
-
-    //     if($categoria->id_pai != null){
-    //         return Redirect::route('catportifolio.index')->with([
-    //             'color' => 'success', 
-    //             'message' => 'A sub categoria '.$categoriaR.' foi removida com sucesso!'
-    //         ]);
-    //     }else{
-    //         return Redirect::route('catportifolio.index')->with([
-    //             'color' => 'success', 
-    //             'message' => 'A categoria '.$categoriaR.' foi removida com sucesso!'
-    //         ]);
-    //     }        
-    // }
+    
 }
