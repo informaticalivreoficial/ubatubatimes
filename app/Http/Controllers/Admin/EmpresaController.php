@@ -60,12 +60,12 @@ class EmpresaController extends Controller
         $criarEmpresa->fill($request->all());
 
         if(!empty($request->file('logomarca'))){
-            $criarEmpresa->logomarca = $request->file('logomarca')->storeAs(env('AWS_PASTA') . 'empresas/'. $criarEmpresa->uuid . '/', 'logomarca-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
+            $criarEmpresa->logomarca = $request->file('logomarca')->storeAs(env('AWS_PASTA') . 'empresas/'. $criarEmpresa->uuid, 'logomarca-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
             $criarEmpresa->save();
         }
 
         if(!empty($request->file('metaimg'))){
-            $criarEmpresa->metaimg = $request->file('metaimg')->storeAs('empresas/'. $criarEmpresa->uuid . '/', 'metaimg-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('metaimg')->extension());
+            $criarEmpresa->metaimg = $request->file('metaimg')->storeAs('empresas/'. $criarEmpresa->uuid, 'metaimg-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('metaimg')->extension());
             $criarEmpresa->save();
         }
 
@@ -125,25 +125,23 @@ class EmpresaController extends Controller
 
         if(!empty($request->file('logomarca'))){
             Storage::delete($empresa->logomarca);
-            Cropper::flush($empresa->logomarca);
             $empresa->logomarca = '';
         }
 
         if(!empty($request->file('metaimg'))){
             Storage::delete($empresa->metaimg);
-            Cropper::flush($empresa->metaimg);
             $empresa->metaimg = '';
         }
 
         $empresa->fill($request->all());
 
         if(!empty($request->file('logomarca'))){
-            $empresa->logomarca = $request->file('logomarca')->storeAs(env('AWS_PASTA') . 'empresas/'. $empresa->uuid . '/', 'logomarca-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
+            $empresa->logomarca = $request->file('logomarca')->storeAs(env('AWS_PASTA') . 'empresas/'. $empresa->uuid, 'logomarca-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('logomarca')->extension());
             $empresa->save();
         }
 
         if(!empty($request->file('metaimg'))){
-            $empresa->metaimg = $request->file('metaimg')->storeAs('empresas/'. $empresa->uuid . '/', 'metaimg-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('metaimg')->extension());
+            $empresa->metaimg = $request->file('metaimg')->storeAs(env('AWS_PASTA') . 'empresas/'. $empresa->uuid, 'metaimg-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('metaimg')->extension());
             $empresa->save();
         }
 
