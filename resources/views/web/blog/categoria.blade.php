@@ -26,7 +26,7 @@
                                     <div class="utf_post_block_style post-grid clearfix">
                                         <div class="utf_post_thumb"> 
                                             <a href="{{route(($post->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'),[ 'slug' => $post->slug ])}}"> 
-                                                <img class="img-fluid" src="{{$post->cover()}}" alt="" /> 
+                                                <img class="img_person" src="{{$post->cover()}}" alt="" /> 
                                             </a> 
                                         </div>
                                         <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoriaObject->slug ])}}">{{$post->categoriaObject->titulo}}</a>
@@ -60,7 +60,12 @@
 @endsection
 
 @section('css')
-
+<style>
+    .img_person{
+        min-height: 270px !important;
+        max-height: 270px !important;
+    }
+</style>
 @endsection
 
 @section('js')

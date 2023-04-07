@@ -208,7 +208,7 @@
                                     <div class="utf_post_block_style post-float clearfix">
                                         <div class="utf_post_thumb"> 
                                             <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}"> 
-                                                <img class="img-fluid" src="{{$postmais->cover()}}" alt="{{$postmais->titulo}}" /> 
+                                                <img class="img_person" src="{{$postmais->cover()}}" alt="{{$postmais->titulo}}" /> 
                                             </a> 
                                         </div>                      
                                         <div class="utf_post_content">
@@ -337,6 +337,11 @@
     }
     .btn-front:hover, mdi:hover{
         color:#fff;
+    }
+    .img_person{
+        min-height: 75px !important;
+        max-height: 75px !important;
+        min-width: 100px !important;
     }
 </style>
 @endsection

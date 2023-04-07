@@ -23,6 +23,7 @@ class WebController extends Controller
 {
     protected $configService;
     protected $seo;
+    protected $crowler;
 
     public function __construct(ConfigService $configService)
     {

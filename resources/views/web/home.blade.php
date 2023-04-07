@@ -12,7 +12,7 @@
                                   <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
                                         <div class="utf_post_thumb"> 
                                           <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">
-                                            <img class="img-fluid" src="{{ $noticiau->cover() }}" alt="{{ $noticiau->titulo }}">
+                                            <img class="img_person" src="{{ $noticiau->cover() }}" alt="{{ $noticiau->titulo }}">
                                           </a> 
                                         </div>
                                         <div class="utf_post_content"> 
@@ -89,7 +89,7 @@
                             <div class="utf_post_overaly_style clearfix">
                                 <div class="utf_post_thumb"> 
                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasCaragua[0]->slug ])}}">
-                                        <img class="img-fluid" src="{{$noticiasCaragua[0]->cover()}}" alt="{{$noticiasCaragua[0]->titulo}}" /> 
+                                        <img class="img_person" src="{{$noticiasCaragua[0]->cover()}}" alt="{{$noticiasCaragua[0]->titulo}}" /> 
                                     </a> 
                                 </div>
                                 <div class="utf_post_content">
@@ -174,7 +174,7 @@
                             <div class="utf_post_overaly_style clearfix">
                                 <div class="utf_post_thumb"> 
                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[0]->slug ])}}"> 
-                                        <img class="img-fluid" src="{{$noticiasSaoSebastiao[0]->cover()}}" alt="{{$noticiasSaoSebastiao[0]->titulo}}" /> 
+                                        <img class="img_person" src="{{$noticiasSaoSebastiao[0]->cover()}}" alt="{{$noticiasSaoSebastiao[0]->titulo}}" /> 
                                     </a> 
                                 </div>
                                 <div class="utf_post_content">
@@ -195,7 +195,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[1]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$noticiasSaoSebastiao[1]->cover()}}" alt="{{$noticiasSaoSebastiao[1]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$noticiasSaoSebastiao[1]->cover()}}" alt="{{$noticiasSaoSebastiao[1]->titulo}}" /> 
                                                     </a> 
                                                 </div>                    
                                                 <div class="utf_post_content">
@@ -215,7 +215,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[2]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$noticiasSaoSebastiao[2]->cover()}}" alt="{{$noticiasSaoSebastiao[2]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$noticiasSaoSebastiao[2]->cover()}}" alt="{{$noticiasSaoSebastiao[2]->titulo}}" /> 
                                                     </a> 
                                                 </div>                    
                                                 <div class="utf_post_content">
@@ -234,7 +234,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[3]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$noticiasSaoSebastiao[3]->cover()}}" alt="{{$noticiasSaoSebastiao[3]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$noticiasSaoSebastiao[3]->cover()}}" alt="{{$noticiasSaoSebastiao[3]->titulo}}" /> 
                                                     </a> 
                                                 </div>                    
                                                 <div class="utf_post_content">
@@ -260,7 +260,7 @@
                             <div class="utf_post_overaly_style clearfix">
                                 <div class="utf_post_thumb"> 
                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[0]->slug ])}}"> 
-                                        <img class="img-fluid" src="{{$noticiasIlhabela[0]->cover()}}" alt="{{$noticiasIlhabela[0]->titulo}}" /> 
+                                        <img class="img_person" src="{{$noticiasIlhabela[0]->cover()}}" alt="{{$noticiasIlhabela[0]->titulo}}" /> 
                                     </a> 
                                 </div>
                                 <div class="utf_post_content">
@@ -281,7 +281,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[1]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$noticiasIlhabela[1]->cover()}}" alt="{{$noticiasIlhabela[1]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$noticiasIlhabela[1]->cover()}}" alt="{{$noticiasIlhabela[1]->titulo}}" /> 
                                                     </a> 
                                                 </div>                    
                                                 <div class="utf_post_content">
@@ -300,7 +300,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[2]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$noticiasIlhabela[2]->cover()}}" alt="{{$noticiasIlhabela[2]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$noticiasIlhabela[2]->cover()}}" alt="{{$noticiasIlhabela[2]->titulo}}" /> 
                                                     </a> 
                                                 </div>                    
                                                 <div class="utf_post_content">
@@ -319,7 +319,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.noticia', [ 'slug' => $noticiasIlhabela[3]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$noticiasIlhabela[3]->cover()}}" alt="{{$noticiasIlhabela[3]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$noticiasIlhabela[3]->cover()}}" alt="{{$noticiasIlhabela[3]->titulo}}" /> 
                                                     </a> 
                                                 </div>                    
                                                 <div class="utf_post_content">
@@ -355,7 +355,7 @@
                                       <div class="utf_post_block_style clearfix">
                                             <div class="utf_post_thumb"> 
                                                 <a href="{{route('web.blog.artigo', [ 'slug' => $artigo->slug ])}}">
-                                                    <img class="img-fluid" src="{{$artigo->cover()}}" alt="{{$artigo->titulo}}" />
+                                                    <img class="img_person_blog" src="{{$artigo->cover()}}" alt="{{$artigo->titulo}}" />
                                                 </a> 
                                             </div>
                                             <a class="utf_post_cat" href="#">{{$artigo->categoriaObject->titulo}}</a>
@@ -405,7 +405,7 @@
                               <div class="utf_post_block_style clearfix">
                                   <div class="utf_post_thumb"> 
                                       <a href="{{route('web.blog.artigo', [ 'slug' => $praiasDeUbatuba[0]->slug ])}}"> 
-                                          <img class="img-fluid" src="{{$praiasDeUbatuba[0]->cover()}}" alt="{{$praiasDeUbatuba[0]->titulo}}" /> 
+                                          <img class="img_person" src="{{$praiasDeUbatuba[0]->cover()}}" alt="{{$praiasDeUbatuba[0]->titulo}}" /> 
                                       </a> 
                                   </div>
                                   <a class="utf_post_cat" href="#"><i class="fa fa-eye"></i> {{$praiasDeUbatuba[0]->views}}</a>
@@ -431,7 +431,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.blog.artigo', [ 'slug' => $praiasDeUbatuba[1]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$praiasDeUbatuba[1]->cover()}}" alt="{{$praiasDeUbatuba[1]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$praiasDeUbatuba[1]->cover()}}" alt="{{$praiasDeUbatuba[1]->titulo}}" /> 
                                                     </a> 
                                                 </div>                            
                                                 <div class="utf_post_content">
@@ -451,7 +451,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.blog.artigo', [ 'slug' => $praiasDeUbatuba[2]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$praiasDeUbatuba[2]->cover()}}" alt="{{$praiasDeUbatuba[2]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$praiasDeUbatuba[2]->cover()}}" alt="{{$praiasDeUbatuba[2]->titulo}}" /> 
                                                     </a> 
                                                 </div>                            
                                                 <div class="utf_post_content">
@@ -471,7 +471,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.blog.artigo', [ 'slug' => $praiasDeUbatuba[3]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$praiasDeUbatuba[3]->cover()}}" alt="{{$praiasDeUbatuba[3]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$praiasDeUbatuba[3]->cover()}}" alt="{{$praiasDeUbatuba[3]->titulo}}" /> 
                                                     </a> 
                                                 </div>                            
                                                 <div class="utf_post_content">
@@ -491,7 +491,7 @@
                                             <div class="utf_post_block_style post-float clearfix">
                                                 <div class="utf_post_thumb"> 
                                                     <a href="{{route('web.blog.artigo', [ 'slug' => $praiasDeUbatuba[4]->slug ])}}"> 
-                                                        <img class="img-fluid" src="{{$praiasDeUbatuba[4]->cover()}}" alt="{{$praiasDeUbatuba[4]->titulo}}" /> 
+                                                        <img class="img_person_gastronomia" src="{{$praiasDeUbatuba[4]->cover()}}" alt="{{$praiasDeUbatuba[4]->titulo}}" /> 
                                                     </a> 
                                                 </div>                            
                                                 <div class="utf_post_content">
@@ -525,7 +525,7 @@
                                       <div class="utf_post_block_style post-float clearfix">
                                           <div class="utf_post_thumb"> 
                                               <a href="{{route('web.blog.artigo', [ 'slug' => $receita->slug ])}}"> 
-                                                  <img class="img-fluid" src="{{$receita->cover()}}" alt="{{$receita->titulo}}" /> 
+                                                  <img class="img_person_gastronomia" src="{{$receita->cover()}}" alt="{{$receita->titulo}}" /> 
                                               </a> 
                                           </div>                      
                                           <div class="utf_post_content">
@@ -567,7 +567,21 @@
 @endsection
 
 @section('css')
-
+<style>
+    .img_person{
+        min-height: 250px !important;
+        max-height: 250px !important;
+    }
+    .img_person_blog{
+        min-height: 170px !important;
+        max-height: 170px !important;
+    }
+    .img_person_gastronomia{
+        min-height: 75px !important;
+        max-height: 75px !important;
+        min-width: 100px !important;
+    }
+</style>
 @endsection
 
 @section('js')

@@ -173,6 +173,17 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('posts/noticias', [PostController::class, 'index'])->name('posts.noticias');
     Route::get('posts/paginas', [PostController::class, 'index'])->name('posts.paginas');
 
+    /******************** Planos *************************************************************/
+    Route::match(['get', 'post'], 'planos/pesquisa', [PlanoController::class, 'search'])->name('planos.search');
+    Route::get('planos/delete', [PlanoController::class, 'delete'])->name('planos.delete');
+    Route::delete('planos/deleteon', [PlanoController::class, 'deleteon'])->name('planos.deleteon');
+    Route::get('planos/set-status', [PlanoController::class, 'planosetStatus'])->name('plano.setStatus');
+    Route::put('planos/{id}', [PlanoController::class, 'update'])->name('planos.update');
+    Route::get('planos/{id}/edit', [PlanoController::class, 'edit'])->name('planos.edit');
+    Route::get('planos/create', [PlanoController::class, 'create'])->name('planos.create');
+    Route::post('planos/store', [PlanoController::class, 'store'])->name('planos.store');
+    Route::get('planos', [PlanoController::class, 'index'])->name('planos.index');
+
     //*********************** Email **********************************************/
     Route::get('email/suporte', [EmailController::class, 'suporte'])->name('email.suporte');
     Route::match(['post', 'get'], 'email/enviar-email', [EmailController::class, 'send'])->name('email.send');

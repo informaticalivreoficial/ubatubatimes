@@ -324,7 +324,7 @@ $config = [
                                     @foreach($empresa->images()->get() as $image)
                                     <div class="property_image_item">
                                         <a href="{{ $image->getUrlImageAttribute() }}" data-toggle="lightbox" data-gallery="property-gallery" data-type="image">
-                                        <img src="{{ $image->url_cropped }}" alt="">
+                                        <img class="img_person" src="{{ $image->url_cropped }}" alt="{{ old('alias_name') ?? $empresa->alias_name }}">
                                         </a>
                                         <div class="property_image_actions">
                                             <a href="javascript:void(0)" class="btn btn-xs {{ ($image->cover == true ? 'btn-success' : 'btn-default') }} icon-notext image-set-cover px-2" data-action="{{ route('empresas.imageSetCover', ['image' => $image->id]) }}"><i class="nav-icon fas fa-check"></i> </a>
@@ -386,19 +386,7 @@ $config = [
                                     <label class="labelforms text-muted"><b>Linkedin:</b></label>
                                     <input type="text" class="form-control text-muted" placeholder="Linkedin" name="linkedin" value="{{old('linkedin') ?? $empresa->linkedin}}">
                                 </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-lg-4"> 
-                                <div class="form-group">
-                                    <label class="labelforms text-muted"><b>Sound Cloud:</b></label>
-                                    <input type="text" class="form-control text-muted" placeholder="Linkedin" name="soundclound" value="{{old('soundclound') ?? $empresa->soundclound}}">
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-lg-4"> 
-                                <div class="form-group">
-                                    <label class="labelforms text-muted"><b>SnapChat:</b></label>
-                                    <input type="text" class="form-control text-muted" placeholder="SnapChat" name="snapchat" value="{{old('snapchat') ?? $empresa->snapchat}}">
-                                </div>
-                            </div>
+                            </div>                            
                         </div>
                     </div>
 
@@ -580,6 +568,11 @@ $config = [
         overflow: hidden;
         max-width: 100%;
     }
+    .img_person{
+        min-height: 188px !important;
+        max-height: 188px !important;
+        min-width: 270px !important;
+    }    
 </style>
 @stop
 

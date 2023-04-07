@@ -57,9 +57,7 @@ class Empresa extends Model
         'linkedin',
         'vimeo',
         'youtube',
-        'fliccr',
-        'soundclound',
-        'snapchat'
+        'fliccr'
     ];
 
     /**
