@@ -9,7 +9,7 @@ class Plan extends Model
 {
     use HasFactory;
 
-    //protected $table = 'plans'; 
+    protected $table = 'plans'; 
     
     protected $fillable = [
         'name',
@@ -18,13 +18,11 @@ class Plan extends Model
         'exibivalores',
         'status',
         'avaliacao',   
-        'tipo_pagamento',     
-        'valor',
+        'tipo_pagamento',
         'valor_mensal',
         'valor_trimestral',
         'valor_semestral',
-        'valor_anual',
-        'valor_bianual'
+        'valor_anual'
     ];
 
     /**
@@ -63,19 +61,7 @@ class Plan extends Model
     /**
      * Accerssors and Mutators
     */
-    public function setValorAttribute($value)
-    {
-        $this->attributes['valor'] = (!empty($value) ? floatval($this->convertStringToDouble($value)) : null);
-    }
-
-    public function getValorAttribute($value)
-    {
-        if (empty($value)) {
-            return null;
-        }
-
-        return number_format($value, 2, ',', '.');
-    }
+    
 
     private function convertStringToDouble($param)
     {

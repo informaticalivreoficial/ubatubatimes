@@ -14,6 +14,7 @@ use App\Models\Cidades;
 use Illuminate\Http\Request;
 use App\Models\Empresa;
 use App\Models\EmpresaGb;
+use App\Models\Fatura;
 use App\Services\CidadeService;
 use App\Services\EmpresaService;
 use App\Services\EstadoService;
@@ -99,6 +100,7 @@ class EmpresaController extends Controller
     {
         $empresa = $this->empresaService->getEmpresaById($id);
         $anuncios = Anuncio::orderBy('created_at', 'DESC')->where('empresa', $empresa->id)->get();
+        $faturas = Fatura::where('empresa', $empresa->id)->get();
         $categorias = CatEmpresa::whereNull('id_pai')
                     ->orderBy('titulo', 'ASC')
                     ->orderBy('status', 'ASC')
@@ -107,6 +109,7 @@ class EmpresaController extends Controller
         return view('admin.empresas.edit', [
             'empresa' => $empresa,
             'anuncios' => $anuncios,
+            'faturas' => $faturas,
             'categorias' => $categorias,
             'estados' => $this->estadoService->getEstados(),
             'cidades' => $this->cidadeService->getCidades()

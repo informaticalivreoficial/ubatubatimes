@@ -243,6 +243,20 @@ return [
             'icon' => 'fas fa-cog',
         ],
         [
+            'text' => 'Planos',            
+            'icon' => 'fas fa-fw fa-list-alt',
+            'submenu' => [
+                [
+                    'text' => 'Listar Planos',
+                    'url'  => 'admin/planos',
+                ],
+                [
+                    'text' => 'Cadastrar Plano',
+                    'url'  => 'admin/planos/create',
+                ],
+            ]
+        ],
+        [
             'text' => 'Usuários',            
             'icon' => 'fas fa-fw fa-users',
             'submenu' => [

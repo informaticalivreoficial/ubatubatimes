@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b46a7018b49e71d35e3a38d029d38bb8",
+    "content-hash": "3859a3ba9a8cb71cc7b9391ee066dee6",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -8530,6 +8530,50 @@
                 }
             ],
             "time": "2022-01-24T18:55:24+00:00"
+        },
+        {
+            "name": "webmasterdro/paghiper-php-sdk",
+            "version": "3.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmasterdro/paghiper-php-sdk.git",
+                "reference": "e4721f74635e6b081acfb272b9ddd4eaefc3825f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmasterdro/paghiper-php-sdk/zipball/e4721f74635e6b081acfb272b9ddd4eaefc3825f",
+                "reference": "e4721f74635e6b081acfb272b9ddd4eaefc3825f",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0",
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WebMaster\\PagHiper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pedro Lima",
+                    "email": "pedro-octavio@hotmail.com"
+                }
+            ],
+            "description": "Biblioteca de integração PHP PagHiper",
+            "keywords": [
+                "paghiper"
+            ],
+            "support": {
+                "issues": "https://github.com/webmasterdro/paghiper-php-sdk/issues",
+                "source": "https://github.com/webmasterdro/paghiper-php-sdk/tree/3.1.2"
+            },
+            "time": "2022-03-17T17:16:32+00:00"
         },
         {
             "name": "webmozart/assert",

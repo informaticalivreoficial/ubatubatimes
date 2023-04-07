@@ -80,66 +80,99 @@ $config = [
             <div class="card-body">
                 <div class="tab-content" id="custom-tabs-four-tabContent">
                     <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <div class="row mb-2">
-                                    <div class="col-12 col-md-4">
-                                        <div class="form-group">
-                                            <label class="labelforms text-muted"><b>Título do Anúncio:</b></label>
-                                            <input class="form-control" name="titulo" value="{{old('titulo') ?? $anuncio->titulo}}">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4"> 
-                                        <div class="form-group">
-                                            <label class="labelforms text-muted"><b>*Empresa:</b></label>
-                                            <select class="form-control" name="empresa">
-                                                @if (!empty($empresas) && $empresas->count() > 0)
-                                                    <option value="">Selecione a Empresa</option>
-                                                    @foreach($empresas as $empresa)
-                                                        <option value="{{ $empresa->id }}" {{ (old('empresa') == $empresa->id ? 'selected' : ($anuncio->empresa == $empresa->id ? 'selected' : '')) }}>{{ $empresa->alias_name }}</option>
-                                                    @endforeach
-                                                @else
-                                                    <option value="">Cadastre uma Empresa</option>
-                                                @endif                                                
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4"> 
-                                        <div class="form-group">
-                                            <label class="labelforms text-muted"><b>*Plano:</b></label>
-                                            <select class="form-control" name="plan_id">
-                                                @if (!empty($plans) && $plans->count() > 0)
-                                                    <option value="">Selecione o Plano</option>
-                                                    @foreach($plans as $plan)
-                                                        <option value="{{ $plan->id }}" {{ (old('plan_id') == $plan->id ? 'selected' : ($anuncio->plan_id == $plan->id ? 'selected' : '')) }}>{{ $plan->name }}</option>
-                                                    @endforeach
-                                                @else
-                                                    <option value="">Cadastre um Plano</option>
-                                                @endif                                                
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4"> 
-                                        <div class="form-group">
-                                            <label class="labelforms text-muted"><b>Posição:</b></label>
-                                            <select class="form-control j_posicao" name="posicao">
-                                                @foreach ($anuncio->position() as $position)
-                                                    <option value="{{$position['id']}}" {{(old('posicao') == $position['id'] ? 'selected' : ($anuncio->posicao == $position['id'] ? 'selected' : ''))}}>{{$position['id']}} - {{$position['name']}} </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>                            
+                        <div class="row mb-2">
+                            <div class="col-12 col-md-4">
+                                <div class="form-group">
+                                    <label class="labelforms text-muted"><b>Título do Anúncio:</b></label>
+                                    <input class="form-control" name="titulo" value="{{old('titulo') ?? $anuncio->titulo}}">
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="row mb-2">                                    
-                                    <div class="col-12 col-md-4">
-                                        <label class="labelforms text-muted"><b>Link:</b></label>
-                                        <input class="form-control" name="link" value="{{old('link') ?? $anuncio->link}}">
-                                    </div>                                     
+                            <div class="col-12 col-md-4"> 
+                                <div class="form-group">
+                                    <label class="labelforms text-muted"><b>*Empresa:</b></label>
+                                    <select class="form-control" name="empresa">
+                                        @if (!empty($empresas) && $empresas->count() > 0)
+                                            <option value="">Selecione a Empresa</option>
+                                            @foreach($empresas as $empresa)
+                                                <option value="{{ $empresa->id }}" {{ (old('empresa') == $empresa->id ? 'selected' : ($anuncio->empresa == $empresa->id ? 'selected' : '')) }}>{{ $empresa->alias_name }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="">Cadastre uma Empresa</option>
+                                        @endif                                                
+                                    </select>
                                 </div>
-                            </div>                            
-                        </div>                   
+                            </div>
+                            <div class="col-12 col-md-4"> 
+                                <div class="form-group">
+                                    <label class="labelforms text-muted"><b>*Plano:</b></label>
+                                    <select class="form-control" name="plan_id">
+                                        @if (!empty($plans) && $plans->count() > 0)
+                                            <option value="">Selecione o Plano</option>
+                                            @foreach($plans as $plan)
+                                                <option value="{{ $plan->id }}" {{ (old('plan_id') == $plan->id ? 'selected' : ($anuncio->plan_id == $plan->id ? 'selected' : '')) }}>{{ $plan->name }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="">Cadastre um Plano</option>
+                                        @endif                                                
+                                    </select>
+                                </div>
+                            </div>                                                               
+                        </div> 
+                        <div class="row mb-2">
+                            <div class="col-12 col-sm-4 col-md-4 col-lg-4"> 
+                                <div class="form-group">
+                                    <label class="labelforms text-muted"><b>Posição:</b></label>
+                                    <select class="form-control j_posicao" name="posicao">
+                                        @foreach ($anuncio->position() as $position)
+                                            <option value="{{$position['id']}}" {{(old('posicao') == $position['id'] ? 'selected' : ($anuncio->posicao == $position['id'] ? 'selected' : ''))}}>{{$position['id']}} - {{$position['name']}} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                <label class="labelforms text-muted"><b>Link:</b></label>
+                                <input class="form-control" name="link" value="{{old('link') ?? $anuncio->link}}">
+                            </div> 
+                            <div class="col-12 col-sm-4 col-md-4 col-lg-2">
+                                <div class="form-group">
+                                    <label class="labelforms text-muted"><b>Período:</b></label>
+                                    <select name="periodo" class="form-control">
+                                        <option value="1" {{ (old('periodo') == '1' ? 'selected' : ($anuncio->periodo == 1 ? 'selected' : '')) }}>Mensal</option>
+                                        <option value="3" {{ (old('periodo') == '3' ? 'selected' : ($anuncio->periodo == 3 ? 'selected' : '')) }}>Trimestral</option>
+                                        <option value="6" {{ (old('periodo') == '6' ? 'selected' : ($anuncio->periodo == 4 ? 'selected' : '')) }}>Semestral</option>
+                                        <option value="12" {{ (old('periodo') == '12' ? 'selected' : ($anuncio->periodo == 12 ? 'selected' : '')) }}>Anual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-4 col-md-4 col-lg-2"> 
+                                <div class="form-group">
+                                    <label class="labelforms text-muted"><b>*Dia de Vencimento</b></label>
+                                    <input type="text" class="form-control" name="vencimento" value="{{ old('vencimento') ?? $anuncio->vencimento}}">
+                                </div>                                                    
+                            </div>
+                        </div>  
+                        <div class="row mb-2">
+                            @if (!$anuncio->countfaturas() > 0)
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
+                                    <div class="form-group p-3 mb-1">
+                                        <label class="labelforms text-muted"><b> </b></label>
+                                        <div class="form-check mb-2">
+                                            <input id="gerarfatura" class="form-check-input" type="checkbox" name="gerarfatura" {{ (old('gerarfatura') == 'on' || old('gerarfatura') == true ? 'checked' : '') }}>
+                                            <label for="gerarfatura" class="form-check-label text-muted">Gerar Fatura?</label>
+                                        </div>                                            
+                                    </div>
+                                </div>
+                            @endif                                                             
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
+                                <div class="form-group p-3 mb-1">
+                                    <label class="labelforms text-muted"><b> </b></label>
+                                    <div class="form-check mb-2">
+                                        <input id="gerarcontrato" class="form-check-input" type="checkbox" name="gerarcontrato" {{ (old('gerarcontrato') == 'on' || old('gerarcontrato') == true ? 'checked' : '') }}>
+                                        <label for="gerarcontrato" class="form-check-label text-muted">Gerar Contrato?</label>
+                                    </div>                                            
+                                </div>
+                            </div>                             
+                        </div>               
                     </div> 
 
                     <div class="tab-pane fade" id="custom-tabs-four-redes" role="tabpanel" aria-labelledby="custom-tabs-four-redes-tab">

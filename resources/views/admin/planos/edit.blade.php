@@ -83,24 +83,7 @@ $config = [
                                         <label class="labelforms text-muted"><b>*Plano</b> </label>
                                         <input type="text" class="form-control" name="name" value="{{ old('name') ?? $plano->name}}">
                                     </div>
-                                </div> 
-                                <div class="col-12 col-md-6 col-lg-2">   
-                                    <div class="form-group">
-                                        <label class="labelforms text-muted"><b>Vagas</b></label>
-                                        <input type="text" class="form-control" name="vagas" value="{{old('vagas') ?? $plano->vagas}}">
-                                    </div>                                                    
-                                </div> 
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2"> 
-                                    <div class="form-group">
-                                        <label class="labelforms text-muted"><b>Horário</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control only-time" data-language='pt-BR' name="horario" value="{{ old('horario') ?? $plano->horario }}"/>
-                                            <div class="input-group-append">
-                                                <div class="input-group-text"><i class="fa fa-clock"></i></div>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                </div> 
+                                </div>                                 
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-2">
                                     <div class="form-group">
                                         <label class="labelforms text-muted"><b>Status:</b></label>
@@ -131,63 +114,12 @@ $config = [
                                 </div>
                             </div>
 
-                            <div class="row mb-2">   
-                                <div class="col-12">
-                                    <label class="labelforms text-muted"><b>Dias da Semana</b></label>    
-                                </div>                                  
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="segunda" class="form-check-input" type="checkbox" name="segunda" {{ (old('segunda') == 'on' || old('segunda') == true ? 'checked' : ($plano->segunda == true ? 'checked' : '')) }}>
-                                            <label for="segunda" class="form-check-label text-muted">Segunda</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="terca" class="form-check-input" type="checkbox" name="terca" {{ (old('terca') == 'on' || old('terca') == true ? 'checked' : ($plano->terca == true ? 'checked' : '')) }}>
-                                            <label for="terca" class="form-check-label text-muted">Terça</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="quarta" class="form-check-input" type="checkbox" name="quarta" {{ (old('quarta') == 'on' || old('quarta') == true ? 'checked' : ($plano->quarta == true ? 'checked' : '')) }}>
-                                            <label for="quarta" class="form-check-label text-muted">Quarta</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="quinta" class="form-check-input" type="checkbox" name="quinta" {{ (old('quinta') == 'on' || old('quinta') == true ? 'checked' : ($plano->quinta == true ? 'checked' : '')) }}>
-                                            <label for="quinta" class="form-check-label text-muted">Quinta</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="sexta" class="form-check-input" type="checkbox" name="sexta" {{ (old('sexta') == 'on' || old('sexta') == true ? 'checked' : ($plano->sexta == true ? 'checked' : '')) }}>
-                                            <label for="sexta" class="form-check-label text-muted">Sexta</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="sabado" class="form-check-input" type="checkbox" name="sabado" {{ (old('sabado') == 'on' || old('sabado') == true ? 'checked' : ($plano->sabado == true ? 'checked' : '')) }}>
-                                            <label for="sabado" class="form-check-label text-muted">Sábado</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
+                            <div class="row mb-2"> 
                                 <div class="col-12">   
                                     <label class="labelforms text-muted"><b>Descrição do Plano</b></label>
                                     <x-adminlte-text-editor name="content" v placeholder="Descrição..." :config="$config">{{ old('content') ?? $plano->content }}</x-adminlte-text-editor>                                                                                     
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                     <div class="row text-right">
@@ -203,47 +135,16 @@ $config = [
 @stop
 
 @section('css')
-<link href="{{url(asset('backend/plugins/airdatepicker/css/datepicker.min.css'))}}" rel="stylesheet" type="text/css">
-<style>
-    .only-timepicker .datepicker--nav,
-    .only-timepicker .datepicker--content {
-        display: none;
-    }
-    .only-timepicker .datepicker--time {
-        border-top: none;
-    }
-</style>
+
 @stop
 
 
 @section('js')
-<script src="{{url(asset('backend/plugins/airdatepicker/js/datepicker.min.js'))}}"></script>
-<script src="{{url(asset('backend/plugins/airdatepicker/js/i18n/datepicker.pt-BR.js'))}}"></script>
 <script src="{{url(asset('backend/assets/js/jquery.mask.js'))}}"></script>
 <script>
     $(document).ready(function () { 
        var $money = $(".mask-money");
         $money.mask('R$ 000.000.000.000.000,00', {reverse: true, placeholder: "R$ 0,00"});
-    });
-</script>
-
-<script>
-    $(function () {         
-        $('.only-time').datepicker({
-            confirmButton:true,
-            clearButton:true,
-            autoClose:true,
-            // dateFormat: ' ',
-            // timeFormat: 'hh:ii',
-            // classes: 'only-timepicker'
-            dateFormat: ' ',
-            timepicker: true,
-            classes: 'only-timepicker'
-        });
-        var okButton = '<span class="datepicker--button" data-action="hide">Ok</span>'; 
-        $('.datepicker--button[data-action="clear"]').each(function( index ) { 
-            $(okButton).insertBefore($(this)); 
-        });
     });
 </script>
 @stop

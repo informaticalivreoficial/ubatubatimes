@@ -469,7 +469,38 @@ $config = [
                     </div>
 
                     <div class="tab-pane fade" id="custom-tabs-four-faturas" role="tabpanel" aria-labelledby="custom-tabs-four-faturas-tab">
-                        
+                        <div class="col-sm-12">
+                            <div class="form-group text-muted">
+                                <h5><b>Faturas</b></h5>               
+                            </div>
+                        </div>
+                        @if (!empty($faturas) && $faturas->count() > 0)
+                            <table id="example1" class="table table-bordered table-striped projects">
+                                <thead>
+                                    <tr class="text-muted">
+                                        <th>#</th>
+                                        <th>Criado</th>
+                                        <th>Expira</th>
+                                        <th>valor</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($faturas as $fatura)
+                                        <tr>
+                                            <td>{{$fatura->id}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <a href="{{route('faturas.show',['id' => $fatura->id])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
+                                                <a href="" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
                 
                     <div class="row text-right">

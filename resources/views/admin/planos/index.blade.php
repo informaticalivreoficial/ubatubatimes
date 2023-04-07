@@ -56,9 +56,7 @@
             <table class="table table-bordered table-striped projects">
                 <thead>
                     <tr>
-                        <th>Plano</th>
-                        <th class="text-center">Horário</th>
-                        <th class="text-center">Vagas</th>
+                        <th>Plano</th>                        
                         <th class="text-center">Valor</th>
                         <th>Ações</th>
                     </tr>
@@ -67,14 +65,11 @@
                     @foreach($planos as $plano)                    
                         <tr style="{{ ($plano->status == '1' ? '' : 'background: #fffed8 !important;')  }}">
                             <td>{{$plano->name}}</td>
-                            <td class="text-center">{{\Carbon\Carbon::parse($plano->horario)->format('H:i')}}</td>
-                            <td class="text-center"></td>
                             <td class="text-center">                            
                                 {{($plano->valor_mensal ? 'Mensal: R$'.$plano->valor_mensal : '')}}
                                 {!!($plano->valor_trimestral ? '<br>Trimestral: R$'.$plano->valor_trimestral : '')!!}
                                 {!!($plano->valor_semestral ? '<br>Semestral: R$'.$plano->valor_semestral : '')!!}
-                                {!!($plano->valor_anual ? '<br>Anual: R$'.$plano->valor_anual : '')!!}
-                                {!!($plano->valor_bianual ? '<br>Bianual: R$'.$plano->valor_bianual : '')!!}                            
+                                {!!($plano->valor_anual ? '<br>Anual: R$'.$plano->valor_anual : '')!!}                           
                             </td>
                             <td>
                                 <input type="checkbox" data-onstyle="success" data-offstyle="warning" data-size="mini" class="toggle-class" data-id="{{ $plano->id }}" data-toggle="toggle" data-style="slow" data-on="<i class='fas fa-check'></i>" data-off="<i style='color:#fff !important;' class='fas fa-exclamation-triangle'></i>" {{ $plano->status == true ? 'checked' : ''}}>

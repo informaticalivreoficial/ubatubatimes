@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+    protected $crowler;
+    
     public function __construct()
     {
         $this->crowler = new Client();

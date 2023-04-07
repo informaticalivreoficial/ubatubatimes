@@ -27,6 +27,8 @@ class Anuncio extends Model
         'link',
         'posicao',
         'status',
+        'vencimento',
+        'periodo',
         'subscription_id',
         'subscription',
         'expires_at',
@@ -63,6 +65,11 @@ class Anuncio extends Model
     public function plano()
     {
         return $this->belongsTo(Plan::class, 'plan_id', 'id');
+    }
+
+    public function countfaturas()
+    {
+        return $this->hasMany(Fatura::class, 'anuncio', 'id')->count();
     }
 
     /**
