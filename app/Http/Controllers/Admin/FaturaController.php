@@ -31,7 +31,7 @@ class FaturaController extends Controller
             'payer_cpf_cnpj' => ($fatura->getEmpresa->document_company ? $fatura->getEmpresa->document_company : $fatura->getEmpresa->responsavel_cpf),
             'days_due_date' => Carbon::parse($fatura->vencimento)->diffInDays(Carbon::parse(Carbon::now())),
             'type_bank_slip' => 'boletoA4',
-            'notification_url' => route('web.retornoBoleto'),
+            'notification_url' => route('web.getTransaction'),
         ];
 
         $items['items'][] = [                    
@@ -77,5 +77,6 @@ class FaturaController extends Controller
             $_POST['notification_id'], 
             $_POST['idTransacao']
         );
+        dd($transaction);
     }
 }

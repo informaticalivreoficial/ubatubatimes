@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     
-    Route::get('pagar/{fatura}', [FaturaController::class, 'pagar'])->name('pagar');
-    Route::get('notification', [FaturaController::class, 'retornoBoleto'])->name('retornoBoleto');
+    Route::match(['get', 'post'],'pagar/{fatura}', [FaturaController::class, 'pagar'])->name('pagar');
+    Route::match(['get', 'post'],'notification', [FaturaController::class, 'getTransaction'])->name('getTransaction');
 });
 
 Route::prefix('admin')->middleware('auth')->group( function(){
