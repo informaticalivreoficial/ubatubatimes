@@ -28,7 +28,7 @@ class FaturaController extends Controller
             'order_id' => $fatura->id,
             'payer_name' => $fatura->getEmpresa->alias_name,
             'payer_email' => $fatura->getEmpresa->email,
-            'payer_cpf_cnpj' => ($fatura->getEmpresa->cnpj ? $fatura->getEmpresa->cnpj : $fatura->getEmpresa->cpf),
+            'payer_cpf_cnpj' => ($fatura->getEmpresa->document_company ? $fatura->getEmpresa->document_company : $fatura->getEmpresa->responsavel_cpf),
             'days_due_date' => Carbon::parse($fatura->vencimento)->diffInDays(Carbon::parse(Carbon::now())),
             'type_bank_slip' => 'boletoA4',
             'notification_url' => route('web.retornoBoleto'),
