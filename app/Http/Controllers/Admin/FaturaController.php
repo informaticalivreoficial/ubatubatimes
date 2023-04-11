@@ -77,6 +77,13 @@ class FaturaController extends Controller
             $_POST['notification_id'], 
             $_POST['idTransacao']
         );
-        dd($transaction);
+        $fatura = Fatura::where('id', $_POST['idTransacao'])->first();
+        $fatura->transaction_id = $_POST['notification_id'];
+        // $fatura->status = $request->create_request['status'];
+        // $fatura->vencimento = $request->create_request['due_date'];
+        // $fatura->url_slip = $request->create_request['bank_slip']['url_slip'];
+        // $fatura->url_slip_pdf = $request->create_request['bank_slip']['url_slip_pdf'];
+        // $fatura->bar_code_number_to_image = $request->create_request['bank_slip']['bar_code_number_to_image'];
+        $fatura->save(); 
     }
 }
