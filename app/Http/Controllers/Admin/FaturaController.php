@@ -11,6 +11,14 @@ use WebMaster\PagHiper\PagHiper;
 
 class FaturaController extends Controller
 {
+    public function faturas()
+    {
+        $faturas = Fatura::orderBy('created_at', 'DESC')->paginate(35);        
+        return view('admin.faturas.faturas',[
+            'faturas' => $faturas
+        ]);
+    }
+
     public function show($id)
     {
         $fatura = Fatura::where('id', $id)->first();
@@ -74,16 +82,42 @@ class FaturaController extends Controller
         );
         
         $transaction = $paghiper->notification()->response(
-            $_POST['notification_id'], 
-            $_POST['idTransacao']
+            '041KPPVOSPLSV923', 
+            '1'
         );
-        $fatura = Fatura::where('id', $_POST['idTransacao'])->first();
-        $fatura->transaction_id = $_POST['notification_id'];
+        //$fatura = Fatura::where('id', $_POST['idTransacao'])->first();
+        //$fatura->transaction_id = $_POST['notification_id'];
         // $fatura->status = $request->create_request['status'];
         // $fatura->vencimento = $request->create_request['due_date'];
         // $fatura->url_slip = $request->create_request['bank_slip']['url_slip'];
         // $fatura->url_slip_pdf = $request->create_request['bank_slip']['url_slip_pdf'];
         // $fatura->bar_code_number_to_image = $request->create_request['bank_slip']['bar_code_number_to_image'];
-        $fatura->save(); 
+        //$fatura->save(); 
+    }
+
+    public function cancelarBoleto($data)
+    {
+        $paghiper = new PagHiper(
+            env('PAGHIPER_APIKEY'), 
+            env('PAGHIPER_TOKEM')
+        );
+        $transaction = $paghiper->billet()->cancel($data);
+    }
+
+    public function statusBoleto($data)
+    {
+        $paghiper = new PagHiper(
+            env('PAGHIPER_APIKEY'), 
+            env('PAGHIPER_TOKEM')
+        );
+        $transaction = $paghiper->billet()->status($data);
+
+        $fatura = Fatura::where('id', $transaction['order_id'])->first();
+        $fatura->status = $transaction['status'];
+        $fatura->vencimento = $transaction['due_date'];
+        $fatura->digitable_line = $transaction['bank_slip']['digitable_line'];
+        $fatura->url_slip = $transaction['bank_slip']['url_slip'];
+        $fatura->url_slip_pdf = $transaction['bank_slip']['url_slip_pdf'];
+        $fatura->save();
     }
 }

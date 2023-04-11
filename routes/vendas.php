@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\{
     AnunciosController,
+    BancoController,
     FaturaController,
     PlanController,
     PlanoController
@@ -13,9 +14,19 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     
     Route::match(['get', 'post'],'pagar/{fatura}', [FaturaController::class, 'pagar'])->name('pagar');
     Route::match(['get', 'post'],'notification', [FaturaController::class, 'getTransaction'])->name('getTransaction');
+    Route::get('canlelar-boleto/{data}', [FaturaController::class, 'cancelarBoleto'])->name('cancelarBoleto');
+    Route::get('status-do-boleto/{data}', [FaturaController::class, 'statusBoleto'])->name('statusBoleto');
 });
 
 Route::prefix('admin')->middleware('auth')->group( function(){
+
+    //******************** Vendas *************************************************************/
+    Route::get('bancos', [BancoController::class, 'index'])->name('bancos.index');
+    Route::get('bancos/refresh', [BancoController::class, 'refresh'])->name('bancos.refresh');
+
+    //******************** Faturas *************************************************************/
+    Route::get('faturas/show/{id}', [FaturaController::class, 'show'])->name('faturas.show');
+    Route::get('/faturas', [FaturaController::class, 'faturas'])->name('faturas.index');
 
     //********************************* Anúncios *******************************************/
     Route::get('anuncios/set-status', [AnunciosController::class, 'anuncioSetStatus'])->name('anuncios.anuncioSetStatus');
@@ -43,11 +54,7 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('planos/{id}/edit', [PlanoController::class, 'edit'])->name('planos.edit');
     Route::get('planos/create', [PlanoController::class, 'create'])->name('planos.create');
     Route::post('planos/store', [PlanoController::class, 'store'])->name('planos.store');
-    Route::get('planos', [PlanoController::class, 'index'])->name('planos.index');
-
-    //******************** Faturas *************************************************************/
-    Route::get('faturas/show/{id}', [FaturaController::class, 'show'])->name('faturas.show');
-    Route::get('/faturas', [FaturaController::class, 'index'])->name('faturas.index');
+    Route::get('planos', [PlanoController::class, 'index'])->name('planos.index');    
 });
 
 Auth::routes();

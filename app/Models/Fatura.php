@@ -50,6 +50,13 @@ class Fatura extends Model
     /**
      * Accerssors and Mutators
     */
+    public function getStatus()
+    {
+        if(!empty($this->status) && $this->status == 'pending'){
+            return '<span class="badge bg-warning">Aguardando</span>';
+        }
+    }
+
     public function setValorMensalAttribute($value)
     {
         $this->attributes['valor_mensal'] = (!empty($value) ? floatval($this->convertStringToDouble($value)) : null);

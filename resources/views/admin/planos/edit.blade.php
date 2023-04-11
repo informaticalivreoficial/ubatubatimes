@@ -138,7 +138,6 @@ $config = [
 
 @stop
 
-
 @section('js')
 <script src="{{url(asset('backend/assets/js/jquery.mask.js'))}}"></script>
 <script>

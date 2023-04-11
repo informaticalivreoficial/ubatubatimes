@@ -197,46 +197,15 @@ $config = [
 @stop
 
 @section('css')
-<link href="{{url(asset('backend/plugins/airdatepicker/css/datepicker.min.css'))}}" rel="stylesheet" type="text/css">
-<style>
-    .only-timepicker .datepicker--nav,
-    .only-timepicker .datepicker--content {
-        display: none;
-    }
-    .only-timepicker .datepicker--time {
-        border-top: none;
-    }
-</style>
+
 @stop
 
 @section('js')
-<script src="{{url(asset('backend/plugins/airdatepicker/js/datepicker.min.js'))}}"></script>
-<script src="{{url(asset('backend/plugins/airdatepicker/js/i18n/datepicker.pt-BR.js'))}}"></script>
 <script src="{{url(asset('backend/assets/js/jquery.mask.js'))}}"></script>
 <script>
     $(document).ready(function () { 
        var $money = $(".mask-money");
         $money.mask('R$ 000.000.000.000.000,00', {reverse: true, placeholder: "R$ 0,00"});
-    });
-</script>
-
-<script>
-    $(function () {         
-        $('.only-time').datepicker({
-            confirmButton:true,
-            clearButton:true,
-            autoClose:true,
-            // dateFormat: ' ',
-            // timeFormat: 'hh:ii',
-            // classes: 'only-timepicker'
-            dateFormat: ' ',
-            timepicker: true,
-            classes: 'only-timepicker'
-        });
-        var okButton = '<span class="datepicker--button" data-action="hide">Ok</span>'; 
-        $('.datepicker--button[data-action="clear"]').each(function( index ) { 
-            $(okButton).insertBefore($(this)); 
-        });
     });
 </script>
 @stop

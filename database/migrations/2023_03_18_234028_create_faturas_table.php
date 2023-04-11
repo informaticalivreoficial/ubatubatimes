@@ -22,9 +22,9 @@ class CreateFaturasTable extends Migration
             $table->date('vencimento')->nullable();
             $table->decimal('valor', 10, 2)->nullable(); 
             $table->string('status')->nullable();
-            $table->string('url_slip')->nullable();
-            $table->string('url_slip_pdf')->nullable();
-            $table->string('bar_code_number_to_image')->nullable();
+            $table->text('url_slip')->nullable();
+            $table->text('url_slip_pdf')->nullable();
+            $table->text('digitable_line')->nullable();
 
             $table->timestamps();
 

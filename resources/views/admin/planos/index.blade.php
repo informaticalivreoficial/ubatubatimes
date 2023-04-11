@@ -133,12 +133,10 @@
 @section('plugins.Toastr', true)
 
 @section('css')
-    <link rel="stylesheet" href="{{url(asset('backend/plugins/ekko-lightbox/ekko-lightbox.css'))}}">
     <link href="{{url(asset('backend/plugins/bootstrap-toggle/bootstrap-toggle.min.css'))}}" rel="stylesheet">
 @stop
 
 @section('js')
-    <script src="{{url(asset('backend/plugins/ekko-lightbox/ekko-lightbox.min.js'))}}"></script>
     <script src="{{url(asset('backend/plugins/bootstrap-toggle/bootstrap-toggle.min.js'))}}"></script>
     <script>
        $(function () {           
@@ -149,13 +147,6 @@
                 }
             });
            
-            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-                event.preventDefault();
-                $(this).ekkoLightbox({
-                    alwaysShowClose: true
-                });
-            });
-            
             $('.j_modal_btn').click(function() {
                 var plano_id = $(this).data('id');                
                 $.ajax({

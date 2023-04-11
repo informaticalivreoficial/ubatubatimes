@@ -243,6 +243,25 @@ return [
             'icon' => 'fas fa-cog',
         ],
         [
+            'text' => 'Vendas',            
+            'icon' => 'fas fa-money-check',
+            'submenu' => [
+                [
+                    'text' => 'Bancos',
+                    'url' => 'admin/bancos',
+                ],
+                [
+                    'text' => 'Faturas',
+                    'url' => 'admin/faturas',
+                ],
+                [
+                    'text' => 'Carteira',
+                    'url' => 'admin/carteira',
+                ]               
+            ],
+            
+        ],
+        [
             'text' => 'Planos',            
             'icon' => 'fas fa-fw fa-list-alt',
             'submenu' => [
@@ -299,10 +318,6 @@ return [
                 [
                     'text' => 'Cadastrar Anúncio',
                     'url'  => 'admin/anuncios/create',
-                ],                
-                [
-                    'text' => 'Planos',
-                    'url'  => 'admin/anuncios/planos',
                 ]
             ]
         ],        

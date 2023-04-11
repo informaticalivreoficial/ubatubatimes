@@ -125,7 +125,7 @@
                             <table class="table">
                                <tr>
                                   <th>Total:</th>
-                                  <td>R$ {{str_replace(',00', '', $fatura->getAnuncio->valor_mensal)}}</td>
+                                  <td>R$ {{str_replace(',00', '', $fatura->getAnuncio->plano->valor_mensal)}}</td>
                                </tr>
                             </table>
                          </div>
