@@ -80,7 +80,7 @@ class WebController extends Controller
                     ->limit(4)
                     ->get();
         
-        $positionSidebarhome = Anuncio::where('posicao', 1)->available()->limit(2)->get();
+        $positionSidebarhome = Anuncio::where('plan_id', 2)->available()->limit(2)->get();
 
         //Boletim das Ondas
         $boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');

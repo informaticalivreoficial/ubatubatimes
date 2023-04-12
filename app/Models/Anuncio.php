@@ -93,26 +93,12 @@ class Anuncio extends Model
         return $position;
     }
 
-    // public function getPosicaoAttribute($value)
-    // {
-    //     if (empty($value)) {
-    //         return null;
-    //     }
-
-    //     foreach($this->position() as $pos){
-    //         if($pos['id'] === $value){
-    //             return $pos['name'];
-    //         }
-    //     }
-    // }
-
     public function get300x250()
     {
         $image = $this['300x250'];        
         if(empty($this['300x250']) || !Storage::disk()->exists($image)) {
-            return url(asset('backend/assets/images/image.jpg'));
+            return url(asset('backend/assets/images/banner300x250.jpg'));
         } 
-        //return Storage::url(Cropper::thumb($this['300x250'], 300, 250));
         return Storage::url($this['300x250']);
     }
     
