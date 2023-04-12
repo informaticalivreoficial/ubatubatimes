@@ -77,23 +77,6 @@ $config = [
                                         <input type="text" class="form-control" name="name" value="{{ old('name') }}">
                                     </div>
                                 </div> 
-                                <div class="col-12 col-md-6 col-lg-2">   
-                                    <div class="form-group">
-                                        <label class="labelforms text-muted"><b>Vagas</b></label>
-                                        <input type="text" class="form-control" name="vagas" value="{{old('vagas')}}">
-                                    </div>                                                    
-                                </div> 
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2"> 
-                                    <div class="form-group">
-                                        <label class="labelforms text-muted"><b>Horário</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control only-time" data-language='pt-BR' name="horario" value="{{ old('horario')}}"/>
-                                            <div class="input-group-append">
-                                                <div class="input-group-text"><i class="fa fa-clock"></i></div>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                </div>
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-2">
                                     <div class="form-group">
                                         <label class="labelforms text-muted"><b>Status:</b></label>
@@ -123,59 +106,8 @@ $config = [
                                     <input type="text" class="form-control mask-money a" name="valor_anual" value="{{ old('valor_anual') }}">
                                 </div>
                             </div>
-
-                            <div class="row mb-2">   
-                                <div class="col-12">
-                                    <label class="labelforms text-muted"><b>Dias da Semana</b></label>    
-                                </div>                                  
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="segunda" class="form-check-input" type="checkbox" name="segunda" {{ (old('segunda') == 'on' || old('segunda') == true ? 'checked' : '') }}>
-                                            <label for="segunda" class="form-check-label text-muted">Segunda</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="terca" class="form-check-input" type="checkbox" name="terca" {{ (old('terca') == 'on' || old('terca') == true ? 'checked' : '') }}>
-                                            <label for="terca" class="form-check-label text-muted">Terça</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="quarta" class="form-check-input" type="checkbox" name="quarta" {{ (old('quarta') == 'on' || old('quarta') == true ? 'checked' : '') }}>
-                                            <label for="quarta" class="form-check-label text-muted">Quarta</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="quinta" class="form-check-input" type="checkbox" name="quinta" {{ (old('quinta') == 'on' || old('quinta') == true ? 'checked' : '') }}>
-                                            <label for="quinta" class="form-check-label text-muted">Quinta</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="sexta" class="form-check-input" type="checkbox" name="sexta" {{ (old('sexta') == 'on' || old('sexta') == true ? 'checked' : '') }}>
-                                            <label for="sexta" class="form-check-label text-muted">Sexta</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
-                                    <div class="form-group p-3 mb-1">
-                                        <div class="form-check mb-2">
-                                            <input id="sabado" class="form-check-input" type="checkbox" name="sabado" {{ (old('sabado') == 'on' || old('sabado') == true ? 'checked' : '') }}>
-                                            <label for="sabado" class="form-check-label text-muted">Sábado</label>
-                                        </div>                                            
-                                    </div>
-                                </div>
+ 
+                            <div class="row mb-2">
                                 <div class="col-12">   
                                     <label class="labelforms text-muted"><b>Descrição do Plano</b></label>
                                     <x-adminlte-text-editor name="content" v placeholder="Descrição..." :config="$config">{{ old('content') }}</x-adminlte-text-editor>                                                                                     

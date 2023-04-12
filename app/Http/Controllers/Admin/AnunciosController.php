@@ -60,6 +60,23 @@ class AnunciosController extends Controller
             $anuncioCreate['300x250'] = $request->file('300x250')->storeAs(env('AWS_PASTA') . 'anuncios', '300x250-'.Str::slug($request->titulo)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('300x250')->extension());
             $anuncioCreate->save();
         }
+
+        //Cria Fatura
+        if($request->gerarfatura === 'on'){
+            $plano = Plan::where('id', $request->plan_id)->first();
+            $dataFatura = [
+                'anuncio' => $anuncioCreate->id,
+                'empresa' => $anuncioCreate->empresa,
+                'vencimento' => date('Y-m-d', strtotime("+{$request->vencimento} days")),
+                'valor' => ($request->periodo == 1 ? $plano->valor_mensal : 
+                           ($request->periodo == 3 ? $plano->valor_trimestral : 
+                           ($request->periodo == 6 ? $plano->valor_semestral : 
+                           ($request->periodo == 12 ? $plano->valor_anual : $plano->valor_mensal)))),
+                'status' => 'pending'
+            ];
+            $criarFatura = Fatura::create($dataFatura);
+            $criarFatura->save();
+        }
         
         return Redirect::route('anuncios.edit', $anuncioCreate->id)->with([
             'color' => 'success', 
@@ -121,7 +138,10 @@ class AnunciosController extends Controller
                 'anuncio' => $anuncio->id,
                 'empresa' => $anuncio->empresa,
                 'vencimento' => date('Y-m-d', strtotime("+{$request->vencimento} days")),
-                'valor' => ($request->periodo == 1 ? $plano->valor_mensal : ''),
+                'valor' => ($request->periodo == 1 ? $plano->valor_mensal : 
+                           ($request->periodo == 3 ? $plano->valor_trimestral : 
+                           ($request->periodo == 6 ? $plano->valor_semestral : 
+                           ($request->periodo == 12 ? $plano->valor_anual : $plano->valor_mensal)))),
                 'status' => 'pending'
             ];
             $criarFatura = Fatura::create($dataFatura);

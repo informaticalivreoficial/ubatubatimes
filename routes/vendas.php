@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\{
     AnunciosController,
     BancoController,
     FaturaController,
-    PlanController,
     PlanoController
 };
 use Illuminate\Support\Facades\Auth;
@@ -36,14 +35,6 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('anuncios/create', [AnunciosController::class, 'create'])->name('anuncios.create');
     Route::post('anuncios/store', [AnunciosController::class, 'store'])->name('anuncios.store');
     Route::get('/anuncios', [AnunciosController::class, 'index'])->name('anuncios.index');
-
-    //********************************** Planos *******************************************/
-    Route::get('anuncios/planos/set-status', [PlanController::class, 'planSetStatus'])->name('plans.planSetStatus');
-    Route::put('anuncios/planos/{id}', [PlanController::class, 'update'])->name('plans.update');
-    Route::get('anuncios/planos/{id}/edit', [PlanController::class, 'edit'])->name('plans.edit');
-    Route::get('anuncios/planos/create', [PlanController::class, 'create'])->name('plans.create');
-    Route::post('anuncios/planos/store', [PlanController::class, 'store'])->name('plans.store');
-    Route::get('/anuncios/planos', [PlanController::class, 'index'])->name('plans');
     
     /******************** Planos *************************************************************/
     Route::match(['get', 'post'], 'planos/pesquisa', [PlanoController::class, 'search'])->name('planos.search');
