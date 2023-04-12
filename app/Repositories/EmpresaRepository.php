@@ -21,7 +21,7 @@ class EmpresaRepository
 
     public function getEmpresas($paginate)
     {
-        $paginate = ($paginate == null ? $this->paginate : $paginate);
+        //$paginate = ($paginate == null ? $this->paginate : $paginate);
         $empresas = $this->model->latest()->orderBy('status', 'ASC')->paginate($paginate);
         return $empresas;
     }
