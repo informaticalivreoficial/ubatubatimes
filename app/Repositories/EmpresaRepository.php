@@ -42,7 +42,7 @@ class EmpresaRepository
         $empresa = $this->getById($id);
         $empresa->fill($data);
         $empresa->save(); 
-        return $this->entity->where('id', $id)->firstOrfail();
+        return $this->model->where('id', $id)->firstOrfail();
     }
 
     public function getCategorias()
@@ -75,7 +75,6 @@ class EmpresaRepository
     {      
         $imageDelete = $this->modelGb->where('id', $id)->first();
         Storage::delete($imageDelete->path);
-        //Cropper::flush($imageDelete->path);
         $imageDelete->delete();
         return true;          
     }
@@ -84,7 +83,6 @@ class EmpresaRepository
     {      
         $imageDelete = $this->modelGb->where('empresa', $id)->first();
         Storage::delete($imageDelete->path);
-        Cropper::flush($imageDelete->path);
         $imageDelete->delete();
         Storage::deleteDirectory('empresas/'.$id);
     }
