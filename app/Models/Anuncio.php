@@ -140,9 +140,8 @@ class Anuncio extends Model
     {
         $image = $this['728x90'];        
         if(empty($this['728x90']) || !Storage::disk()->exists($image)) {
-            return url(asset('backend/assets/images/image.jpg'));
-        } 
-        //return Storage::url(Cropper::thumb($this['728x90'], 728, 90));
+            return url(asset('backend/assets/images/banner728x90.jpg'));
+        }         
         return Storage::url($this['728x90']);
     }
 

@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
         View()->share('newsletterForm', $newsletter);
 
         //Anúncio Topo Home 729x90
-        $positionTopohome = Anuncio::where('posicao', 2)->available()->limit(1)->get();
+        $positionTopohome = Anuncio::where('plan_id', 3)->available()->limit(1)->get();
         View()->share('positionTopohome', $positionTopohome);
 
         Paginator::useBootstrap();
