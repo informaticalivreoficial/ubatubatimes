@@ -97,7 +97,7 @@ class Anuncio extends Model
     {
         $image = $this['300x250'];        
         if(empty($this['300x250']) || !Storage::disk()->exists($image)) {
-            return url(asset('backend/assets/images/banner300x250.jpg'));
+            return url(asset('backend/assets/images/image.jpg'));
         } 
         return Storage::url($this['300x250']);
     }
@@ -126,7 +126,7 @@ class Anuncio extends Model
     {
         $image = $this['728x90'];        
         if(empty($this['728x90']) || !Storage::disk()->exists($image)) {
-            return url(asset('backend/assets/images/banner728x90.jpg'));
+            return url(asset('backend/assets/images/image.jpg'));
         }         
         return Storage::url($this['728x90']);
     }

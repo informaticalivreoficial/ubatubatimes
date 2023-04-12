@@ -42,6 +42,17 @@
                                     </a>                                                                      
                                 </div>
                             @endforeach
+                        @else
+                            <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
+                                <a href="#">
+                                    <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
+                                </a>                                                                      
+                            </div>
+                            <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
+                                <a href="#">
+                                    <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
+                                </a>                                                                      
+                            </div>
                         @endif
                         
         

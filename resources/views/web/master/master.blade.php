@@ -105,7 +105,13 @@
 						@if (!empty($positionTopohome) && $positionTopohome->count() > 0)
 							<div class="float-right mt-3"> 
 								<a target="_blank" id="j_click" href="{{$positionTopohome[0]->link ?? '#'}}">
-									<img src="{{(!empty($positionTopohome[0]->get728x90() ? $positionTopohome[0]->get728x90() : url('backend/assets/images/banner728x90.jpg')))}}" class="img-fluid" alt="{{$positionTopohome[0]->titulo}}">
+									<img src="{{$positionTopohome[0]->get728x90()}}" class="img-fluid" alt="{{$positionTopohome[0]->titulo}}">
+								</a> 
+							</div>
+						@else
+							<div class="float-right mt-3"> 
+								<a target="_blank" href="#">
+									<img src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" class="img-fluid" alt="Anuncie Aqui!">
 								</a> 
 							</div>
 						@endif						
