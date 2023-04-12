@@ -118,17 +118,7 @@ $config = [
                                 </div>
                             </div>                                                               
                         </div> 
-                        <div class="row mb-2">
-                            <div class="col-12 col-sm-4 col-md-4 col-lg-4"> 
-                                <div class="form-group">
-                                    <label class="labelforms text-muted"><b>Posição:</b></label>
-                                    <select class="form-control j_posicao" name="posicao">
-                                        @foreach ($anuncio->position() as $position)
-                                            <option value="{{$position['id']}}" {{(old('posicao') == $position['id'] ? 'selected' : ($anuncio->posicao == $position['id'] ? 'selected' : ''))}}>{{$position['id']}} - {{$position['name']}} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> 
+                        <div class="row mb-2">                           
                             <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="labelforms text-muted"><b>Link:</b></label>
                                 <input class="form-control" name="link" value="{{old('link') ?? $anuncio->link}}">

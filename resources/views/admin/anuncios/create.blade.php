@@ -113,15 +113,51 @@ $config = [
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4 col-lg-4"> 
+                                        
+                                    </div>                                    
+                                </div>
+                                <div class="row mb-2">                           
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                        <label class="labelforms text-muted"><b>Link:</b></label>
+                                        <input class="form-control" name="link" value="{{old('link')}}">
+                                    </div> 
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-2">
                                         <div class="form-group">
-                                            <label class="labelforms text-muted"><b>Posição:</b></label>
-                                            <select class="form-control" name="posicao">
-                                                @foreach (\->position() as $position)
-                                                    <option value="{{$position['id']}}" {{(old('posicao') == $position['id'] ? 'selected' : ($anuncio->posicao == $position['id'] ? 'selected' : ''))}}>{{$position['id']}} - {{$position['name']}} </option>
-                                                @endforeach
+                                            <label class="labelforms text-muted"><b>Período:</b></label>
+                                            <select name="periodo" class="form-control">
+                                                <option value="1" {{ (old('periodo') == '1' ? 'selected' : '') }}>Mensal</option>
+                                                <option value="3" {{ (old('periodo') == '3' ? 'selected' : '') }}>Trimestral</option>
+                                                <option value="6" {{ (old('periodo') == '6' ? 'selected' : '') }}>Semestral</option>
+                                                <option value="12" {{ (old('periodo') == '12' ? 'selected' : '') }}>Anual</option>
                                             </select>
                                         </div>
-                                    </div>                                    
+                                    </div>
+                                    <div class="col-12 col-sm-4 col-md-4 col-lg-2"> 
+                                        <div class="form-group">
+                                            <label class="labelforms text-muted"><b>*Dia de Vencimento</b></label>
+                                            <input type="text" class="form-control" name="vencimento" value="{{ old('vencimento')}}">
+                                        </div>                                                    
+                                    </div>
+                                </div>
+                                <div class="row mb-2">                                    
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
+                                        <div class="form-group p-3 mb-1">
+                                            <label class="labelforms text-muted"><b> </b></label>
+                                            <div class="form-check mb-2">
+                                                <input id="gerarfatura" class="form-check-input" type="checkbox" name="gerarfatura" {{ (old('gerarfatura') == 'on' || old('gerarfatura') == true ? 'checked' : '') }}>
+                                                <label for="gerarfatura" class="form-check-label text-muted">Gerar Fatura?</label>
+                                            </div>                                            
+                                        </div>
+                                    </div>                                                                                                
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">                                        
+                                        <div class="form-group p-3 mb-1">
+                                            <label class="labelforms text-muted"><b> </b></label>
+                                            <div class="form-check mb-2">
+                                                <input id="gerarcontrato" class="form-check-input" type="checkbox" name="gerarcontrato" {{ (old('gerarcontrato') == 'on' || old('gerarcontrato') == true ? 'checked' : '') }}>
+                                                <label for="gerarcontrato" class="form-check-label text-muted">Gerar Contrato?</label>
+                                            </div>                                            
+                                        </div>
+                                    </div>                             
                                 </div>
                             </div>                   
                         </div>                   
