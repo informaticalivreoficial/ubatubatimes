@@ -26,8 +26,7 @@ class AnuncioRequest extends FormRequest
         return [
             'titulo' => 'required|min:3|max:191',
             'empresa' => 'required',
-            'plan_id' => 'required',
-            'posicao' => 'required',
+            'plan_id' => 'required'
         ];
     }
 }
