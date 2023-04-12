@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class EmpresaRepository
 {
-    private $model, $modelGb, $modelCategorias, $paginate = 25;
+    private $model, $modelGb, $modelCategorias, $paginate = null;
 
     public function __construct(Empresa $model, EmpresaGb $modelGb, CatEmpresa $modelCategorias)
     {
