@@ -19,6 +19,12 @@ class EmpresaService
         return $empresas;
     }
 
+    public function listAllEmpresas()
+    {
+        $empresas = $this->empresaRepository->getAllEmpresas();
+        return $empresas;
+    }
+
     public function listCategorias($paginate = null)
     {
         $categorias = $this->empresaRepository->getCategorias($paginate);

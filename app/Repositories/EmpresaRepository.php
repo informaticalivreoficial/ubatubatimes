@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class EmpresaRepository
 {
-    private $model, $modelGb, $modelCategorias, $paginate = null;
+    private $model, $modelGb, $modelCategorias, $paginate = 25;
 
     public function __construct(Empresa $model, EmpresaGb $modelGb, CatEmpresa $modelCategorias)
     {
@@ -21,8 +21,14 @@ class EmpresaRepository
 
     public function getEmpresas($paginate)
     {
-        //$paginate = ($paginate == null ? $this->paginate : $paginate);
+        $paginate = ($paginate == null ? $this->paginate : $paginate);
         $empresas = $this->model->latest()->orderBy('status', 'ASC')->paginate($paginate);
+        return $empresas;
+    }
+
+    public function getAllEmpresas()
+    {
+        $empresas = $this->model->latest()->available()->get();
         return $empresas;
     }
 

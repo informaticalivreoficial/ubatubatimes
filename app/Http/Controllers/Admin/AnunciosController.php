@@ -39,7 +39,7 @@ class AnunciosController extends Controller
     public function create()
     {
         return view('admin.anuncios.create',[
-            'empresas' => $this->empresaService->listEmpresas(),
+            'empresas' => $this->empresaService->ListAllEmpresas(),
             'plans' => $this->planService->listPlans()
         ]);
     }
