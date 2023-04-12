@@ -98,12 +98,12 @@
 								<img src="{{$configuracoes->getLogomarca()}}" alt="{{$configuracoes->nomedosite}}"> 
 							</a> 
 						</div>
-					</div>        
+					</div>   
 					<div class="col-md-9 col-sm-12 header-right">
 						@if (!empty($positionTopohome) && $positionTopohome->count() > 0)
 							<div class="float-right mt-3"> 
 								<a target="_blank" id="j_click" href="{{$positionTopohome[0]->link ?? '#'}}">
-									<img src="{{$positionTopohome[0]->get728x90()}}" class="img-fluid" alt="{{$positionTopohome[0]->titulo}}">
+									<img src="{{(!empty($positionTopohome[0]->get728x90() ? $positionTopohome[0]->get728x90() : url('backend/assets/images/banner728x90.jpg')))}}" class="img-fluid" alt="{{$positionTopohome[0]->titulo}}">
 								</a> 
 							</div>
 						@endif						

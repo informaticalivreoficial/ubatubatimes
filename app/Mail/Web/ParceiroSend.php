@@ -32,7 +32,8 @@ class ParceiroSend extends Mailable
     public function build()
     {
         return $this->replyTo($this->data['reply_email'], $this->data['reply_name'])
-            ->to($this->data['siteemail'], $this->data['sitename'])
+            ->to($this->data['empresaemail'], $this->data['empresaname'])
+            //->cc(env('DESENVOLVEDOR_EMAIL'))
             ->from($this->data['siteemail'], $this->data['sitename'])
             ->subject('⚓️ Atendimento ' . $this->data['reply_name'])
             ->markdown('emails.empresa-send', [

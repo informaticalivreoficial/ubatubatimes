@@ -133,6 +133,8 @@ class GuiaController extends Controller
             $data = [
                 'sitename' => $this->configService->getConfig()->nomedosite,
                 'siteemail' => env('MAIL_FROM_ADDRESS'),
+                'empresaname' => $empresa->alias_name,
+                'empresaemail' => $empresa->email,
                 'reply_name' => $request->nome,
                 'reply_email' => $request->email,
                 'mensagem' => $request->mensagem,
