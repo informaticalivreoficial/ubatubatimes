@@ -89,7 +89,7 @@ class AnunciosController extends Controller
         $anuncio = Anuncio::where('id', $id)->first();        
         return view('admin.anuncios.edit', [
             'anuncio' => $anuncio,            
-            'empresas' => $this->empresaService->listEmpresas(),
+            'empresas' => $this->empresaService->ListAllEmpresas(),
             'plans' => $this->planService->listPlans()
         ]);
     }
