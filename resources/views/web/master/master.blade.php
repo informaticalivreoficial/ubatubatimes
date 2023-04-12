@@ -48,6 +48,8 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5276530322225914" crossorigin="anonymous"></script>
+
     @hasSection('css')
         @yield('css')
     @endif
