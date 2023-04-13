@@ -30,6 +30,7 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     Route::get('/politica-de-privacidade', [WebController::class, 'politica'])->name('politica');
     Route::get('/boletim-das-ondas', [WebController::class, 'ondas'])->name('ondas');
     Route::get('/previsao-do-tempo', [WebController::class, 'tempo'])->name('tempo');
+    Route::get('/anunciar', [WebController::class, 'anunciar'])->name('anunciar');
 
     //****************************** Guia ******************************/
     Route::get('/guia-ubatuba', [GuiaController::class, 'guiaUbatuba'])->name('guiaUbatuba');
@@ -40,6 +41,7 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     
     //**************************** Emails ********************************************/
     Route::get('/atendimento', [WebController::class, 'atendimento'])->name('atendimento');
+    Route::get('/sendOrcamento', [SendEmailController::class, 'sendOrcamento'])->name('sendOrcamento');
     Route::get('/sendEmail', [SendEmailController::class, 'sendEmail'])->name('sendEmail');
     Route::get('/sendNewsletter', [SendEmailController::class, 'sendNewsletter'])->name('sendNewsletter');
     Route::get('/sendFormCaptacao', [SendEmailController::class, 'sendFormCaptacao'])->name('sendFormCaptacao');

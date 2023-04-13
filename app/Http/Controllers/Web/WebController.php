@@ -13,6 +13,8 @@ use App\Models\{
     Empresa,
     PrevisaoTempo
 };
+use Analytics;
+use Spatie\Analytics\Period;
 use Goutte\Client;
 use App\Services\ConfigService;
 use App\Support\Seo;
@@ -109,7 +111,7 @@ class WebController extends Controller
     {
         $boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');
         //Anúncio
-        $positionSidebarhome = Anuncio::where('posicao', 8)->available()->limit(1)->get();
+        $positionSidebarhome = Anuncio::where('plan_id', 8)->available()->limit(1)->get();
 
         $head = $this->seo->render('Boletim das Ondas para Ubatuba' ?? 'Informática Livre',
             'Boletim das Ondas para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
@@ -433,13 +435,33 @@ class WebController extends Controller
     public function atendimento()
     {
         $head = $this->seo->render('Atendimento - ' . $this->configService->getConfig()->nomedosite,
-            'Nossa equipe está pronta para melhor atender as demandas de nossos clientes!',
+            $this->configService->getConfig()->descricao ?? 'Nossa equipe está pronta para melhor atender as demandas de nossos clientes!',
             route('web.atendimento'),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+            $this->configService->getMetaImg() ?? 'https://informaticalivre.com.br/media/metaimg.jpg'
         );        
 
         return view('web.atendimento', [
             'head' => $head            
+        ]);
+    }
+
+    public function anunciar()
+    {
+        $visitas365 = Analytics::fetchTotalVisitorsAndPageViews(Period::years(1));
+        $v = [];
+        foreach($visitas365->all() as $key => $visitas){
+            $v[] = $visitas['visitors'] + $visitas['pageViews']; 
+        }
+        
+        $head = $this->seo->render('Anuncie Aqui - ' . $this->configService->getConfig()->nomedosite,
+            $this->configService->getConfig()->descricao ?? 'Nossa equipe está pronta para melhor atender as demandas de nossos clientes!',
+            route('web.atendimento'),
+            $this->configService->getMetaImg() ?? 'https://informaticalivre.com.br/media/metaimg.jpg'
+        ); 
+
+        return view('web.anunciar', [
+            'head' => $head,
+            'visitas' => array_sum($v)            
         ]);
     }
     

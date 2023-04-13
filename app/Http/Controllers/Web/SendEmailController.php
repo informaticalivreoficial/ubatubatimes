@@ -26,46 +26,7 @@ use Error;
 use Illuminate\Support\Facades\Validator;
 
 class SendEmailController extends Controller
-{
-    public function sendEmailParceiro(Request $request)
-    {
-        $Configuracoes = Configuracoes::where('id', '1')->first();
-        $parceiro = Parceiro::where('id', $request->parceiro_id)->first();
-        if($request->nome == ''){
-            $json = "Please fill in the <strong>Name</strong> field";
-            return response()->json(['error' => $json]);
-        }
-        if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
-            $json = "The <strong>Email</strong> field is empty or does not have a valid format!";
-            return response()->json(['error' => $json]);
-        }
-        if($request->mensagem == ''){
-            $json = "Please fill in your <strong>Message</strong>";
-            return response()->json(['error' => $json]);
-        }
-        if(!empty($request->bairro) || !empty($request->cidade)){
-            $json = "<strong>ERROR</strong> you are practicing SPAM!"; 
-            return response()->json(['error' => $json]);
-        }else{
-
-            $data = [
-                'sitename' => $parceiro->name,
-                'siteemail' => $parceiro->email,
-                'reply_name' => $request->nome,
-                'reply_email' => $request->email,
-                'mensagem' => $request->mensagem,
-                'config_site_name' => $Configuracoes->nomedosite
-            ];
-
-            $parceiro->email_send_count = $parceiro->email_send_count + 1;
-            $parceiro->save();
-            
-            Mail::send(new ParceiroSend($data));
-            
-            $json = 'Thank you '.getPrimeiroNome($request->nome).', your message has been sent to our <b>'.$parceiro->name.'</b> partner successfully!'; 
-            return response()->json(['sucess' => $json]);
-        }
-    }    
+{     
 
     public function sendEmail(Request $request)
     {
@@ -173,15 +134,6 @@ class SendEmailController extends Controller
                 'reply_email' => $request->email
             ];
 
-            $orcamentoCreate = [
-                'name' => $request->nome,
-                'email' => $request->email,
-                'telefone' => $request->telefone,
-                'content' => $request->mensagem,
-                'token' => \Illuminate\Support\Str::random(20)
-            ];
-            $orcamento = Orcamento::create($orcamentoCreate);
-            $orcamento->save();
             
             Mail::send(new SendOrcamento($data));
             Mail::send(new OrcamentoRetorno($retorno));

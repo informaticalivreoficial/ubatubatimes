@@ -110,7 +110,7 @@
 							</div>
 						@else
 							<div class="float-right mt-3"> 
-								<a target="_blank" href="#">
+								<a href="{{route('web.anunciar')}}">
 									<img src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" class="img-fluid" alt="Anuncie Aqui!">
 								</a> 
 							</div>
@@ -228,6 +228,10 @@
 						<li>
 							<i class="fa fa-angle-double-right"></i>
 							<a href="{{route('web.guiaUbatuba')}}"><span class="catTitle">Guia Comercial Ubatuba</span></a> 
+						</li>
+						<li>
+							<i class="fa fa-angle-double-right"></i>
+							<a href="{{route('web.anunciar')}}"><span class="catTitle">Anunciar</span></a> 
 						</li>
 						<li>
 							<i class="fa fa-angle-double-right"></i>

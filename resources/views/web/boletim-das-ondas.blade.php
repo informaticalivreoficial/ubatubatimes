@@ -33,6 +33,12 @@
                                             </a>                                                                      
                                         </div>
                                     @endforeach
+                                @else
+                                    <div class="widget text-center">                                    
+                                        <a href="#">
+                                            <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
+                                        </a>                                                                      
+                                    </div>
                                 @endif                              
                             </div>
                             <div class="col-sm-12 col-md-4">                       
