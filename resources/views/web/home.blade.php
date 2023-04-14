@@ -391,17 +391,33 @@
     @endif
       
   
-  <!-- Ad Content Area Start -->
-  <div class="utf_ad_content_area text-center utf_banner_area no-padding">
-      <div class="container">
-          <div class="row">
-              <div class="col-md-12"> 
-                <img class="img-fluid" src="{{url(asset('frontend/assets/images/cavalo.png'))}}" alt="" /> 
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- Ad Content Area End -->
+    @if (!empty($positionMainhome) && $positionMainhome->count() > 0)
+        @foreach($positionMainhome as $m)
+            <div class="utf_ad_content_area text-center utf_banner_area no-padding">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12"> 
+                            <a href="{{$m->link ?? '#'}}" target="_blank">
+                                <img class="img-fluid" src="{{$m->get728x90()}}" alt="{{$m->titulo}}" /> 
+                            </a> 
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        @endforeach
+    @else
+        <div class="utf_ad_content_area text-center utf_banner_area no-padding">  
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12"> 
+                        <a href="{{route('web.anunciar')}}" target="_blank">
+                            <img class="img-fluid" src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" alt="Anuncie Aqui!" /> 
+                        </a> 
+                    </div>
+                </div>
+            </div>                                                               
+        </div>        
+    @endif
   
 @if (!empty($praiasDeUbatuba) && $praiasDeUbatuba->count() > 0)
   <section class="utf_block_wrapper p-bottom-0">
@@ -562,16 +578,34 @@
   </section>
 @endif
 
-  
-<div class="utf_ad_content_area text-center utf_banner_area">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12"> 
-                <img class="img-fluid" src="{{url(asset('frontend/assets/images/cavalo.png'))}}" alt="" /> 
+@if (!empty($positionFooterhome) && $positionFooterhome->count() > 0)
+    @foreach($positionFooterhome as $f)
+        <div class="utf_ad_content_area text-center utf_banner_area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12"> 
+                        <a href="{{$f->link ?? '#'}}" target="_blank">
+                            <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->titulo}}" /> 
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
+        </div>                    
+    @endforeach
+@else
+    <div class="utf_ad_content_area text-center utf_banner_area">  
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12"> 
+                    <a href="{{route('web.anunciar')}}" target="_blank">
+                        <img class="img-fluid" src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" alt="Anuncie Aqui!" /> 
+                    </a> 
+                </div>
+            </div>
+        </div>                                                               
+    </div>        
+@endif  
+
 
 <ul id="rudr_instafeed"></ul>
   

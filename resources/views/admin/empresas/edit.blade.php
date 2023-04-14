@@ -446,7 +446,6 @@ $config = [
                                     <tr class="text-muted">
                                         <th>Posição</th>
                                         <th>Criado</th>
-                                        <th>Expira</th>
                                         <th>Situação</th>
                                         <th>Ações</th>
                                     </tr>
@@ -454,9 +453,8 @@ $config = [
                                 <tbody>
                                     @foreach ($anuncios as $anuncio)
                                         <tr>
-                                            <td>{{$anuncio->posicao}}</td>
-                                            <td>{{$anuncio->created_at}}</td>
-                                            <td></td>
+                                            <td>{{$anuncio->plano->name}}</td>
+                                            <td>{{\Carbon\Carbon::parse($anuncio->created_at)->format('d/m/Y')}}</td>
                                             <td>{{($anuncio->status == 1 ? 'Ativo' : 'Inativo')}}</td>
                                             <td>
                                                 <a href="{{route('anuncios.edit',['id' => $anuncio->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
@@ -479,9 +477,9 @@ $config = [
                                 <thead>
                                     <tr class="text-muted">
                                         <th>#</th>
-                                        <th>Criado</th>
-                                        <th>Expira</th>
-                                        <th>valor</th>
+                                        <th class="text-center">Vencimento</th>
+                                        <th class="text-center">valor</th>
+                                        <th class="text-center">Status</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
@@ -489,12 +487,12 @@ $config = [
                                     @foreach ($faturas as $fatura)
                                         <tr>
                                             <td>{{$fatura->id}}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td>{{$fatura->getEmpresa->alias_name}}</td>
+                                            <td class="text-center">{{\Carbon\Carbon::parse($fatura->vencimento)->format('d/m/Y')}}</td>
+                                            <td class="text-center">R$ {{str_replace(',00', '', $fatura->valor)}}</td>
+                                            <td class="text-center">{!! $fatura->getStatus() !!}</td>
                                             <td>
                                                 <a href="{{route('faturas.show',['id' => $fatura->id])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>
-                                                <a href="" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach

@@ -231,7 +231,7 @@
 						</li>
 						<li>
 							<i class="fa fa-angle-double-right"></i>
-							<a href="{{route('web.anunciar')}}"><span class="catTitle">Anunciar</span></a> 
+							<a href="{{route('web.anunciar')}}" target="_blank"><span class="catTitle">Anunciar</span></a> 
 						</li>
 						<li>
 							<i class="fa fa-angle-double-right"></i>

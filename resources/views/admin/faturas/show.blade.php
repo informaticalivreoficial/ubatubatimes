@@ -109,13 +109,13 @@
                    </div>
                    <div class="row">
                       <div class="col-6">
-                         <p class="lead">Forma de Pagamento:</p>
+                         <p class="lead no-print">Forma de Pagamento:</p>
                          @if (!empty($gateways) && $gateways->count() > 0)
                             @foreach ($gateways as $gateway)
-                                <label class="gateway" for="{{$gateway->id}}">
+                                <label class="gateway no-print" for="{{$gateway->id}}">
                                     <img class="m-2" width="120" src="{{$gateway->logomarca}}" alt="{{$gateway->nome}}">
                                 </label>
-                                <input class="gateway" type="radio" name="gateway" value="{{$gateway->id}}" id="{{$gateway->id}}" />
+                                <input class="gateway no-print" type="radio" name="gateway" value="{{$gateway->id}}" id="{{$gateway->id}}" />
                             @endforeach
                          @endif                       
                       </div>

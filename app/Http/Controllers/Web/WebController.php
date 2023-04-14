@@ -83,6 +83,8 @@ class WebController extends Controller
                     ->get();
         
         $positionSidebarhome = Anuncio::where('plan_id', 2)->available()->limit(2)->get();
+        $positionMainhome = Anuncio::where('plan_id', 9)->available()->limit(1)->get();
+        $positionFooterhome = Anuncio::where('plan_id', 5)->available()->limit(1)->get();
 
         //Boletim das Ondas
         $boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');
@@ -104,6 +106,8 @@ class WebController extends Controller
             'praiasDeUbatuba' => $praiasDeUbatuba,
             'gastronomiaDeUbatuba' => $gastronomiaDeUbatuba,
             'positionSidebarhome' => $positionSidebarhome,
+            'positionMainhome' => $positionMainhome,
+            'positionFooterhome' => $positionFooterhome
 		]);
     }
 
