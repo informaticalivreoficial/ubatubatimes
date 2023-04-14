@@ -88,7 +88,23 @@
                 </div>
                 <div class="author-info">
                     <h3>{{$post->user->name}}</h3>
-                    <p>{!!$post->user->notasadicionais!!}</p>              
+                    <p>
+                        {!!$post->user->notasadicionais!!}
+                        <ul class="unstyled utf_footer_social">
+                            @if ($post->user->facebook)
+                                <li><a target="_blank" href="{{$post->user->facebook}}" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                            @endif
+                            @if ($post->user->twitter)
+                                <li><a target="_blank" href="{{$post->user->twitter}}" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                            @endif
+                            @if ($post->user->instagram)
+                                <li><a target="_blank" href="{{$post->user->instagram}}" title="Instagram"><i class="fa fa-instagram"></i></a></li>
+                            @endif
+                            @if ($post->user->linkedin)
+                                <li><a target="_blank" href="{{$post->user->linkedin}}" title="linkedin"><i class="fa fa-linkedin"></i></a></li>
+                            @endif
+                        </ul>
+                    </p>     
                 </div>
             </div>
         @endif
@@ -360,6 +376,11 @@
         min-height: 75px !important;
         max-height: 75px !important;
         min-width: 100px !important;
+    }
+    .utf_footer_social li {
+        margin: 0;
+        margin-top: 10px;
+        display: inline-block;
     }
 </style>
 @endsection
