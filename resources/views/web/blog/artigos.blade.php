@@ -27,7 +27,7 @@
                                     <div class="utf_post_block_style post-grid clearfix">
                                         <div class="utf_post_thumb"> 
                                             <a href="{{route(($post->tipo == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}"> 
-                                                <img class="img-fluid" src="{{$post->cover()}}" alt="{{$post->titulo}}" /> 
+                                                <img class="img_person" src="{{$post->cover()}}" alt="{{$post->titulo}}" /> 
                                             </a> 
                                         </div>
                                         <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoriaObject->slug ])}}">{{$post->categoriaObject->titulo}}</a>
@@ -54,37 +54,60 @@
             </div>
         </div>
 
-        <div class="utf_ad_content_area text-center utf_banner_area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12"> 
-                        <img class="img-fluid" src="{{url(asset('frontend/assets/images/cavalo.png'))}}" alt="" /> 
+        @if (!empty($positionFooterBlog) && $positionFooterBlog->count() > 0)
+            @foreach($positionFooterBlog as $f)
+                <div class="utf_ad_content_area text-center utf_banner_area">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12"> 
+                                <a href="{{$f->link ?? '#'}}" target="_blank">
+                                    <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->titulo}}" /> 
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </div>                    
+            @endforeach
+        @else
+            <div class="utf_ad_content_area text-center utf_banner_area">  
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12"> 
+                            <a href="{{route('web.anunciar')}}" target="_blank">
+                                <img class="img-fluid" src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" alt="Anuncie Aqui!" /> 
+                            </a> 
+                        </div>
+                    </div>
+                </div>                                                               
+            </div>        
+        @endif        
     </section>
 @endif
 
 @endsection
 
 @section('css')
-
+    <style>
+        .img_person{
+            min-height: 250px !important;
+            max-height: 250px !important;
+        }
+    </style>
 @endsection
 
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 <script>
     // Paginação infinita
-    $('ul.pagination-custom').hide();
+    $('ul.pagination').hide();
     $(function() {
         $('.scrolling-pagination').jscroll({
             autoTrigger: true,
             padding: 0,
-            nextSelector: '.pagination-custom li.active + li a',
+            nextSelector: '.pagination li.active + li a',
             contentSelector: 'div.scrolling-pagination',
             callback: function() {
-                $('ul.pagination-custom').remove();
+                $('ul.pagination').remove();
             }
         });
     });       

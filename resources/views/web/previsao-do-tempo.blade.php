@@ -24,8 +24,7 @@
                             <div class="col-12">
                                 <h3>Atualização: <span>{{ Carbon\Carbon::now()->format('d/m/Y') }}</span></h3>    
                             </div>   
-                            @foreach ($boletim as $item)
-                            
+                            @foreach ($boletim as $item)                            
                                 <div class="col-sm-12 col-md-3">                       
                                     <p style="text-align: center;padding-bottom:10px;margin-bottom: 10px;border-bottom: 3px solid #e9eaea;">
                                         <img src="{{url(asset('frontend/assets/images/'.$item['img']))}}" alt="" title=""/><br>

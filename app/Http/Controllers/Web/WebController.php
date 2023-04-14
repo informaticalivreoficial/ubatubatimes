@@ -175,8 +175,8 @@ class WebController extends Controller
         $postprevious = Post::where('id', '<', $post->id)->postson()->where('tipo', 'noticia')->first();
         $postnext = Post::where('id', '>', $post->id)->postson()->where('tipo', 'noticia')->first();
 
-        //Anúncio
-        $positionSidebarNoticia = Anuncio::where('posicao', 4)->available()->limit(2)->get();        
+        $positionSidebarPost = Anuncio::where('plan_id', 1)->available()->limit(2)->get(); 
+        $positionFooterPost = Anuncio::where('plan_id', 6)->available()->limit(1)->get();       
 
         $head = $this->seo->render($post->titulo ?? 'Informática Livre',
             $post->titulo,
@@ -192,7 +192,8 @@ class WebController extends Controller
             'postsTags' => $postsTags,
             'postprevious' => $postprevious,
             'postnext' => $postnext,
-            'positionSidebarNoticia' => $positionSidebarNoticia,
+            'positionSidebarPost' => $positionSidebarPost,
+            'positionFooterPost' => $positionFooterPost,
         ]);
     }
     
@@ -211,8 +212,8 @@ class WebController extends Controller
 
     public function artigos()
     {
-        $posts = Post::orderBy('created_at', 'DESC')->where('tipo', '=', 'artigo')->postson()->paginate(21);
-        $categorias = CatPost::orderBy('titulo', 'ASC')->where('tipo', 'artigo')->get();
+        $posts = Post::orderBy('created_at', 'DESC')->where('tipo', '=', 'artigo')->postson()->paginate(21);        
+        $positionFooterBlog = Anuncio::where('plan_id', 12)->available()->limit(1)->get();
         
         $head = $this->seo->render('Blog - ' . $this->configService->getConfig()->nomedosite ?? 'Informática Livre',
             'Blog - ' . $this->configService->getConfig()->nomedosite,
@@ -223,7 +224,7 @@ class WebController extends Controller
         return view('web.blog.artigos', [
             'head' => $head,
             'posts' => $posts,
-            'categorias' => $categorias
+            'positionFooterBlog' => $positionFooterBlog
         ]);
     }
 
@@ -237,6 +238,8 @@ class WebController extends Controller
         $categorias = CatPost::orderBy('titulo', 'ASC')
                 ->where('tipo', 'noticia')
                 ->get();
+
+        $positionFooterBlog = Anuncio::where('plan_id', 11)->available()->limit(1)->get();
         
         $head = $this->seo->render('Notícias - ' . $this->configService->getConfig()->nomedosite ?? 'Informática Livre',
             'Notícias - ' . $this->configService->getConfig()->nomedosite,
@@ -247,7 +250,8 @@ class WebController extends Controller
         return view('web.blog.artigos', [
             'head' => $head,
             'posts' => $posts,
-            'categorias' => $categorias
+            'categorias' => $categorias,
+            'positionFooterBlog' => $positionFooterBlog
         ]);
     }
 
@@ -278,7 +282,7 @@ class WebController extends Controller
 
     public function artigo(Request $request)
     {
-        $post = Post::where('slug', $request->slug)->postson()->first();
+        $post = Post::where('slug', $request->slug)->postson()->first();        
         
         $categorias = CatPost::orderBy('titulo', 'ASC')
             ->where('tipo', 'artigo')
@@ -293,8 +297,9 @@ class WebController extends Controller
         $post->views = $post->views + 1;
         $post->save();
 
-        //Anuncio
-        $positionSidebarArtigo = Anuncio::where('posicao', 3)->available()->limit(2)->get();
+        //Anúncios
+        $positionSidebarPost = Anuncio::where('plan_id', 4)->available()->limit(2)->get();
+        $positionFooterPost = Anuncio::where('plan_id', 10)->available()->limit(1)->get();
 
         $head = $this->seo->render($post->titulo ?? 'Informática Livre',
             $post->titulo,
@@ -307,7 +312,8 @@ class WebController extends Controller
             'post' => $post,
             'postsMais' => $postsMais,
             'categorias' => $categorias,
-            'positionSidebarArtigo' => $positionSidebarArtigo,
+            'positionSidebarPost' => $positionSidebarPost,
+            'positionFooterPost' => $positionFooterPost,
         ]);
     }
 

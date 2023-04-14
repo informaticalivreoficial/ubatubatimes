@@ -174,59 +174,59 @@
          Comments form end -->           
       </div>
       
-      <div class="col-lg-4 col-md-12">
-          <div class="sidebar utf_sidebar_right">  
+        <div class="col-lg-4 col-md-12">
+            <div class="sidebar utf_sidebar_right">  
             
-            @if (!empty($positionSidebarNoticia) && $positionSidebarNoticia->count() > 0 && $post->tipo == 'noticia')
-                @foreach($positionSidebarNoticia as $p)
+                @if (!empty($positionSidebarPost) && $positionSidebarPost->count() > 0)
+                    @foreach($positionSidebarPost as $p)
+                        <div class="widget text-center">                                    
+                            <a href="{{$p->link ?? '#'}}" target="_blank">
+                                <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->titulo}}" />
+                            </a>                                                                      
+                        </div>
+                    @endforeach
+                @else
                     <div class="widget text-center">                                    
-                        <a href="{{$p->link ?? '#'}}" target="_blank">
-                            <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->titulo}}" />
+                        <a href="{{route('web.anunciar')}}">
+                            <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
                         </a>                                                                      
                     </div>
-                @endforeach
-            @endif
-
-            @if (!empty($positionSidebarArtigo) && $positionSidebarArtigo->count() > 0 && $post->tipo == 'artigo')
-                @foreach($positionSidebarArtigo as $p)
                     <div class="widget text-center">                                    
-                        <a href="{{$p->link ?? '#'}}" target="_blank">
-                            <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->titulo}}" />
+                        <a href="{{route('web.anunciar')}}">
+                            <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
                         </a>                                                                      
                     </div>
-                @endforeach
-            @endif   
-              
+                @endif
 
-              @if (!empty($postsMais) && $postsMais->count() > 0)
-                  <div class="widget color-default">
-                      <h3 class="utf_block_title"><span>Veja Também</span></h3>
-                      <div class="utf_list_post_block">
-                          <ul class="utf_list_post">
-                              @foreach ($postsMais as $postmais)
-                                <li class="clearfix" style="min-height: 130px;">
-                                    <div class="utf_post_block_style post-float clearfix">
-                                        <div class="utf_post_thumb"> 
-                                            <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}"> 
-                                                <img class="img_person" src="{{$postmais->cover()}}" alt="{{$postmais->titulo}}" /> 
-                                            </a> 
-                                        </div>                      
-                                        <div class="utf_post_content">
-                                            <h2 class="utf_post_title title-small"> 
-                                                <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}">{{$postmais->titulo}}</a> 
-                                            </h2>
-                                            <div class="utf_post_meta"> 
-                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{$postmais->views}}</span> 
-                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($postmais->created_at)->format('d/m/Y') }}</span> 
+                @if (!empty($postsMais) && $postsMais->count() > 0)
+                    <div class="widget color-default">
+                        <h3 class="utf_block_title"><span>Veja Também</span></h3>
+                        <div class="utf_list_post_block">
+                            <ul class="utf_list_post">
+                                @foreach ($postsMais as $postmais)
+                                    <li class="clearfix" style="min-height: 130px;">
+                                        <div class="utf_post_block_style post-float clearfix">
+                                            <div class="utf_post_thumb"> 
+                                                <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}"> 
+                                                    <img class="img_person" src="{{$postmais->cover()}}" alt="{{$postmais->titulo}}" /> 
+                                                </a> 
+                                            </div>                      
+                                            <div class="utf_post_content">
+                                                <h2 class="utf_post_title title-small"> 
+                                                    <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}">{{$postmais->titulo}}</a> 
+                                                </h2>
+                                                <div class="utf_post_meta"> 
+                                                    <span class="utf_post_author"><i class="fa fa-eye"></i> {{$postmais->views}}</span> 
+                                                    <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($postmais->created_at)->format('d/m/Y') }}</span> 
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-                              @endforeach
-                          </ul>
-                      </div>
-                  </div>
-              @endif   
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif   
             
               @if (!empty($categorias) && $categorias->count() > 0)
                 <div class="widget widget-categories">
@@ -306,22 +306,40 @@
                       </div>
                   </div>
               </div>
-
-
           </div>
       </div>     
          
     </div>
   </div>
-  <div class="utf_ad_content_area text-center utf_banner_area">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12"> 
-                <img class="img-fluid" src="{{url(asset('frontend/assets/images/cavalo.png'))}}" alt="" /> 
-            </div>
-        </div>
-    </div>
-</div>
+
+    @if (!empty($positionFooterPost) && $positionFooterPost->count() > 0)
+        @foreach($positionFooterPost as $f)
+            <div class="utf_ad_content_area text-center utf_banner_area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12"> 
+                            <a href="{{$f->link ?? '#'}}" target="_blank">
+                                <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->titulo}}" /> 
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>                    
+        @endforeach
+    @else
+        <div class="utf_ad_content_area text-center utf_banner_area">  
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12"> 
+                        <a href="{{route('web.anunciar')}}" target="_blank">
+                            <img class="img-fluid" src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" alt="Anuncie Aqui!" /> 
+                        </a> 
+                    </div>
+                </div>
+            </div>                                                               
+        </div>        
+    @endif
+
 </section>
   
 @endsection
