@@ -206,6 +206,10 @@ return [
 
         //Planos
         'plan_id' => 'plano',
+        'pfpf' => 'Pessoa Física',
+        'pfpj' => 'Pessoa Jurídica',
+        'nome' => 'Nome',
+        'company' => 'Razão social',
         
     ],
 

@@ -7,6 +7,7 @@ use App\Models\Fatura;
 use App\Models\Gateway;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use WebMaster\PagHiper\PagHiper;
 
 class FaturaController extends Controller
@@ -16,6 +17,48 @@ class FaturaController extends Controller
         $faturas = Fatura::orderBy('created_at', 'DESC')->paginate(35);        
         return view('admin.faturas.faturas',[
             'faturas' => $faturas
+        ]);
+    }
+
+    public function create()
+    {
+        return view('admin.faturas.create');
+    }
+
+    public function store(Request $request)
+    {
+        $mensagens = [
+            'required'      => 'O :attribute é obrigatório!',
+            'titulo.required'      => 'A descrição da Fatura é obrigatória!',
+            'required_if'   => 'O campo :attribute é obrigatório quando o campo :other for selecionado!',            
+        ];
+    
+        $request->validate([
+            'nome' => 'required_if:pfpf,on',//|min:3|max:191
+            'email' => 'required|email',
+            'cpf' => 'required_if:pfpf,on',//|min:11|max:14
+            'company' => 'required_if:pfpj,on',//|min:3|max:191
+            'cnpj' => 'required_if:pfpj,on',//|min:14|max:18            
+            'titulo' => 'required',
+            'vencimento' => 'required',
+            'valor' => 'required',
+            'pedido' => (!empty($request->all()['id']) ? 'required|unique:faturas,pedido,' . $request->all()['id'] : 'required|unique:faturas,pedido'),
+        ], $mensagens);
+
+        $data = $request->all();
+        $data['status'] = 'pending';
+        $criarFatura = Fatura::create($data);
+        $criarFatura->save();              
+        return Redirect::route('faturas.edit', [
+            'id' => $criarFatura->id,
+        ])->with(['color' => 'success', 'message' => 'Fatura criada com sucesso!']);
+    }
+
+    public function edit($id)
+    {
+        $fatura = Fatura::where('id', $id)->first();
+        return view('admin.faturas.edit',[
+            'fatura' => $fatura
         ]);
     }
 
@@ -119,5 +162,29 @@ class FaturaController extends Controller
         $fatura->url_slip = $transaction['bank_slip']['url_slip'];
         $fatura->url_slip_pdf = $transaction['bank_slip']['url_slip_pdf'];
         $fatura->save();
+    }
+
+    public function pagarFaturaUnica($id)
+    {
+        $fatura = Fatura::where('id', $id)->first();
+        $data = [
+            'order_id' => $fatura->id,
+            'payer_name' => $fatura->company ?? $fatura->nome,
+            'payer_email' => $fatura->email,
+            'payer_cpf_cnpj' => $fatura->cnpj ?? $fatura->cpf,
+            'days_due_date' => Carbon::parse($fatura->vencimento)->diffInDays(Carbon::parse(Carbon::now())),
+            'type_bank_slip' => 'boletoA4',
+            'notification_url' => route('web.getTransaction'),
+        ];
+
+        $items['items'][] = [                    
+            'description' => $fatura->getAnuncio->plano->name,
+            'quantity' => 1,
+            'item_id' => $fatura->getAnuncio->plano->id,
+            'price_cents' => str_replace(',', '.', str_replace('.', '', $fatura->getAnuncio->plano->valor_mensal))                    
+        ];
+        
+        $array = array_merge($data, $items);
+        $this->gerarBoleto($array);
     }
 }

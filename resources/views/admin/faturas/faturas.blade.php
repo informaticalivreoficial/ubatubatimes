@@ -40,7 +40,7 @@
                       </div>
                 </div>
                 <div class="col-12 col-sm-6 my-2 text-right">
-                    <a href="" class="btn btn-sm btn-default"><i class="fas fa-plus mr-2"></i> Criar Fatura</a>
+                    <a href="{{route('faturas.create')}}" class="btn btn-sm btn-default"><i class="fas fa-plus mr-2"></i> Criar Fatura</a>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
                     <thead>
                         <tr class="text-muted">
                             <th>#</th>
-                            <th>Empresa</th>
+                            <th>Faturado</th>
                             <th class="text-center">Vencimento</th>
                             <th class="text-center">valor</th>
                             <th class="text-center">Status</th>
@@ -70,13 +70,26 @@
                     <tbody>
                         @foreach ($faturas as $fatura)
                             <tr>
-                                <td>{{$fatura->id}}</td>
-                                <td>{{$fatura->getEmpresa->alias_name}}</td>
-                                <td class="text-center">{{\Carbon\Carbon::parse($fatura->vencimento)->format('d/m/Y')}}</td>
-                                <td class="text-center">R$ {{str_replace(',00', '', $fatura->valor)}}</td>
-                                <td class="text-center">{!! $fatura->getStatus() !!}</td>
+                                <td>{{($fatura->pedido == null ? $fatura->id : $fatura->pedido)}}</td>
                                 <td>
-                                    <a href="{{route('faturas.show',['id' => $fatura->id])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a>                                    
+                                    @if ($fatura->empresa != null && $fatura->Company == null && $fatura->nome == null)
+                                        {{$fatura->getEmpresa->alias_name}}
+                                    @elseif($fatura->Company != null || $fatura->nome == null)
+                                        {{$fatura->Company ?? $fatura->alias_name}}
+                                    @else
+                                        {{$fatura->nome}}
+                                    @endif
+                                </td>
+                                <td class="text-center">{{\Carbon\Carbon::parse($fatura->vencimento)->format('d/m/Y')}}</td>
+                                <td class="text-center">R$ {{number_format($fatura->valor,'2',',','.')}}</td>
+                                <td class="text-center">{!! $fatura->getStatus() !!}</td>
+                                <td>                                    
+                                    @if ($fatura->Company != null || $fatura->nome != null || $fatura->alias_name)
+                                        <a href="{{route('faturas.edit',['id' => $fatura->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
+                                        <a href="" class="btn btn-xs btn-success text-white"><i class="far fa-credit-card"></i></a>
+                                    @else
+                                        <a href="{{route('faturas.show',['id' => $fatura->id])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a> 
+                                    @endif                                   
                                 </td>
                             </tr>
                         @endforeach

@@ -32,7 +32,7 @@ class AdminSend extends Mailable
     {
         $this->replyTo($this->data['reply_email'], $this->data['reply_name']);
         $this->to($this->data['destinatario_email'], $this->data['reply_name']);
-        $this->from($this->data['reply_email'], $this->data['reply_name']);
+        $this->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         $this->subject($this->data['assunto']);
         if(!empty($this->data['copiapara'])){
             $this->cc($this->data['copiapara']);

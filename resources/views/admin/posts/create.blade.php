@@ -84,13 +84,13 @@ $config = [
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label class="labelforms"><b>*Título:</b></label>
+                                            <label class="labelforms text-muted"><b>*Título:</b></label>
                                             <input class="form-control" name="titulo" placeholder="Título" value="{{old('titulo')}}">
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="form-group">
-                                            <label class="labelforms"><b>*Autor:</b></label>
+                                            <label class="labelforms text-muted"><b>*Autor:</b></label>
                                             <select class="form-control" name="autor">
                                                 <option value="">Selecione o Autor</option>
                                                 @foreach($users as $user)
@@ -101,7 +101,7 @@ $config = [
                                     </div>
                                     <div class="col-3">
                                         <div class="form-group">
-                                            <label class="labelforms"><b>Status:</b></label>
+                                            <label class="labelforms text-muted"><b>Status:</b></label>
                                             <select name="status" class="form-control">
                                                 <option value="1" {{ (old('status') == '1' ? 'selected' : '') }}>Publicado</option>
                                                 <option value="0" {{ (old('status') == '0' ? 'selected' : '') }}>Rascunho</option>
@@ -112,7 +112,7 @@ $config = [
                                 <div class="row">
                                     <div class="col-2">
                                         <div class="form-group">
-                                            <label class="labelforms"><b>*Tipo:</b></label>
+                                            <label class="labelforms text-muted"><b>*Tipo:</b></label>
                                             <select name="tipo" class="form-control tipo_post">
                                                 <option value=""> Selecione </option>
                                                 <option value="artigo" {{ (old('artigo') == '1' ? 'selected' : '') }}>Artigo</option>
@@ -123,7 +123,7 @@ $config = [
                                     </div>
                                     <div class="col-4">
                                         <div class="form-group">
-                                            <label class="labelforms"><b>*Categoria:</b> <a style="font-size:11px;" href="{{route('categorias.index')}}">(Criar categoria)</a></label>
+                                            <label class="labelforms text-muted"><b>*Categoria:</b> <a style="font-size:11px;" href="{{route('categorias.index')}}">(Criar categoria)</a></label>
                                             <select name="categoria" class="form-control categoria">
                                                 <option value="">Selecione o Tipo</option>                                               
                                             </select>
@@ -131,7 +131,7 @@ $config = [
                                     </div>
                                     <div class="col-3">
                                         <div class="form-group">
-                                            <label class="labelforms"><b>Permitir Comentários:</b></label>
+                                            <label class="labelforms text-muted"><b>Permitir Comentários:</b></label>
                                             <select name="comentarios" class="form-control">
                                                 <option value="0" {{ (old('comentarios') == '0' ? 'selected' : '') }}>Não</option>
                                                 <option value="1" {{ (old('comentarios') == '1' ? 'selected' : '') }}>Sim</option>                                                
@@ -140,7 +140,7 @@ $config = [
                                     </div>
                                     <div class="col-3">
                                         <div class="form-group">
-                                            <label class="labelforms"><b>Agendar Publicação:</b></label>
+                                            <label class="labelforms text-muted"><b>Agendar Publicação:</b></label>
                                             <div class="input-group date">
                                                 <input type="text" class="form-control datepicker-here" data-language='pt-BR' name="publish_at" value="{{ old('publish_at') }}"/>
                                                 <div class="input-group-append">
@@ -153,12 +153,12 @@ $config = [
                                 <div class="row">
                                     <div class="col-12 mb-1"> 
                                         <div class="form-group">
-                                            <label class="labelforms"><b>MetaTags:</b></label>
+                                            <label class="labelforms text-muted"><b>MetaTags:</b></label>
                                             <input id="tags_1" class="tags" rows="5" name="tags" value="{{old('tags')}}">
                                         </div>
                                     </div>
                                     <div class="col-12">   
-                                        <label class="labelforms"><b>Conteúdo:</b></label>
+                                        <label class="labelforms text-muted"><b>Conteúdo:</b></label>
                                         <x-adminlte-text-editor name="content" v placeholder="Conteúdo do post..." :config="$config">{{ old('content') }}</x-adminlte-text-editor>                                                      
                                     </div>
                                 </div> 
@@ -168,7 +168,7 @@ $config = [
                                 <div class="row mb-4">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">   
                                         <div class="form-group">
-                                            <label class="labelforms"><b>Legenda da Imagem de Capa</b></label>
+                                            <label class="labelforms text-muted"><b>Legenda da Imagem de Capa</b></label>
                                             <input type="text" class="form-control"  name="thumb_legenda" value="{{ old('thumb_legenda') }}">
                                         </div>                                                    
                                     </div>

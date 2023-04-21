@@ -12,6 +12,19 @@ class Fatura extends Model
     protected $table = 'faturas';
 
     protected $fillable = [
+        'nome',
+        'pfpf',
+        'pfpj',
+        'email',
+        'telefone',
+        'cpf',
+        'company',
+        'alias_name',
+        'cnpj',
+        'titulo',
+        'tipo_boleto',
+        'numero_parcelas',
+
         'anuncio',
         'empresa',
         'transaction_id',
@@ -57,9 +70,39 @@ class Fatura extends Model
         }
     }
 
-    public function setValorMensalAttribute($value)
+    public function setPfpfAttribute($value)
     {
-        $this->attributes['valor_mensal'] = (!empty($value) ? floatval($this->convertStringToDouble($value)) : null);
+        $this->attributes['pfpf'] = ($value == true || $value == 'on' ? 1 : 0);
+    }
+
+    public function setPfpjAttribute($value)
+    {
+        $this->attributes['pfpj'] = ($value == true || $value == 'on' ? 1 : 0);
+    }
+
+    public function setValorAttribute($value)
+    {
+        $this->attributes['valor'] = (!empty($value) ? floatval($this->convertStringToDouble($value)) : null);
+    }
+
+    public function setCpfAttribute($value)
+    {
+        $this->attributes['cpf'] = (!empty($value) ? $this->clearField($value) : null);
+    }
+
+    public function setCnpjAttribute($value)
+    {
+        $this->attributes['cnpj'] = (!empty($value) ? $this->clearField($value) : null);
+    }
+
+    public function setVencimentoAttribute($value)
+    {
+        $this->attributes['vencimento'] = (!empty($value) ? $this->convertStringToDate($value) : null);
+    }
+
+    public function setTelefoneAttribute($value)
+    {
+        $this->attributes['telefone'] = (!empty($value) ? $this->clearField($value) : null);
     }
 
     private function convertStringToDouble($param)
@@ -68,5 +111,23 @@ class Fatura extends Model
             return null;
         }
         return str_replace(',', '.', str_replace('.', '', $param));
+    }
+
+    private function convertStringToDate(?string $param)
+    {
+        if (empty($param)) {
+            return null;
+        }
+        list($day, $month, $year) = explode('/', $param);
+        return (new \DateTime($year . '-' . $month . '-' . $day))->format('Y-m-d');
+    }
+
+    private function clearField(?string $param)
+    {
+        if(empty($param)){
+            return null;
+        }
+
+        return str_replace(['.', '-', '/', '(', ')', ' '], '', $param);
     }
 }
