@@ -25,7 +25,12 @@ Route::prefix('admin')->middleware('auth')->group( function(){
 
     //******************** Faturas *************************************************************/
     Route::get('faturas/show/{id}', [FaturaController::class, 'show'])->name('faturas.show');
+    Route::put('faturas/{id}', [FaturaController::class, 'update'])->name('faturas.update');
+    Route::get('faturas/{id}/edit', [FaturaController::class, 'edit'])->name('faturas.edit');
+    Route::get('faturas/create', [FaturaController::class, 'create'])->name('faturas.create');
+    Route::post('faturas/store', [FaturaController::class, 'store'])->name('faturas.store');
     Route::get('/faturas', [FaturaController::class, 'faturas'])->name('faturas.index');
+    Route::get('/faturas/', [FaturaController::class, 'faturas'])->name('faturas.index');
 
     //********************************* Anúncios *******************************************/
     Route::get('anuncios/set-status', [AnunciosController::class, 'anuncioSetStatus'])->name('anuncios.anuncioSetStatus');
