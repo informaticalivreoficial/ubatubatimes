@@ -124,12 +124,13 @@
                                     <h5><b>Informações do Boleto</b></h5>            
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-lg-6">
+                            <div class="col-12 col-md-12 col-lg-12">
                                 <div class="form-group">
                                     <label class="labelforms text-muted"><b>Descrição do produto ou serviço:</b> <small class="text-info">(campo obrigatório, max. 200 caracteres)</small></label>
                                     <input class="form-control" name="titulo" value="{{old('titulo') ?? $fatura->titulo}}">
                                 </div>
                             </div>
+                            {{--
                             <div class="col-3 col-md-3 col-lg-3">
                                 <div class="form-group">
                                     <label class="labelforms text-muted"><b>Tipo de boleto:</b></label>
@@ -150,7 +151,7 @@
                                         @endphp
                                     </select>
                                 </div>
-                            </div>
+                            </div>--}}
                         </div>
                         <div class="row mb-2">                                    
                             <div class="col-3 col-md-6 col-lg-4">
@@ -166,7 +167,7 @@
                             </div>                                                                                            
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="form-group">
-                                    <label class="labelforms text-muted"><b>Valor da parcela:</b> <small class="text-info">(valor mínimo por parcela R$ 3,00)</small></label>
+                                    <label class="labelforms text-muted"><b>Valor:</b> <small class="text-info">(valor mínimo por parcela R$ 3,00)</small></label>
                                     <input class="form-control mask-money" name="valor" value="{{old('valor') ?? $fatura->valor}}">
                                 </div>
                             </div>                           

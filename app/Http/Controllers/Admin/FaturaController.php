@@ -147,41 +147,49 @@ class FaturaController extends Controller
         $transaction = $paghiper->billet()->cancel($data);
     }
 
-    public function statusBoleto($data)
-    {
+    public function statusBoleto(Request $request)
+    {        
         $paghiper = new PagHiper(
             env('PAGHIPER_APIKEY'), 
             env('PAGHIPER_TOKEM')
         );
-        $transaction = $paghiper->billet()->status($data);
 
-        $fatura = Fatura::where('id', $transaction['order_id'])->first();
-        $fatura->status = $transaction['status'];
-        $fatura->vencimento = $transaction['due_date'];
-        $fatura->digitable_line = $transaction['bank_slip']['digitable_line'];
-        $fatura->url_slip = $transaction['bank_slip']['url_slip'];
-        $fatura->url_slip_pdf = $transaction['bank_slip']['url_slip_pdf'];
-        $fatura->save();
+        $transaction = $paghiper->billet()->status($request->pedido);
+        
+        if($transaction['result'] === 'success'){
+            $fatura = Fatura::where('pedido', $transaction['order_id'])->first();
+            $fatura->status = $transaction['status'];
+            $fatura->vencimento = $transaction['due_date'];
+            $fatura->digitable_line = $transaction['bank_slip']['digitable_line'];
+            $fatura->url_slip = $transaction['bank_slip']['url_slip'];
+            $fatura->url_slip_pdf = $transaction['bank_slip']['url_slip_pdf'];
+            $fatura->save();
+            $json = ['success' => 'Fatura atualizada!'];
+        }else{
+            $json = ['error' => 'Erro ao Atualizar!'];
+        }
+        return response()->json($json);
     }
 
-    public function pagarFaturaUnica($id)
+    public function pagarFaturaUnica(Request $request)
     {
-        $fatura = Fatura::where('id', $id)->first();
+        $fatura = Fatura::where('pedido', $request->id)->first();
         $data = [
-            'order_id' => $fatura->id,
+            'order_id' => $fatura->pedido,
             'payer_name' => $fatura->company ?? $fatura->nome,
             'payer_email' => $fatura->email,
+            'payer_phone' => $fatura->telefone ?? null,
             'payer_cpf_cnpj' => $fatura->cnpj ?? $fatura->cpf,
             'days_due_date' => Carbon::parse($fatura->vencimento)->diffInDays(Carbon::parse(Carbon::now())),
             'type_bank_slip' => 'boletoA4',
-            'notification_url' => route('web.getTransaction'),
+            //'notification_url' => route('web.getTransaction'),
         ];
 
         $items['items'][] = [                    
-            'description' => $fatura->getAnuncio->plano->name,
+            'description' => $fatura->titulo,
             'quantity' => 1,
-            'item_id' => $fatura->getAnuncio->plano->id,
-            'price_cents' => str_replace(',', '.', str_replace('.', '', $fatura->getAnuncio->plano->valor_mensal))                    
+            'item_id' => $fatura->id,
+            'price_cents' => str_replace(',', '.', str_replace('.', '', $fatura->valor))                    
         ];
         
         $array = array_merge($data, $items);

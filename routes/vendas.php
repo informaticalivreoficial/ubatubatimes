@@ -9,12 +9,11 @@ use App\Http\Controllers\Admin\{
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
-    
+Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {    
     Route::match(['get', 'post'],'pagar/{fatura}', [FaturaController::class, 'pagar'])->name('pagar');
     Route::match(['get', 'post'],'notification', [FaturaController::class, 'getTransaction'])->name('getTransaction');
     Route::get('canlelar-boleto/{data}', [FaturaController::class, 'cancelarBoleto'])->name('cancelarBoleto');
-    Route::get('status-do-boleto/{data}', [FaturaController::class, 'statusBoleto'])->name('statusBoleto');
+    Route::get('status-do-boleto', [FaturaController::class, 'statusBoleto'])->name('statusBoleto');
 });
 
 Route::prefix('admin')->middleware('auth')->group( function(){
@@ -30,7 +29,7 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('faturas/create', [FaturaController::class, 'create'])->name('faturas.create');
     Route::post('faturas/store', [FaturaController::class, 'store'])->name('faturas.store');
     Route::get('/faturas', [FaturaController::class, 'faturas'])->name('faturas.index');
-    Route::get('/faturas/', [FaturaController::class, 'faturas'])->name('faturas.index');
+    Route::post('/create-fatura-unica/{pedido}', [FaturaController::class, 'pagarFaturaUnica'])->name('faturas.pagarFaturaUnica');
 
     //********************************* Anúncios *******************************************/
     Route::get('anuncios/set-status', [AnunciosController::class, 'anuncioSetStatus'])->name('anuncios.anuncioSetStatus');

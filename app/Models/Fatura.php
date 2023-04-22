@@ -95,10 +95,10 @@ class Fatura extends Model
         $this->attributes['cnpj'] = (!empty($value) ? $this->clearField($value) : null);
     }
 
-    public function setVencimentoAttribute($value)
-    {
-        $this->attributes['vencimento'] = (!empty($value) ? $this->convertStringToDate($value) : null);
-    }
+    // public function setVencimentoAttribute($value)
+    // {
+    //     $this->attributes['vencimento'] = (!empty($value) ? $this->convertStringToDate($value) : null);
+    // }
 
     public function setTelefoneAttribute($value)
     {

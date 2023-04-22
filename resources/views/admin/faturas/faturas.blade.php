@@ -72,7 +72,7 @@
                             <tr>
                                 <td>{{($fatura->pedido == null ? $fatura->id : $fatura->pedido)}}</td>
                                 <td>
-                                    @if ($fatura->empresa != null && $fatura->Company == null && $fatura->nome == null)
+                                    @if($fatura->empresa != null && $fatura->Company == null && $fatura->nome == null)
                                         {{$fatura->getEmpresa->alias_name}}
                                     @elseif($fatura->Company != null || $fatura->nome == null)
                                         {{$fatura->Company ?? $fatura->alias_name}}
@@ -84,9 +84,16 @@
                                 <td class="text-center">R$ {{number_format($fatura->valor,'2',',','.')}}</td>
                                 <td class="text-center">{!! $fatura->getStatus() !!}</td>
                                 <td>                                    
-                                    @if ($fatura->Company != null || $fatura->nome != null || $fatura->alias_name)
-                                        <a href="{{route('faturas.edit',['id' => $fatura->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
-                                        <a href="" class="btn btn-xs btn-success text-white"><i class="far fa-credit-card"></i></a>
+                                    @if($fatura->Company != null || $fatura->nome != null || $fatura->alias_name)
+                                            <a title="Atualizar Fatura" href="{{route('faturas.edit',['id' => $fatura->id])}}" class="btn btn-xs btn-default"><i class="fas fa-pen"></i></a>
+                                        @if($fatura->transaction_id)
+                                            <button title="Sincronizar Fatura" type="button" data-id="{{$fatura->transaction_id}}" class="btn btn-xs btn-dark text-white j_refresh"><i class="fas fa-sync"></i></button>
+                                        @endif
+                                        @if($fatura->url_slip)
+                                            <a target="_blank" title="Abrir Boleto" href="{{$fatura->url_slip}}" class="btn btn-xs btn-primary text-white"><i class="fas fa-file-alt"></i> 2&deg; via</a>
+                                        @else
+                                            <a title="Gerar Boleto" title="Pagar" href="{{route('faturas.pagarFaturaUnica', [ 'pedido' => $fatura->pedido ])}}" class="btn btn-xs btn-success text-white"><i class="far fa-credit-card"></i></a>
+                                        @endif                                 
                                     @else
                                         <a href="{{route('faturas.show',['id' => $fatura->id])}}" class="btn btn-xs btn-info text-white"><i class="fas fa-search"></i></a> 
                                     @endif                                   
@@ -121,11 +128,11 @@
 @section('plugins.Toastr', true)
 
 @section('css')
-<link href="{{url(asset('backend/plugins/bootstrap-toggle/bootstrap-toggle.min.css'))}}" rel="stylesheet">
+<link rel="stylesheet" href="{{url(asset('backend/plugins/toastr/toastr.min.css'))}}">
 @stop
 
 @section('js')    
-    <script src="{{url(asset('backend/plugins/bootstrap-toggle/bootstrap-toggle.min.js'))}}"></script>
+    <script src="{{url(asset('backend/plugins/toastr/toastr.min.js'))}}"></script>
     <script>
        $(function () {           
            
@@ -134,6 +141,34 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             }); 
+
+            $('.j_refresh').click(function() {
+            var pedido = $(this).data('id');
+            $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                url: "{{ route('web.statusBoleto') }}",
+                data: {
+                   'pedido': pedido
+                },
+                beforeSend: function(){
+                    $('.fa-sync').hide();
+                    $('.j_refresh').attr("disabled", true);
+                    $('.j_refresh').html("<img src=\"{{url('backend/assets/images/loading.gif')}}\" />"); 
+                },
+                success:function(data) { 
+                    if(data.success){
+                        toastr.success(data.success);
+                    }else{
+                        toastr.error(data.error);
+                    }
+                },
+                complete: function(resposta){
+                    $('.j_refresh').attr("disabled", false);  
+                    $('.j_refresh').html("<i class=\"fas fa-sync\"></i>");                              
+                }
+            });
+        });
             
         });
     </script>

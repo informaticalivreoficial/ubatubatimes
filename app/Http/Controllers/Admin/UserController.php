@@ -123,7 +123,6 @@ class UserController extends Controller
 
         if(!empty($request->file('avatar'))){
             Storage::delete($user->avatar);
-            Cropper::flush($user->avatar);
             $user->avatar = '';
         }
 
