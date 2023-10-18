@@ -15,7 +15,6 @@ use App\Models\{
     //Orcamento,
     User,
     Post,
-    Produto
 };
 
 class AdminController extends Controller
@@ -86,7 +85,7 @@ class AdminController extends Controller
         
         //Analitcs
         $visitasHoje = Analytics::fetchMostVisitedPages(Period::days(1));
-        $visitas365 = Analytics::fetchTotalVisitorsAndPageViews(Period::months(5));
+        $analyticsData = Analytics::fetchVisitorsAndPageViews(Period::months(5));
         $top_browser = Analytics::fetchTopBrowsers(Period::months(5));
 
         $analyticsData = Analytics::performQuery(
