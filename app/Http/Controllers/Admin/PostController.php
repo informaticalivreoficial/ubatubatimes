@@ -15,6 +15,7 @@ use App\Models\Post;
 use App\Models\PostGb;
 use App\Models\CatPost;
 use App\Notifications\PostCreatedUpdated;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Goutte\Client;
 use Illuminate\Notifications\Notification;
@@ -400,6 +401,21 @@ class PostController extends Controller
         ])->with(['color' => 'success', 'message' => $request->tipo.' atualizado com sucesso!']);
     } 
 
+    public function trash()
+    {
+        // if(Auth::user()->editor == 1){
+        
+        // }
+        $postTrash = Post::orderBy('created_at', 'DESC')
+                    ->orderBy('status', 'ASC')
+                    ->onlyTrashed()
+                    ->paginate(100);
+        
+        return view('admin.posts.trash', [
+            'posts' => $postTrash
+        ]);
+    }
+
     public function postSetStatus(Request $request)
     {        
         $post = Post::find($request->id);
@@ -490,18 +506,25 @@ class PostController extends Controller
                  ($postdelete->tipo == 'pagina' ? 'paginas' : 'posts')));
         
         if(!empty($postdelete)){
-            if(!empty($imageDelete)){
-                Storage::delete($imageDelete->path);
-                Cropper::flush($imageDelete->path);
-                $imageDelete->delete();
-                Storage::deleteDirectory($secao.'/'.$postdelete->id);
-                $postdelete->delete();
-            }
+            // if(!empty($imageDelete)){
+            //     Storage::delete($imageDelete->path);
+            //     Cropper::flush($imageDelete->path);
+            //     $imageDelete->delete();
+            //     Storage::deleteDirectory($secao.'/'.$postdelete->id);
+            //     $postdelete->delete();
+            // }
             $postdelete->delete();
         }
         return Redirect::route('posts.'.$secao.'')->with([
             'color' => 'success', 
             'message' => $postdelete->tipo.' '.$postR.' foi removido com sucesso!'
         ]);
+    }
+
+    public function deleteCron()
+    {
+        $posts = Post::where('tipo', 'noticia')
+                ->where('created_at', '<', Carbon::now()->subYear(2))
+                ->delete();
     }
 }

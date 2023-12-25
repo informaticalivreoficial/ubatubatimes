@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('noticiasaosebastiao:create')->everyMinute()->withoutOverlapping();                
         $schedule->command('noticiailhabela:create')->everyMinute()->withoutOverlapping();      
         $schedule->command('fundartubatuba:create')->everyMinute()->withoutOverlapping();      
+        $schedule->command('deletepost:create')->weekly();      
     }
 
     /**

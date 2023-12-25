@@ -155,6 +155,7 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('posts/artigos', [PostController::class, 'index'])->name('posts.artigos');
     Route::get('posts/noticias', [PostController::class, 'index'])->name('posts.noticias');
     Route::get('posts/paginas', [PostController::class, 'index'])->name('posts.paginas');    
+    Route::get('posts/lixeira', [PostController::class, 'trash'])->name('posts.trash');    
 
     //*********************** Email **********************************************/
     Route::get('email/suporte', [EmailController::class, 'suporte'])->name('email.suporte');
@@ -177,6 +178,9 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('usuarios', [UserController::class, 'index'])->name('users.index');
 
     Route::get('/', [AdminController::class, 'home'])->name('home');
+
+    //Cron POSTS
+    //Route::get('posts/Cron', [PostController::class, 'deleteCron'])->name('posts.deleteCron');
 });
 
 Auth::routes();

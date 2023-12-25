@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Support\Cropper;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
 class Post extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'posts'; 
 
@@ -31,6 +30,8 @@ class Post extends Model
         'thumb_legenda',
         'publish_at'
     ];
+
+    protected $dates = ['deleted_at']; // marca a coluna como uma data
 
     /**
      * Scopes

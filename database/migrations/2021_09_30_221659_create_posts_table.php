@@ -29,6 +29,7 @@ class CreatePostsTable extends Migration
             $table->string('thumb_legenda')->nullable(); 
             $table->date('publish_at')->nullable();
 
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('autor')->references('id')->on('users')->onDelete('CASCADE');

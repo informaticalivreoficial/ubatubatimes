@@ -342,6 +342,10 @@ return [
                     'url'  => 'admin/posts/paginas',
                 ],
                 [
+                    'text' => 'Lixeira',
+                    'url'  => 'admin/posts/lixeira',
+                ],
+                [
                     'text' => 'Categorias',
                     'url'  => 'admin/posts/categorias',
                 ]
