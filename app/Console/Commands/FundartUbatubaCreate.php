@@ -12,7 +12,7 @@ class FundartUbatubaCreate extends Command
      *
      * @var string
      */
-    protected $signature = 'fundartubatuba:name';
+    protected $signature = 'app:fundartubatuba';
 
     /**
      * The console command description.
@@ -22,21 +22,11 @@ class FundartUbatubaCreate extends Command
     protected $description = 'Cria uma notícia da fundart de ubatuba';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(): void
     {
         $controller = new PostController();
         $controller->crowlerFundartUbatuba();

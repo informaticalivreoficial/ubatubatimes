@@ -198,7 +198,7 @@ class PostController extends Controller
 
     public function crowlerNoticiasSaoSebastiao()
     {
-        $urlSaoSebastiao  = 'http://www.saosebastiao.sp.gov.br/noticia-lista.asp';
+        $urlSaoSebastiao  = 'https://www.saosebastiao.sp.gov.br/noticia-lista.asp';
         $pageSaoSebastiao = $this->crowler->request('GET', $urlSaoSebastiao);
         $result = [
             'tipo' => 'noticia',
@@ -215,7 +215,7 @@ class PostController extends Controller
         
         $posts = Post::where('titulo', $result['titulo'])->first();
         if(empty($posts)){     
-            $link = 'http://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.notice-list-page .notice a')->eq(0)->attr('href');
+            $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.notice-list-page .notice a')->eq(0)->attr('href');
             $linkContent = $this->crowler->request('GET', $link);   
             
             $content = ['content' => $linkContent->filter('.post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>'];     
@@ -223,9 +223,9 @@ class PostController extends Controller
             
             if(count($linkContent->filter('.slide')) > 0){
                 $imgurl = explode("'", $linkContent->filter('.slide')->attr("style"));   
-                $imgurl = 'http://www.saosebastiao.sp.gov.br/' . $imgurl[1]; 
+                $imgurl = 'https://www.saosebastiao.sp.gov.br/' . $imgurl[1]; 
             }else{
-                $imgurl = 'http://www.saosebastiao.sp.gov.br/' . $linkContent->filter('.post-image img')->eq(0)->attr('src');
+                $imgurl = 'https://www.saosebastiao.sp.gov.br/' . $linkContent->filter('.post-image img')->eq(0)->attr('src');
             }
             
             $contents = file_get_contents($imgurl);
@@ -498,7 +498,7 @@ class PostController extends Controller
     public function deleteon(Request $request)
     {
         $postdelete = Post::where('id', $request->post_id)->first();  
-        $imageDelete = PostGb::where('post', $postdelete->id)->first();
+        //$imageDelete = PostGb::where('post', $postdelete->id)->first();
         $postR = $postdelete->titulo;
 
         $secao = ($postdelete->tipo == 'artigo' ? 'artigos' : 
@@ -517,7 +517,7 @@ class PostController extends Controller
         }
         return Redirect::route('posts.'.$secao.'')->with([
             'color' => 'success', 
-            'message' => $postdelete->tipo.' '.$postR.' foi removido com sucesso!'
+            'message' => $postdelete->tipo.' '.$postR.' foi movido para a lixeira!'
         ]);
     }
 

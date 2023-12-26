@@ -181,6 +181,7 @@ Route::prefix('admin')->middleware('auth')->group( function(){
 
     //Cron POSTS
     //Route::get('posts/clear-trash', [PostController::class, 'clearTrash'])->name('posts.clearTrash');
+    //Route::get('posts/crowler', [PostController::class, 'crowlerFundartUbatuba'])->name('posts.crowlerFundartUbatuba');
 });
 
 Auth::routes();

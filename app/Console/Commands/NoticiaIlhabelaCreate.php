@@ -12,7 +12,7 @@ class NoticiaIlhabelaCreate extends Command
      *
      * @var string
      */
-    protected $signature = 'noticiailhabela:create';
+    protected $signature = 'app:noticiailhabela';
 
     /**
      * The console command description.
@@ -20,23 +20,13 @@ class NoticiaIlhabelaCreate extends Command
      * @var string
      */
     protected $description = 'Cria notícia puxando do site da prefeitura de Ilhabela';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
+    
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(): void
     {
         $controller = new PostController();
         $controller->crowlerNoticiasIlhabela();

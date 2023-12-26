@@ -24,7 +24,7 @@ class ClearTrashCron extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $controller = new PostController();
         $controller->clearTrash();
