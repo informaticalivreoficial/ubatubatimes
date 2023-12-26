@@ -22,14 +22,15 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
         $schedule->command('noticiaubatuba:create')->everyMinute()->withoutOverlapping();                
         $schedule->command('noticiacaragua:create')->everyMinute()->withoutOverlapping();                
         $schedule->command('noticiasaosebastiao:create')->everyMinute()->withoutOverlapping();                
         $schedule->command('noticiailhabela:create')->everyMinute()->withoutOverlapping();      
         $schedule->command('fundartubatuba:create')->everyMinute()->withoutOverlapping();      
-        $schedule->command('deletepost:create')->weekly();      
+        $schedule->command('app:deletepost')->monthly();      
+        $schedule->command('app:clear-trash-cron')->monthly();      
     }
 
     /**

@@ -180,7 +180,7 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('/', [AdminController::class, 'home'])->name('home');
 
     //Cron POSTS
-    //Route::get('posts/Cron', [PostController::class, 'deleteCron'])->name('posts.deleteCron');
+    //Route::get('posts/clear-trash', [PostController::class, 'clearTrash'])->name('posts.clearTrash');
 });
 
 Auth::routes();

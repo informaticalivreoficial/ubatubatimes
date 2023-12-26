@@ -527,4 +527,24 @@ class PostController extends Controller
                 ->where('created_at', '<', Carbon::now()->subYear(2))
                 ->delete();
     }
+
+    public function clearTrash()
+    {
+        $posts = Post::where('tipo', 'noticia')
+                ->where('deleted_at', '<', Carbon::now()->subMonths(6))
+                ->onlyTrashed()
+                ->get();
+
+        if(!empty($posts) && $posts->count() > 0){
+            foreach($posts as $post){
+                $imageDelete = PostGb::where('post', $post->id)->first();
+                if($imageDelete){
+                    Storage::delete($imageDelete->path);
+                    Storage::deleteDirectory('noticias/'.$post->id);
+                }
+                $post->forceDelete();
+            } 
+        }
+                
+    }
 }
