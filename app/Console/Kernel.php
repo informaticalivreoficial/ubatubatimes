@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('noticiaubatuba:create')->everyMinute()->withoutOverlapping();                
-        $schedule->command('noticiacaragua:create')->everyMinute()->withoutOverlapping();                
+        $schedule->command('app:noticiaubatuba')->everyMinute()->withoutOverlapping();                
+        $schedule->command('app:noticiacaragua')->everyMinute()->withoutOverlapping();                
         $schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
         $schedule->command('app:noticiailhabela')->everyMinute()->withoutOverlapping();      
         //$schedule->command('app:fundartubatuba')->everyMinute()->withoutOverlapping();      

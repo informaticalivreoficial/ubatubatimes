@@ -12,7 +12,7 @@ class NoticiaUbatubaCreate extends Command
      *
      * @var string
      */
-    protected $signature = 'noticiaubatuba:create';
+    protected $signature = 'app:noticiaubatuba';
 
     /**
      * The console command description.
@@ -22,21 +22,11 @@ class NoticiaUbatubaCreate extends Command
     protected $description = 'Cria notícia puxando do site da prefeitura de Ubatuba';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(): void
     {
         $controller = new PostController();
         $controller->crowlerNoticiasUbatuba(); 
