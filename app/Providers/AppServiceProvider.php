@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //URL::forceScheme('https');
+        URL::forceScheme('https');
         Empresa::observe(EmpresaObserver::class);
 
         Schema::defaultStringLength(191);
