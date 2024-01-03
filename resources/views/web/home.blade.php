@@ -444,7 +444,7 @@
                                           <span class="utf_post_author"><i class="fa fa-user"></i> {{$praiasDeUbatuba[0]->user->name}}</span> 
                                           <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($praiasDeUbatuba[0]->created_at)->format('d/m/Y') }}</span> 
                                       </div>
-                                      <p>{!! Words($praiasDeUbatuba[0]->content, 25) !!}</p>
+                                      <p>{!! \App\Helpers\Renato::Words($praiasDeUbatuba[0]->content, 25) !!}</p>
                                   </div>
                               </div>
                           </div>
