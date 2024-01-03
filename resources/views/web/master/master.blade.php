@@ -186,7 +186,7 @@
 							<h3 class="widget-title">Quem Somos</h3>
 							<ul>
 								<li>{{$configuracoes->descricao}}</li>
-								<li><i class="fa fa-home"></i> {{getCidadeNome($configuracoes->cidade, 'cidades')}}</li>
+								<li><i class="fa fa-home"></i> {{\App\Helpers\Cidade::getCidadeNome($configuracoes->cidade, 'cidades')}}</li>
 								@if ($configuracoes->telefone1)
 									<li><i class="fa fa-phone"></i> <a href="tel:{{$configuracoes->telefone1}}">{{$configuracoes->telefone1}}</a></li>
 								@endif
@@ -197,7 +197,7 @@
 									<li><i class="fa fa-phone"></i> <a href="tel:{{$configuracoes->telefone3}}">{{$configuracoes->telefone3}}</a></li>
 								@endif								
 								@if ($configuracoes->whatsapp)
-									<li><i class="fa fa-whatsapp"></i> <a target="_blank" href="{{getNumZap($configuracoes->whatsapp ,$configuracoes->nomedosite)}}">{{$configuracoes->whatsapp}}</a></li>
+									<li><i class="fa fa-whatsapp"></i> <a target="_blank" href="{{\App\Helpers\WhatsApp::getNumZap($configuracoes->whatsapp ,$configuracoes->nomedosite)}}">{{$configuracoes->whatsapp}}</a></li>
 								@endif								
 								@if ($configuracoes->email)
 									<li><i class="fa fa-envelope-o"></i> <a href="mailto:{{$configuracoes->email}}">{{$configuracoes->email}}</a></li>
