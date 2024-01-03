@@ -33,39 +33,39 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //URL::forceScheme('https');
-        // Empresa::observe(EmpresaObserver::class);
+        URL::forceScheme('https');
+        Empresa::observe(EmpresaObserver::class);
 
-        // Schema::defaultStringLength(191);
-        // Blade::aliasComponent('admin.components.message', 'message');
+        Schema::defaultStringLength(191);
+        Blade::aliasComponent('admin.components.message', 'message');
 
-        // $configuracoes = \App\Models\Configuracoes::find(1); 
-        // View()->share('configuracoes', $configuracoes);
+        $configuracoes = \App\Models\Configuracoes::find(1); 
+        View()->share('configuracoes', $configuracoes);
 
-        // //Região Categorias de Notícias
-        // $catnoticias = CatPost::where('tipo', 'noticia')
-        //                 ->available()
-        //                 ->whereNotNull('id_pai')
-        //                 ->get();
-        // View()->share('catnoticias', $catnoticias);
+        //Região Categorias de Notícias
+        $catnoticias = CatPost::where('tipo', 'noticia')
+                        ->available()
+                        ->whereNotNull('id_pai')
+                        ->get();
+        View()->share('catnoticias', $catnoticias);
 
-        // //Colunas Categorias
-        // $catcolunas = CatPost::where('tipo', 'artigo')
-        //                 ->available()
-        //                 ->whereNotNull('id_pai')
-        //                 ->get();
-        // View()->share('catcolunas', $catcolunas);
+        //Colunas Categorias
+        $catcolunas = CatPost::where('tipo', 'artigo')
+                        ->available()
+                        ->whereNotNull('id_pai')
+                        ->get();
+        View()->share('catcolunas', $catcolunas);
 
-        // //Newsletter
-        // $newsletter = NewsletterCat::whereNotNull('sistema')
-        //                 ->available()
-        //                 ->first();
-        // View()->share('newsletterForm', $newsletter);
+        //Newsletter
+        $newsletter = NewsletterCat::whereNotNull('sistema')
+                        ->available()
+                        ->first();
+        View()->share('newsletterForm', $newsletter);
 
-        // //Anúncio Topo Home 729x90
-        // $positionTopohome = Anuncio::where('plan_id', 3)->available()->limit(1)->get();
-        // View()->share('positionTopohome', $positionTopohome);
+        //Anúncio Topo Home 729x90
+        $positionTopohome = Anuncio::where('plan_id', 3)->available()->limit(1)->get();
+        View()->share('positionTopohome', $positionTopohome);
 
-        // Paginator::useBootstrap();
+        Paginator::useBootstrap();
     }
 }
