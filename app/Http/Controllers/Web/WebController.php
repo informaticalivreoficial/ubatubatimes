@@ -49,10 +49,10 @@ class WebController extends Controller
             $controller->crowlerNoticiasCaraguatatuba();
             $controller->crowlerNoticiasUbatuba();
             $controller->crowlerNoticiasIlhabela();
-            $controller->deleteCron();
-            $controller->deleteCron();
+            //$controller->deleteCron();
+            //$controller->deleteCron();
         }
-        
+
         $noticiasUbatuba = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
                     ->where('categoria', '!=', 16)
