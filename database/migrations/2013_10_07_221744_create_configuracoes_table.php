@@ -47,6 +47,7 @@ class CreateConfiguracoesTable extends Migration
             $table->string('skype')->nullable();
             $table->string('email')->nullable();
             $table->string('email1')->nullable();
+            $table->string('telegram')->nullable();
             
             /** address */
             $table->string('cep')->nullable();
@@ -54,19 +55,15 @@ class CreateConfiguracoesTable extends Migration
             $table->string('num')->nullable();
             $table->string('complemento')->nullable();
             $table->string('bairro')->nullable();
-            $table->integer('uf')->nullable();
-            $table->integer('cidade')->nullable();
+            $table->string('uf')->nullable();
+            $table->string('cidade')->nullable();
             
             /** redes sociais */
             $table->string('facebook')->nullable();
             $table->string('twitter')->nullable();
             $table->string('youtube')->nullable();
             $table->string('instagram')->nullable();
-            $table->string('linkedin')->nullable();
-            $table->string('vimeo')->nullable();
-            $table->string('fliccr')->nullable();
-            $table->string('soundclound')->nullable();
-            $table->string('snapchat')->nullable(); 
+            $table->string('linkedin')->nullable();            
             
             /** seo */
             $table->text('descricao')->nullable();

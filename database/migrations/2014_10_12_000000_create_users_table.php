@@ -48,8 +48,8 @@ class CreateUsersTable extends Migration
             $table->string('num')->nullable();
             $table->string('complemento')->nullable();
             $table->string('bairro')->nullable();
-            $table->integer('uf')->nullable();
-            $table->integer('cidade')->nullable();
+            $table->string('uf')->nullable();
+            $table->string('cidade')->nullable();
 
             /** contact */
             $table->string('telefone')->nullable();
@@ -61,11 +61,9 @@ class CreateUsersTable extends Migration
             /** Redes Sociais */
             $table->string('facebook')->nullable();
             $table->string('twitter')->nullable();
-            $table->string('vimeo')->nullable();
             $table->string('youtube')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('instagram')->nullable();
-            $table->string('fliccr')->nullable();
 
             $table->string('stripe_id')->nullable();
             $table->string('pm_type')->nullable();
