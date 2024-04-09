@@ -16,6 +16,7 @@
         "league/flysystem-aws-s3-v3": "^3.16",
         "spatie/laravel-analytics": "^5.0",
         "spatie/laravel-sitemap": "^6.2",
+        "vedmant/laravel-feed-reader": "^1.6",
         "webmasterdro/paghiper-php-sdk": "^3.0",
         "weidner/goutte": "^2.3.0",
         "werneckbh/laravel-qr-code": "^0.1.3"

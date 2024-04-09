@@ -9,17 +9,13 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Bootstrap  -->
-        <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/bootstrap.css'))}}" >
+        <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/bootstrap.min.css'))}}" >
 
         <!-- Theme Style -->
         <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/style.css'))}}">
 
-        <!-- Colors -->
-        <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/colors/color1.css'))}}">
-    
-        <!-- Animation Style -->
-        <link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/animate.css'))}}">
-
+        
+        
         <!-- Google Fonts -->
         <link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>

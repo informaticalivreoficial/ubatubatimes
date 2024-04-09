@@ -180,7 +180,7 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     Route::get('/', [AdminController::class, 'home'])->name('home');
 
     //Cron POSTS
-    //Route::get('posts/clear-noticias', [PostController::class, 'crowlerNoticiasUbatuba'])->name('posts.crowlerNoticiasUbatuba');
+    Route::get('posts/clear-noticias', [PostController::class, 'crowlerNoticiasSaoSebastiao'])->name('posts.crowlerNoticiasUbatuba');
     //Route::get('posts/clear-trash', [PostController::class, 'clearTrash'])->name('posts.clearTrash');
     //Route::get('posts/crowler', [PostController::class, 'crowlerFundartUbatuba'])->name('posts.crowlerFundartUbatuba');
 });
