@@ -251,13 +251,11 @@ class PostController extends Controller
     public function crowlerNoticiasIlhabela()
     {
         $rss = FeedReader::read('https://www.ilhabela.sp.gov.br/feedrss.xml');
-        $image = $rss->get_item_tags('', 'image')[0]['child']['']['url'][0]['data'];
         $result = [
             'tipo' => 'noticia',
             'autor' => 1,
             'titulo' => $rss->get_items()[0]->get_title(),
             'content' => $rss->get_items()[0]->get_description(),
-            //'image_url' => $rss->get_items_tags()[0],
             'slug' => Str::slug($rss->get_items()[0]->get_title()),
             'cat_pai' => 14,
             'categoria' => 18,
@@ -266,59 +264,35 @@ class PostController extends Controller
             'created_at' => now(),
             'publish_at' => now(),
         ];
+
+        $posts = Post::where('deleted_at', null)->where('titulo', $result['titulo'])->first();
         
-        // foreach ($rss->get_items() as $item) {
-        //     $image = $item->get_item_tags('', 'image')[0]['child']['']['url'][0]['data'];
-        //    dd($item->titulo);
-        // }
-        dd($result);
-        
-        $posts = Post::where('titulo', $result['titulo'])->first();
+        foreach ($rss->get_items() as $item) {
 
-        if($posts){
+            if($posts){
 
-        }
-
-        // $urlIlhabela  = 'https://www.ilhabela.sp.gov.br/portal/noticias/';
-        // $pageIlhabela = $this->crowler->request('GET', $urlIlhabela);
-        // $result = [
-        //     'tipo' => 'noticia',
-        //     'autor' => 1,
-        //     'titulo' => $pageIlhabela->filter('#content article .entry-header h2')->eq(0)->text(),
-        //     'slug' => Str::slug($pageIlhabela->filter('#content article .entry-header h2')->eq(0)->text()),
-        //     'cat_pai' => 14,
-        //     'categoria' => 18,
-        //     'status' => 1,
-        //     'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de Ilhabela',
-        //     'created_at' => now(),
-        //     'publish_at' => now(),
-        // ];
-        
-        // $posts = Post::where('titulo', $result['titulo'])->first();
-        // if(empty($posts)){     
-        //     $link = $pageIlhabela->filter('#content article .entry-header h2 a')->eq(0)->attr('href');
-        //     $linkContent = $this->crowler->request('GET', $link);   
-        //     $content = ['content' => $linkContent->filter('#content .entry-content-text')->html() . '<br>Fonte: <a target="_blank" href="https://www.ilhabela.sp.gov.br">Divulgação Prefeitura Municipal de Ilhabela</a>'];     
-        //     $result = array_merge($result, $content);
-            
-        //     $imgurl = $linkContent->filter('#content .entry-thumbnail img')->attr('src');
-        //     $contents = file_get_contents($imgurl);
-        //     $name = substr($imgurl, strrpos($imgurl, '/') + 1);
-
-        //     $criarPost = DB::table('posts')->updateOrInsert($result);
-        //     $id = DB::getPdo()->lastInsertId();
-        //     Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
+                $image = $item->get_item_tags('', 'image')[0]['child']['']['url'][0]['data'];            
                 
-        //     $postGb = new PostGb();
-        //     $postGb->post = $id;
-        //     $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
-        //     $postGb->save();
-        //     unset($postGb);
+                $criarPost = DB::table('posts')->updateOrInsert($result);
+                $id = DB::getPdo()->lastInsertId();
 
-        //     $post = Post::find($id);
-        //     $autor = User::find($post->autor);
-        //     $autor->notify(new PostCreatedUpdated($post));
-        // }
+                $contents = file_get_contents($image); 
+                $name = substr($image, strrpos($image, '/') + 1);
+                Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents); 
+
+                $postGb = new PostGb();
+                $postGb->post = $id;
+                $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
+                $postGb->save();
+                unset($postGb);
+
+                $post = Post::find($id);
+                $autor = User::find($post->autor);
+                $autor->notify(new PostCreatedUpdated($post));                
+            }
+            
+        }
+         
     }
 
     public function create()
