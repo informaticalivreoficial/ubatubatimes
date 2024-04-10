@@ -61,7 +61,7 @@ class PostController extends Controller
         $urlUbatuba  = 'https://www.ubatuba.sp.gov.br/noticias/';
         $pageUbatuba = $this->crowler->request('GET', $urlUbatuba);
         $pageUbatuba->filter('.blog-items li')->each( function ($item){
-            $this->resultsUbatuba[] = [
+            $resultsUbatuba[] = [
                 'tipo' => 'noticia',
                 'autor' => 1,
                 'titulo' => $item->filter('h4')->text(),
@@ -73,20 +73,22 @@ class PostController extends Controller
                 'url' => $item->filter('a')->attr('href'),
                 'created_at' => now(),
             ]; 
-            $posts = Post::where('titulo', $this->resultsUbatuba[0]['titulo'])->first();
-            if(empty($posts)){
-                $link = $this->resultsUbatuba[0]['url'];
+            
+            $posts = Post::where('tipo', 'noticia')->where('titulo', $resultsUbatuba[0]['titulo'])->first();
+            
+            if($posts == null){
+                $link = $resultsUbatuba[0]['url'];
                 $linkContent = $this->crowler->request('GET', $link);            
-                $this->resultsUbatuba[0]['content'] = $linkContent->filter('.article-body-wrap .body-text')->html() . '<br>Fonte: <a target="_blank" href="https://www.ubatuba.sp.gov.br">Divulgação Prefeitura Municipal de Ubatuba</a>';
-                $this->resultsUbatuba[0]['img'] = $linkContent->filter('.page-content figure img')->attr('src');
+                $resultsUbatuba[0]['content'] = $linkContent->filter('.article-body-wrap .body-text')->html() . '<br>Fonte: <a target="_blank" href="https://www.ubatuba.sp.gov.br">Divulgação Prefeitura Municipal de Ubatuba</a>';
+                $resultsUbatuba[0]['img'] = $linkContent->filter('.page-content figure img')->attr('src');
 
-                $imgurl = $this->resultsUbatuba[0]['img'];
+                $imgurl = $resultsUbatuba[0]['img'];
                 $contents = file_get_contents($imgurl);
                 $name = substr($imgurl, strrpos($imgurl, '/') + 1);
                 
-                unset($this->resultsUbatuba[0]['img']);
-                unset($this->resultsUbatuba[0]['url']);
-                $criarPost = DB::table('posts')->updateOrInsert($this->resultsUbatuba[0]);
+                unset($resultsUbatuba[0]['img']);
+                unset($resultsUbatuba[0]['url']);
+                $criarPost = DB::table('posts')->updateOrInsert($resultsUbatuba[0]);
                 $id = DB::getPdo()->lastInsertId();
                 Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
                 
@@ -98,9 +100,9 @@ class PostController extends Controller
 
                 $post = Post::find($id);
                 $autor = User::find($post->autor);
-                $autor->notify(new PostCreatedUpdated($post));
+                $autor->notify(new PostCreatedUpdated($post));                
             }
-        });                
+        });               
     }
 
     public function crowlerFundartUbatuba()
@@ -122,8 +124,9 @@ class PostController extends Controller
                 'publish_at' => now(),
             ]; 
             
-            $post = Post::where('titulo', $resultFundartUbatuba['titulo'])->first();
-            if(empty($post)){
+            $post = Post::where('deleted_at', null)->where('titulo', $resultFundartUbatuba['titulo'])->first();
+
+            if($post){
                 $link = $resultFundartUbatuba['url'];
                 $linkContent = $this->crowler->request('GET', $link);            
                 $resultFundartUbatuba['content'] = $linkContent->filter('.single-content p')->eq(2)->html() . '<br>Fonte: <a target="_blank" href="https://fundart.com.br">Divulgação Fundação de Arte e Cultura de Ubatuba – FundArt</a>';
@@ -170,8 +173,9 @@ class PostController extends Controller
             'publish_at' => now(),
         ];
         
-        $posts = Post::where('titulo', $result['titulo'])->first();
-        if(empty($posts)){     
+        $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
+
+        if($posts == null){     
             $link = $pageCaragua->filter('.card-deck .card a')->eq(0)->attr('href');
             $linkContent = $this->crowler->request('GET', $link);   
             $content = ['content' => $linkContent->filter('.card-text')->html() . '<br>Fonte: <a target="_blank" href="https://www.caraguatatuba.sp.gov.br/">Divulgação Prefeitura Municipal de Caraguatatuba</a>'];     
@@ -214,8 +218,9 @@ class PostController extends Controller
             'publish_at' => now(),
         ];
         
-        $posts = Post::where('titulo', $result['titulo'])->first();
-        if(empty($posts)){     
+        $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
+
+        if($posts == null){     
             $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.notice-list-page .notice a')->eq(0)->attr('href');
             $linkContent = $this->crowler->request('GET', $link);   
             
@@ -265,11 +270,11 @@ class PostController extends Controller
             'publish_at' => now(),
         ];
 
-        $posts = Post::where('deleted_at', null)->where('titulo', $result['titulo'])->first();
+        $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
         
         foreach ($rss->get_items() as $item) {
 
-            if($posts){
+            if($posts == null){
 
                 $image = $item->get_item_tags('', 'image')[0]['child']['']['url'][0]['data'];            
                 
