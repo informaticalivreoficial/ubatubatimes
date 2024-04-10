@@ -124,19 +124,24 @@ class PostController extends Controller
                 'publish_at' => now(),
             ]; 
             
-            $post = Post::where('deleted_at', null)->where('titulo', $resultFundartUbatuba['titulo'])->first();
+            $post = Post::where('tipo', 'noticia')->where('titulo', $resultFundartUbatuba['titulo'])->first();
 
-            if($post){
-                $link = $resultFundartUbatuba['url'];
-                $linkContent = $this->crowler->request('GET', $link);            
+            // $imgContent = $this->crowler->request('GET', $resultFundartUbatuba['url']); 
+            // $imgurl = $imgContent->filter('.single-content img')->attr('src');
+            // $contents = file_get_contents($imgurl);
+            // $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+
+            //dd($imgurl);
+            
+            if($post == null){
+                $linkContent = $this->crowler->request('GET', $resultFundartUbatuba['url']);            
                 $resultFundartUbatuba['content'] = $linkContent->filter('.single-content p')->eq(2)->html() . '<br>Fonte: <a target="_blank" href="https://fundart.com.br">Divulgação Fundação de Arte e Cultura de Ubatuba – FundArt</a>';
                 $resultFundartUbatuba['img'] = $linkContent->filter('.single-content img')->attr('src');
                 
-                $imgurl = $resultFundartUbatuba['img'];
-                $imgurl = explode('300x300', $imgurl);                
-                $imgurl = $imgurl[0] . '768x769' . $imgurl[1];
-                $contents = file_get_contents($imgurl);
-                $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+                //$imgurl = explode('300x300', $imgurl);                
+                //$imgurl = $imgurl[0] . '768x769' . $imgurl[1];
+                $contents = file_get_contents($resultFundartUbatuba['img']);
+                $name = substr($resultFundartUbatuba['img'], strrpos($resultFundartUbatuba['img'], '/') + 1);
                 
                 unset($resultFundartUbatuba['img']);
                 unset($resultFundartUbatuba['url']);
@@ -260,7 +265,7 @@ class PostController extends Controller
             'tipo' => 'noticia',
             'autor' => 1,
             'titulo' => $rss->get_items()[0]->get_title(),
-            'content' => $rss->get_items()[0]->get_description(),
+            //'content' => $rss->get_items()[0]->get_description(),
             'slug' => Str::slug($rss->get_items()[0]->get_title()),
             'cat_pai' => 14,
             'categoria' => 18,
@@ -269,31 +274,35 @@ class PostController extends Controller
             'created_at' => now(),
             'publish_at' => now(),
         ];
-
-        $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
         
-        foreach ($rss->get_items() as $item) {
-
+        $content = ['content' => $rss->get_items()[0]->get_description() . '<br>Fonte: <a target="_blank" href="https://www.ilhabela.sp.gov.br/">Divulgação Prefeitura Municipal de Ilhabela</a>'];     
+        $result = array_merge($result, $content);
+        
+        $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();        
+        
+        foreach ($rss->get_items() as $key => $item) {
+            $numItems = count($rss->get_items());
             if($posts == null){
 
                 $image = $item->get_item_tags('', 'image')[0]['child']['']['url'][0]['data'];            
-                
-                $criarPost = DB::table('posts')->updateOrInsert($result);
-                $id = DB::getPdo()->lastInsertId();
+                dd($numItems);
+                    $criarPost = DB::table('posts')->updateOrInsert($result);
+                    $id = DB::getPdo()->lastInsertId();
 
-                $contents = file_get_contents($image); 
-                $name = substr($image, strrpos($image, '/') + 1);
-                Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents); 
+                    $contents = file_get_contents($image); 
+                    $name = substr($image, strrpos($image, '/') + 1);
+                    Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents); 
 
-                $postGb = new PostGb();
-                $postGb->post = $id;
-                $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
-                $postGb->save();
-                unset($postGb);
+                    $postGb = new PostGb();
+                    $postGb->post = $id;
+                    $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
+                    $postGb->save();
+                    unset($postGb);
 
-                $post = Post::find($id);
-                $autor = User::find($post->autor);
-                $autor->notify(new PostCreatedUpdated($post));                
+                    $post = Post::find($id);
+                    $autor = User::find($post->autor);
+                    $autor->notify(new PostCreatedUpdated($post));   
+                                         
             }
             
         }
