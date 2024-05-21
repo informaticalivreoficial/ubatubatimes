@@ -208,13 +208,13 @@ class PostController extends Controller
 
     public function crowlerNoticiasSaoSebastiao()
     {
-        $urlSaoSebastiao  = 'https://www.saosebastiao.sp.gov.br/noticia-lista.asp';
+        $urlSaoSebastiao  = 'https://www.saosebastiao.sp.gov.br';
         $pageSaoSebastiao = $this->crowler->request('GET', $urlSaoSebastiao);
         $result = [
             'tipo' => 'noticia',
             'autor' => 1,
-            'titulo' => $pageSaoSebastiao->filter('.notice-list-page .notice h2')->eq(0)->text(),
-            'slug' => Str::slug($pageSaoSebastiao->filter('.notice-list-page .notice h2')->eq(0)->text()),
+            'titulo' => $pageSaoSebastiao->filter('.post-list-content article .post-core h3')->eq(0)->text(),
+            'slug' => Str::slug($pageSaoSebastiao->filter('.post-list-content article .post-core h3')->eq(0)->text()),
             'cat_pai' => 14,
             'categoria' => 17,
             'status' => 1,
@@ -226,18 +226,13 @@ class PostController extends Controller
         $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
 
         if($posts == null){     
-            $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.notice-list-page .notice a')->eq(0)->attr('href');
+            $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');
             $linkContent = $this->crowler->request('GET', $link);   
             
             $content = ['content' => $linkContent->filter('.post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>'];     
             $result = array_merge($result, $content);
             
-            if(count($linkContent->filter('.slide')) > 0){
-                $imgurl = explode("'", $linkContent->filter('.slide')->attr("style"));   
-                $imgurl = 'https://www.saosebastiao.sp.gov.br/' . $imgurl[1]; 
-            }else{
-                $imgurl = 'https://www.saosebastiao.sp.gov.br/' . $linkContent->filter('.post-image img')->eq(0)->attr('src');
-            }
+            $imgurl = $urlSaoSebastiao. '/' . $pageSaoSebastiao->filter('.post-list-content .featured-post .post-image a img')->eq(0)->attr('src');
             
             $contents = file_get_contents($imgurl);
             $name = substr($imgurl, strrpos($imgurl, '/') + 1);
@@ -302,56 +297,7 @@ class PostController extends Controller
             $post = Post::find($id);
             $autor = User::find($post->autor);
             $autor->notify(new PostCreatedUpdated($post));
-        }
-
-
-        // $rss = FeedReader::read('https://www.ilhabela.sp.gov.br/feedrss.xml');
-        // $result = [
-        //     'tipo' => 'noticia',
-        //     'autor' => 1,
-        //     'titulo' => $rss->get_items()[0]->get_title(),
-        //     //'content' => $rss->get_items()[0]->get_description(),
-        //     'slug' => Str::slug($rss->get_items()[0]->get_title()),
-        //     'cat_pai' => 14,
-        //     'categoria' => 18,
-        //     'status' => 1,
-        //     'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de Ilhabela',
-        //     'created_at' => now(),
-        //     'publish_at' => now(),
-        // ];
-        
-        // $content = ['content' => $rss->get_items()[0]->get_description() . '<br>Fonte: <a target="_blank" href="https://www.ilhabela.sp.gov.br/">Divulgação Prefeitura Municipal de Ilhabela</a>'];     
-        // $result = array_merge($result, $content);
-        
-        // $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();        
-        
-        // foreach ($rss->get_items() as $key => $item) {
-        //     $numItems = count($rss->get_items());
-        //     if($posts == null){
-
-        //         $image = $item->get_item_tags('', 'image')[0]['child']['']['url'][0]['data'];            
-        //         dd($numItems);
-        //             $criarPost = DB::table('posts')->updateOrInsert($result);
-        //             $id = DB::getPdo()->lastInsertId();
-
-        //             $contents = file_get_contents($image); 
-        //             $name = substr($image, strrpos($image, '/') + 1);
-        //             Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents); 
-
-        //             $postGb = new PostGb();
-        //             $postGb->post = $id;
-        //             $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
-        //             $postGb->save();
-        //             unset($postGb);
-
-        //             $post = Post::find($id);
-        //             $autor = User::find($post->autor);
-        //             $autor->notify(new PostCreatedUpdated($post));   
-                                         
-        //     }
-            
-        // }
-         
+        }         
     }
 
     public function create()

@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:noticiaubatuba')->everyMinute()->withoutOverlapping();                
         $schedule->command('app:noticiacaragua')->everyMinute()->withoutOverlapping();                
-        //$schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
+        $schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
         $schedule->command('app:noticiailhabela')->everyMinute()->withoutOverlapping();      
         //$schedule->command('app:fundartubatuba')->everyMinute()->withoutOverlapping();      
         $schedule->command('app:deletepost')->everyMinute()->withoutOverlapping();      
