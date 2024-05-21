@@ -186,7 +186,7 @@
 							<h3 class="widget-title">Quem Somos</h3>
 							<ul>
 								<li>{{$configuracoes->descricao}}</li>
-								<li><i class="fa fa-home"></i> {{\App\Helpers\Cidade::getCidadeNome($configuracoes->cidade, 'cidades')}}</li>
+								<li><i class="fa fa-home"></i> {{$configuracoes->cidade}}</li>
 								@if ($configuracoes->telefone1)
 									<li><i class="fa fa-phone"></i> <a href="tel:{{$configuracoes->telefone1}}">{{$configuracoes->telefone1}}</a></li>
 								@endif

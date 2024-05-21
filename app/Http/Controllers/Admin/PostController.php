@@ -260,13 +260,13 @@ class PostController extends Controller
 
     public function crowlerNoticiasIlhabela()
     {
-        $rss = FeedReader::read('https://www.ilhabela.sp.gov.br/feedrss.xml');
+        $urlIlhaBela  = 'https://www.ilhabela.sp.gov.br/portal/noticias';
+        $pageIlhaBela = $this->crowler->request('GET', $urlIlhaBela);
         $result = [
             'tipo' => 'noticia',
             'autor' => 1,
-            'titulo' => $rss->get_items()[0]->get_title(),
-            //'content' => $rss->get_items()[0]->get_description(),
-            'slug' => Str::slug($rss->get_items()[0]->get_title()),
+            'titulo' => $pageIlhaBela->filter('.ntc_cont_noticias a .ntc_noticia .ntc_area_info_noticia .ntc_cont_info_noticia .ntc_titulo_noticia')->eq(0)->text(),
+            'slug' => Str::slug($pageIlhaBela->filter('.ntc_cont_noticias a .ntc_noticia .ntc_area_info_noticia .ntc_cont_info_noticia .ntc_titulo_noticia')->eq(0)->text()),
             'cat_pai' => 14,
             'categoria' => 18,
             'status' => 1,
@@ -275,37 +275,82 @@ class PostController extends Controller
             'publish_at' => now(),
         ];
         
-        $content = ['content' => $rss->get_items()[0]->get_description() . '<br>Fonte: <a target="_blank" href="https://www.ilhabela.sp.gov.br/">Divulgação Prefeitura Municipal de Ilhabela</a>'];     
-        $result = array_merge($result, $content);
-        
-        $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();        
-        
-        foreach ($rss->get_items() as $key => $item) {
-            $numItems = count($rss->get_items());
-            if($posts == null){
+        $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
 
-                $image = $item->get_item_tags('', 'image')[0]['child']['']['url'][0]['data'];            
-                dd($numItems);
-                    $criarPost = DB::table('posts')->updateOrInsert($result);
-                    $id = DB::getPdo()->lastInsertId();
-
-                    $contents = file_get_contents($image); 
-                    $name = substr($image, strrpos($image, '/') + 1);
-                    Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents); 
-
-                    $postGb = new PostGb();
-                    $postGb->post = $id;
-                    $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
-                    $postGb->save();
-                    unset($postGb);
-
-                    $post = Post::find($id);
-                    $autor = User::find($post->autor);
-                    $autor->notify(new PostCreatedUpdated($post));   
-                                         
-            }
+        if($posts == null){     
+            $link = 'https://www.ilhabela.sp.gov.br' . $pageIlhaBela->filter('.ntc_cont_noticias a')->eq(0)->attr('href');
+            $linkContent = $this->crowler->request('GET', $link);   
             
+            $content = ['content' => $linkContent->filter('.ntc_descricao_noticia .ntc_cont_descricao_noticia')->html() . '<br>Fonte: <a target="_blank" href="https://www.ilhabela.sp.gov.br/">Divulgação Prefeitura Municipal de Ilhabela</a>'];
+            $result = array_merge($result, $content);
+            
+            $imgurl = 'https://www.ilhabela.sp.gov.br' . $linkContent->filter('.ntc_area_slide_imagens_noticia .ntc_img_slide_noticia img')->eq(0)->attr('src');
+            
+            $contents = file_get_contents($imgurl);
+            $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+            
+            $criarPost = DB::table('posts')->updateOrInsert($result);
+            $id = DB::getPdo()->lastInsertId();
+            Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
+                
+            $postGb = new PostGb();
+            $postGb->post = $id;
+            $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
+            $postGb->save();
+            unset($postGb);
+
+            $post = Post::find($id);
+            $autor = User::find($post->autor);
+            $autor->notify(new PostCreatedUpdated($post));
         }
+
+
+        // $rss = FeedReader::read('https://www.ilhabela.sp.gov.br/feedrss.xml');
+        // $result = [
+        //     'tipo' => 'noticia',
+        //     'autor' => 1,
+        //     'titulo' => $rss->get_items()[0]->get_title(),
+        //     //'content' => $rss->get_items()[0]->get_description(),
+        //     'slug' => Str::slug($rss->get_items()[0]->get_title()),
+        //     'cat_pai' => 14,
+        //     'categoria' => 18,
+        //     'status' => 1,
+        //     'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de Ilhabela',
+        //     'created_at' => now(),
+        //     'publish_at' => now(),
+        // ];
+        
+        // $content = ['content' => $rss->get_items()[0]->get_description() . '<br>Fonte: <a target="_blank" href="https://www.ilhabela.sp.gov.br/">Divulgação Prefeitura Municipal de Ilhabela</a>'];     
+        // $result = array_merge($result, $content);
+        
+        // $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();        
+        
+        // foreach ($rss->get_items() as $key => $item) {
+        //     $numItems = count($rss->get_items());
+        //     if($posts == null){
+
+        //         $image = $item->get_item_tags('', 'image')[0]['child']['']['url'][0]['data'];            
+        //         dd($numItems);
+        //             $criarPost = DB::table('posts')->updateOrInsert($result);
+        //             $id = DB::getPdo()->lastInsertId();
+
+        //             $contents = file_get_contents($image); 
+        //             $name = substr($image, strrpos($image, '/') + 1);
+        //             Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents); 
+
+        //             $postGb = new PostGb();
+        //             $postGb->post = $id;
+        //             $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
+        //             $postGb->save();
+        //             unset($postGb);
+
+        //             $post = Post::find($id);
+        //             $autor = User::find($post->autor);
+        //             $autor->notify(new PostCreatedUpdated($post));   
+                                         
+        //     }
+            
+        // }
          
     }
 
