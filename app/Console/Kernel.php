@@ -24,13 +24,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:noticiaubatuba')->everyMinute()->withoutOverlapping();                
-        $schedule->command('app:noticiacaragua')->everyMinute()->withoutOverlapping();                
+        //$schedule->command('app:noticiaubatuba')->everyMinute()->withoutOverlapping();                
+        //$schedule->command('app:noticiacaragua')->everyMinute()->withoutOverlapping();                
         $schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
-        $schedule->command('app:noticiailhabela')->everyMinute()->withoutOverlapping();      
+        //$schedule->command('app:noticiailhabela')->everyMinute()->withoutOverlapping();      
         //$schedule->command('app:fundartubatuba')->everyMinute()->withoutOverlapping();      
-        $schedule->command('app:deletepost')->everyMinute()->withoutOverlapping();      
-        $schedule->command('app:clear-trash-cron')->everyMinute()->withoutOverlapping();      
+        //$schedule->command('app:deletepost')->everyMinute()->withoutOverlapping();      
+        //$schedule->command('app:clear-trash-cron')->everyMinute()->withoutOverlapping();      
     }
 
     /**

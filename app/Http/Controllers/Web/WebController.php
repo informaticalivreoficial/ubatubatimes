@@ -39,20 +39,6 @@ class WebController extends Controller
 
     public function home()
     {        
-        //Executa tarefas agendadas
-        //if (strtotime($this->configService->getConfig()->cron_timestamp) < time()) {
-            // $config = Configuracoes::where('id', '1')->first();
-            // $config->cron_timestamp = Carbon::parse($this->configService->getConfig()->cron_timestamp)->addDay();
-            // $config->save();
-            // $controller = new PostController();
-            // $controller->crowlerNoticiasSaoSebastiao();
-            // $controller->crowlerNoticiasCaraguatatuba();
-            // $controller->crowlerNoticiasUbatuba();
-            // $controller->crowlerNoticiasIlhabela();
-            //$controller->deleteCron();
-            //$controller->deleteCron();
-        //}
-
         $noticiasUbatuba = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
                     ->where('categoria', '!=', 16)
