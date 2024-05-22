@@ -23,6 +23,7 @@ use App\Support\Seo;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Redirect;
 
 class WebController extends Controller
 {
@@ -45,7 +46,21 @@ class WebController extends Controller
                     ->where('categoria', '!=', 17)
                     ->where('categoria', '!=', 18)
                     ->postson()
-                    ->limit(4)
+                    ->limit(2)
+                    ->get();
+        $noticiasUbatuba1 = Post::orderBy('created_at', 'DESC')
+                    ->where('tipo', 'noticia')
+                    ->where('categoria', '!=', 16)
+                    ->where('categoria', '!=', 17)
+                    ->where('categoria', '!=', 18)
+                    ->postson()
+                    ->offset(2)
+                    ->limit(2)
+                    ->get();
+        $artigosDestaque = Post::orderBy('created_at', 'DESC')
+                    ->where('tipo', 'artigo')
+                    ->postson()
+                    ->limit(2)
                     ->get();
         $noticiasCaragua = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
@@ -85,7 +100,7 @@ class WebController extends Controller
                     ->limit(4)
                     ->get();
         
-        $positionSidebarhome = Anuncio::where('plan_id', 2)->available()->limit(2)->get();
+        $positionSidebarhome = Anuncio::where('plan_id', 2)->available()->limit(3)->get();
         $positionMainhome = Anuncio::where('plan_id', 9)->available()->limit(1)->get();
         $positionFooterhome = Anuncio::where('plan_id', 5)->available()->limit(1)->get();
 
@@ -101,6 +116,8 @@ class WebController extends Controller
     	return view('web.home',[
             'head' => $head,
             'noticiasUbatuba'  => $noticiasUbatuba,
+            'noticiasUbatuba1'  => $noticiasUbatuba1,
+            'artigosDestaque' => $artigosDestaque,
             'noticiasCaragua' => $noticiasCaragua,
             'noticiasSaoSebastiao' => $noticiasSaoSebastiao,
             'noticiasIlhabela' => $noticiasIlhabela,
@@ -152,6 +169,10 @@ class WebController extends Controller
     public function noticia($slug)
     {
         $post = Post::where('slug', $slug)->where('tipo', 'noticia')->postson()->first();
+
+        if($post == null){
+            return Redirect::route('web.home');
+        }
         
         $categorias = CatPost::orderBy('titulo', 'ASC')
             ->where('tipo', 'noticia')
@@ -285,7 +306,11 @@ class WebController extends Controller
 
     public function artigo(Request $request)
     {
-        $post = Post::where('slug', $request->slug)->postson()->first();        
+        $post = Post::where('slug', $request->slug)->postson()->first();   
+        
+        if($post == null){
+            return Redirect::route('web.home');
+        }
         
         $categorias = CatPost::orderBy('titulo', 'ASC')
             ->where('tipo', 'artigo')
