@@ -52,7 +52,7 @@
                                     <img width="60" alt="{{$post->titulo}}" src="{{$post->cover()}}">
                                 </a>
                             </td>
-                            <td>{{$post->titulo}}</td>
+                            <td title="{{$post->titulo}}">{{$post->titulo}}</td>
                             <td>{{$post->categoriaObject->titulo}}</td>
                             <td class="text-center">{{$post->views}}</td>
                             <td class="text-center">{{\Carbon\Carbon::parse($post->created_at)->format('d/m/Y')}}</td>

@@ -62,7 +62,7 @@ class CatPost extends Model
 
     public function countposts()
     {
-        return $this->hasMany(Post::class, 'categoria', 'id')->count();
+        return $this->hasMany(Post::class, 'categoria', 'id')->available()->count();
     }
 
     public function setSlug()
