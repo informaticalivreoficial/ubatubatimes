@@ -156,72 +156,55 @@ $config1 = [
                                         </h4>
                                     </div>
                                     <div id="collapseEndereco" class="panel-collapse collapse show">
-                                        <div class="card-body text-muted">
+                                        <div class="card-body">
                                             <div class="row mb-2">
-                                                <div class="col-12 col-md-4 col-lg-4"> 
+                                                <div class="col-12 col-md-2 col-lg-2"> 
                                                     <div class="form-group">
-                                                        <label class="labelforms"><b>Estado:</b></label>
-                                                        <select id="state-dd" class="form-control text-muted" name="uf">
-                                                            @if(!empty($estados))
-                                                                <option value="">Selecione o Estado</option>
-                                                                @foreach($estados as $estado)
-                                                                    <option value="{{$estado->estado_id}}" {{ (old('uf') == $estado->estado_id ? 'selected' : ($config->uf == $estado->estado_id ? 'selected' : '')) }}>{{$estado->estado_nome}}</option>
-                                                                @endforeach                                                                        
-                                                            @endif
-                                                        </select>
+                                                        <label class="labelforms text-muted"><b>CEP:</b></label>
+                                                        <input type="text" id="cep" class="form-control mask-zipcode" placeholder="Digite o CEP" name="cep" value="{{old('cep') ?? $config->cep}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-3 col-lg-3"> 
+                                                    <div class="form-group">
+                                                        <label class="labelforms text-muted"><b>Estado:</b></label>
+                                                        <input type="text" class="form-control" id="uf" name="uf" value="{{old('uf') ?? $config->uf}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-4 col-lg-4"> 
                                                     <div class="form-group">
-                                                        <label class="labelforms"><b>Cidade:</b></label>
-                                                        <select id="city-dd" class="form-control text-muted" name="cidade">
-                                                            @if(!empty($cidades) && !empty($config->cidade) && $config->uf != null)
-                                                                @foreach($cidades as $cidade)
-                                                                <option value="{{$cidade->cidade_id}}" 
-                                                                        {{ (old('cidade') == $cidade->cidade_id ? 'selected' : 
-                                                                        ($config->cidade == $cidade->cidade_id ? 'selected' : '')) }}>{{$cidade->cidade_nome}}</option>
-                                                                @endforeach
-                                                            @else  
-                                                            <option value="">Selecione o Estado</option>
-                                                            @endif
-                                                        </select>
+                                                        <label class="labelforms text-muted"><b>Cidade:</b></label>
+                                                        <input type="text" class="form-control" id="cidade" name="cidade" value="{{old('cidade') ?? $config->cidade}}">
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4 col-lg-4"> 
+                                                <div class="col-12 col-md-4 col-lg-3"> 
                                                     <div class="form-group">
-                                                        <label class="labelforms"><b>Bairro:</b></label>
-                                                        <input type="text" class="form-control text-muted" placeholder="Bairro" name="bairro" value="{{old('bairro') ?? $config->bairro}}">
+                                                        <label class="labelforms text-muted"><b>Bairro:</b></label>
+                                                        <input type="text" class="form-control" placeholder="Bairro" id="bairro" name="bairro" value="{{old('bairro') ?? $config->bairro}}">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row mb-2">
                                                 <div class="col-12 col-md-6 col-lg-5"> 
                                                     <div class="form-group">
-                                                        <label class="labelforms"><b>Endereço:</b></label>
-                                                        <input type="text" class="form-control text-muted" placeholder="Endereço Completo" name="rua" value="{{old('rua') ?? $config->rua}}">
+                                                        <label class="labelforms text-muted"><b>Rua/Av:</b></label>
+                                                        <input type="text" class="form-control" id="rua" name="rua" value="{{old('rua') ?? $config->rua}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6 col-lg-2"> 
                                                     <div class="form-group">
-                                                        <label class="labelforms"><b>Número:</b></label>
-                                                        <input type="text" class="form-control text-muted" placeholder="Número do Endereço" name="num" value="{{old('num') ?? $config->num}}">
+                                                        <label class="labelforms text-muted"><b>Número:</b></label>
+                                                        <input type="text" class="form-control" placeholder="Número do Endereço" name="num" value="{{old('num') ?? $config->num}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6 col-lg-3"> 
                                                     <div class="form-group">
-                                                        <label class="labelforms"><b>Complemento:</b></label>
-                                                        <input type="text" class="form-control text-muted" placeholder="Completo (Opcional)" name="complemento" value="{{old('complemento') ?? $config->complemento}}">
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-md-6 col-lg-2"> 
-                                                    <div class="form-group">
-                                                        <label class="labelforms"><b>CEP:</b></label>
-                                                        <input type="text" class="form-control text-muted mask-zipcode" placeholder="Digite o CEP" name="cep" value="{{old('cep') ?? $config->cep}}">
+                                                        <label class="labelforms text-muted"><b>Complemento:</b></label>
+                                                        <input type="text" class="form-control" placeholder="Complemento (Opcional)" name="complemento" value="{{old('complemento') ?? $config->complemento}}">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>                                
                                 </div>
                                 <div class="card">
                                     <div class="card-header text-muted">
@@ -712,6 +695,53 @@ $config1 = [
         });
         
         
+    });
+
+
+    $(document).ready(function() {
+
+        function limpa_formulário_cep() {
+            $("#rua").val("");
+            $("#bairro").val("");
+            $("#cidade").val("");
+            $("#uf").val("");
+        }
+
+        $("#cep").blur(function() {
+
+            var cep = $(this).val().replace(/\D/g, '');
+
+            if (cep != "") {
+                
+                var validacep = /^[0-9]{8}$/;
+
+                if(validacep.test(cep)) {
+                    
+                    $("#rua").val("Carregando...");
+                    $("#bairro").val("Carregando...");
+                    $("#cidade").val("Carregando...");
+                    $("#uf").val("Carregando...");
+                    
+                    $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+
+                        if (!("erro" in dados)) {
+                            $("#rua").val(dados.logradouro);
+                            $("#bairro").val(dados.bairro);
+                            $("#cidade").val(dados.localidade);
+                            $("#uf").val(dados.uf);
+                        } else {
+                            limpa_formulário_cep();
+                            alert("CEP não encontrado.");
+                        }
+                    });
+                } else {
+                    limpa_formulário_cep();
+                    alert("Formato de CEP inválido.");
+                }
+            } else {
+                limpa_formulário_cep();
+            }
+        });
     });
 </script>
 @stop

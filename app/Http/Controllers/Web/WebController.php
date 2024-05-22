@@ -15,8 +15,8 @@ use App\Models\{
     PrevisaoTempo
 };
 use Analytics;
-use App\Http\Controllers\Admin\PostController;
 use Spatie\Analytics\Period;
+use App\Http\Controllers\Admin\PostController;
 use Goutte\Client;
 use App\Services\ConfigService;
 use App\Support\Seo;
@@ -474,10 +474,15 @@ class WebController extends Controller
 
     public function anunciar()
     {
-        $visitas365 = Analytics::fetchTotalVisitorsAndPageViews(Period::years(1));
+        $visitas365 = Analytics::get(
+                Period::months(12), 
+                metrics: ['totalUsers', 'sessions', 'screenPageViews'], 
+                dimensions: ['month'],
+        );
+        //dd($visitas365);
         $v = [];
-        foreach($visitas365->all() as $key => $visitas){
-            $v[] = $visitas['visitors'] + $visitas['pageViews']; 
+        foreach($visitas365->all() as $key => $visitas){            
+            $v[] = $visitas['totalUsers'] + $visitas['screenPageViews']; 
         }
         
         $head = $this->seo->render('Anuncie Aqui - ' . $this->configService->getConfig()->nomedosite,
