@@ -63,7 +63,6 @@ class WebController extends Controller
                     ->limit(1)
                     ->get();
         $artigosDurval = Post::orderBy('created_at', 'DESC')
-                    ->where('tipo', 'artigo')
                     ->where('categoria', '21')
                     ->postson()
                     ->limit(1)
