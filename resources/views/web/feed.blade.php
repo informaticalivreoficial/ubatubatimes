@@ -49,7 +49,7 @@
                 <pubDate>{{ $post->created_at }}</pubDate>
             </item>
         @endforeach
-
+        {{--    
         @foreach($paginas as $pagina)
             <item>
                 <title><![CDATA[{{ $pagina->titulo }}]]></title>
@@ -61,6 +61,6 @@
                 <guid>{{ $pagina->id }}</guid>
                 <pubDate>{{ $pagina->created_at }}</pubDate>
             </item>
-        @endforeach
+        @endforeach --}}
     </channel>
 </rss>

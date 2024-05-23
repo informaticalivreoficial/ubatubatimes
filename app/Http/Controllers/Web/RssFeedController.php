@@ -7,12 +7,13 @@ use App\Models\{
     Empresa,
     Post
 };
+use Carbon\Carbon;
 
 class RssFeedController extends Controller
 {
     public function feed()
     {
-        $posts = Post::orderBy('created_at', 'DESC')
+        $posts = Post::whereDate('created_at', Carbon::today())
                 ->where('tipo', 'artigo')
                 ->postson()
                 ->limit(10)
@@ -22,7 +23,7 @@ class RssFeedController extends Controller
                 ->postson()
                 ->limit(10)
                 ->get();
-        $noticias = Post::orderBy('created_at', 'DESC')
+        $noticias = Post::whereDate('created_at', Carbon::today())
                 ->where('tipo', 'noticia')
                 ->postson()
                 ->limit(10)
