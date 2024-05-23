@@ -5,75 +5,74 @@
       <div class="container">
           <div class="row">
               <div class="col-lg-8 col-md-12 pad-r">
-                  @if (!empty($noticiasUbatuba && $noticiasUbatuba->count() > 0))
-                      <div class="row">
-                          @foreach ($noticiasUbatuba as $noticiau)
-                              <div class="col-md-6 pb-4">
-                                  <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
-                                        <div class="utf_post_thumb"> 
-                                          <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">
-                                            <img class="img_person" src="{{ $noticiau->cover() }}" alt="{{ $noticiau->titulo }}">
-                                          </a> 
-                                        </div>
-                                        <div class="utf_post_content"> 
-                                            <a class="utf_post_cat" href="#">Ubatuba</a>
-                                            <h2 class="utf_post_title title-large"> 
-                                              <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">{{ $noticiau->titulo }}</a> 
-                                            </h2>
-                                            <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $noticiau->views }}</span>	
-                                            <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiau->created_at)->format('d/m/Y') }}</span> 
-                                        </div>
-                                  </div>
-                              </div>
-                          @endforeach
-                      </div>
-                  @endif
-                  @if (!empty($artigosDestaque && $artigosDestaque->count() > 0))
-                      <div class="row">
-                          @foreach ($artigosDestaque as $artD)
-                              <div class="col-md-6 pb-4">
-                                  <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
-                                        <div class="utf_post_thumb"> 
-                                          <a href="{{route('web.blog.artigo', ['slug' => $artD->slug ])}}">
-                                            <img class="img_person" src="{{ $artD->cover() }}" alt="{{ $artD->titulo }}">
-                                          </a> 
-                                        </div>
-                                        <div class="utf_post_content"> 
-                                            <a class="utf_post_cat" href="#">{{$artD->categoriaObject->titulo}}</a>
-                                            <h2 class="utf_post_title title-large"> 
-                                              <a href="{{route('web.blog.artigo', ['slug' => $artD->slug ])}}">{{ $artD->titulo }}</a> 
-                                            </h2>
-                                            <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $artD->views }}</span>	
-                                            <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($artD->created_at)->format('d/m/Y') }}</span> 
-                                        </div>
-                                  </div>
-                              </div>
-                          @endforeach
-                      </div>
-                  @endif
-                  @if (!empty($artigosDurval && $artigosDurval->count() > 0))
-                      <div class="row">
-                          @foreach ($artigosDurval as $artD1)
-                              <div class="col-md-6 pb-4">
-                                  <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
-                                        <div class="utf_post_thumb"> 
-                                          <a href="{{route('web.blog.artigo', ['slug' => $artD1->slug ])}}">
-                                            <img class="img_person" src="{{ $artD1->cover() }}" alt="{{ $artD1->titulo }}">
-                                          </a> 
-                                        </div>
-                                        <div class="utf_post_content"> 
-                                            <a class="utf_post_cat" href="#">{{$artD1->categoriaObject->titulo}}</a>
-                                            <h2 class="utf_post_title title-large"> 
-                                              <a href="{{route('web.blog.artigo', ['slug' => $artD1->slug ])}}">{{ $artD1->titulo }}</a> 
-                                            </h2>
-                                            <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $artD1->views }}</span>	
-                                            <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($artD1->created_at)->format('d/m/Y') }}</span> 
-                                        </div>
-                                  </div>
-                              </div>
-                          @endforeach
-                      </div>
-                  @endif
+                    @if (!empty($noticiasUbatuba && $noticiasUbatuba->count() > 0))
+                        <div class="row">
+                            @foreach ($noticiasUbatuba as $noticiau)
+                                <div class="col-md-6 pb-4">
+                                    <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
+                                            <div class="utf_post_thumb"> 
+                                            <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">
+                                                <img class="img_person" src="{{ $noticiau->cover() }}" alt="{{ $noticiau->titulo }}">
+                                            </a> 
+                                            </div>
+                                            <div class="utf_post_content"> 
+                                                <a class="utf_post_cat" href="#">Ubatuba</a>
+                                                <h2 class="utf_post_title title-large"> 
+                                                <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">{{ $noticiau->titulo }}</a> 
+                                                </h2>
+                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $noticiau->views }}</span>	
+                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiau->created_at)->format('d/m/Y') }}</span> 
+                                            </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <div class="row">    
+                        @if (!empty($artigosDestaque && $artigosDestaque->count() > 0))                        
+                            @foreach ($artigosDestaque as $artD)
+                                <div class="col-md-6 pb-4">
+                                    <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
+                                            <div class="utf_post_thumb"> 
+                                            <a href="{{route('web.blog.artigo', ['slug' => $artD->slug ])}}">
+                                                <img class="img_person" src="{{ $artD->cover() }}" alt="{{ $artD->titulo }}">
+                                            </a> 
+                                            </div>
+                                            <div class="utf_post_content"> 
+                                                <a class="utf_post_cat" href="#">{{$artD->categoriaObject->titulo}}</a>
+                                                <h2 class="utf_post_title title-large"> 
+                                                <a href="{{route('web.blog.artigo', ['slug' => $artD->slug ])}}">{{ $artD->titulo }}</a> 
+                                                </h2>
+                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $artD->views }}</span>	
+                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($artD->created_at)->format('d/m/Y') }}</span> 
+                                            </div>
+                                    </div>
+                                </div>
+                            @endforeach                       
+                        @endif
+                        @if (!empty($artigosDurval && $artigosDurval->count() > 0))                        
+                            @foreach ($artigosDurval as $artD1)
+                                <div class="col-md-6 pb-4">
+                                    <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
+                                            <div class="utf_post_thumb"> 
+                                            <a href="{{route('web.blog.artigo', ['slug' => $artD1->slug ])}}">
+                                                <img class="img_person" src="{{ $artD1->cover() }}" alt="{{ $artD1->titulo }}">
+                                            </a> 
+                                            </div>
+                                            <div class="utf_post_content"> 
+                                                <a class="utf_post_cat" href="#">{{$artD1->categoriaObject->titulo}}</a>
+                                                <h2 class="utf_post_title title-large"> 
+                                                <a href="{{route('web.blog.artigo', ['slug' => $artD1->slug ])}}">{{ $artD1->titulo }}</a> 
+                                                </h2>
+                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $artD1->views }}</span>	
+                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($artD1->created_at)->format('d/m/Y') }}</span> 
+                                            </div>
+                                    </div>
+                                </div>
+                            @endforeach                        
+                        @endif
+                    </div>
                   @if (!empty($noticiasUbatuba1 && $noticiasUbatuba1->count() > 0))
                       <div class="row">
                           @foreach ($noticiasUbatuba1 as $noticiau1)
