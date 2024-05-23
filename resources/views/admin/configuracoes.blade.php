@@ -654,28 +654,7 @@ $config1 = [
         document.getElementById("img-favicon").addEventListener("change", readImageFavicon, false);
         document.getElementById("img-marcadagua").addEventListener("change", readImageMarcadagua, false);
         document.getElementById("img-imgheader").addEventListener("change", readImageImgheader, false);
-                    
-       
-        $('#state-dd').on('change', function () {
-            var idState = this.value;
-            $("#city-dd").html('');
-            $.ajax({
-                url: "{{route('configuracoes.fetchCity')}}",
-                type: "POST",
-                data: {
-                    estado_id: idState,
-                    _token: '{{csrf_token()}}'
-                },
-                dataType: 'json',
-                success: function (res) {
-                    $('#city-dd').html('<option value="">Selecione a cidade</option>');
-                    $.each(res.cidades, function (key, value) {
-                        $("#city-dd").append('<option value="' + value
-                            .cidade_id + '">' + value.cidade_nome + '</option>');
-                    });
-                }
-            });
-        });
+              
         
         //tag input
         function onAddTag(tag) {

@@ -8,16 +8,12 @@ use App\Http\Requests\Admin\Empresa as EmpresaRequest;
 use App\Models\Anuncio;
 use App\Models\CatEmpresa;
 use Illuminate\Support\Facades\Storage;
-use App\Support\Cropper;
 use Illuminate\Support\Str;
-use App\Models\Cidades;
 use Illuminate\Http\Request;
 use App\Models\Empresa;
 use App\Models\EmpresaGb;
 use App\Models\Fatura;
-use App\Services\CidadeService;
 use App\Services\EmpresaService;
-use App\Services\EstadoService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -26,10 +22,8 @@ class EmpresaController extends Controller
 {
     private $estadoService, $cidadeService, $empresaService;
 
-    public function __construct(EstadoService $estadoService, CidadeService $cidadeService, EmpresaService $empresaService)
+    public function __construct(EmpresaService $empresaService)
     {
-        $this->estadoService = $estadoService;
-        $this->cidadeService = $cidadeService;
         $this->empresaService = $empresaService;
     }
 
@@ -49,9 +43,7 @@ class EmpresaController extends Controller
                     ->orderBy('created_at', 'DESC')
                     ->get();
         return view('admin.empresas.create', [
-            'categorias' => $categorias,
-            'estados' => $this->estadoService->getEstados(),
-            'cidades' => $this->cidadeService->getCidades()
+            'categorias' => $categorias
         ]);
     }
     
@@ -66,7 +58,7 @@ class EmpresaController extends Controller
         }
 
         if(!empty($request->file('metaimg'))){
-            $criarEmpresa->metaimg = $request->file('metaimg')->storeAs('empresas/'. $criarEmpresa->uuid, 'metaimg-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('metaimg')->extension());
+            $criarEmpresa->metaimg = $request->file('metaimg')->storeAs(env('AWS_PASTA') . 'empresas/'. $criarEmpresa->uuid, 'metaimg-' . Str::slug($request->alias_name)  . '-' . str_replace('.', '', microtime(true)) . '.' . $request->file('metaimg')->extension());
             $criarEmpresa->save();
         }
 
@@ -110,18 +102,10 @@ class EmpresaController extends Controller
             'empresa' => $empresa,
             'anuncios' => $anuncios,
             'faturas' => $faturas,
-            'categorias' => $categorias,
-            'estados' => $this->estadoService->getEstados(),
-            'cidades' => $this->cidadeService->getCidades()
+            'categorias' => $categorias
         ]);
     }
 
-    public function fetchCity(Request $request)
-    {
-        $data['cidades'] = Cidades::where("estado_id",$request->estado_id)->get(["cidade_nome", "cidade_id"]);
-        return response()->json($data);
-    }
-   
     public function update(EmpresaRequest $request, $id)
     {
         $empresa = $this->empresaService->getEmpresaById($id);        
@@ -211,11 +195,8 @@ class EmpresaController extends Controller
         if(!empty($empresa)){
             Storage::delete($empresa->logomarca);
             Storage::delete($empresa->metaimg);
-            // Cropper::flush($empresa->logomarca);            
-            // Cropper::flush($empresa->metaimg);
             if(!empty($imageDelete)){
                 Storage::delete($imageDelete->path);
-               //Cropper::flush($imageDelete->path);
                 $imageDelete->delete();
                 Storage::deleteDirectory('empresas/' . $empresa->uuid . '/' . $empresa->id);
                 Storage::deleteDirectory('empresas/' . $empresa->uuid);
@@ -225,10 +206,6 @@ class EmpresaController extends Controller
                 Storage::delete($anuncio['468x90']);
                 Storage::delete($anuncio['336x280']);
                 Storage::delete($anuncio['728x90']);
-                // Cropper::flush($anuncio['300x250']);
-                // Cropper::flush($anuncio['468x90']);
-                // Cropper::flush($anuncio['336x280']);
-                // Cropper::flush($anuncio['728x90']);
                 Storage::deleteDirectory('anuncios/' . $anuncio->id);
                 $anuncio->delete();
             }
