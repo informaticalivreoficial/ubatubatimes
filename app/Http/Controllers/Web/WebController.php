@@ -60,7 +60,13 @@ class WebController extends Controller
         $artigosDestaque = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'artigo')
                     ->postson()
-                    ->limit(2)
+                    ->limit(1)
+                    ->get();
+        $artigosDurval = Post::orderBy('created_at', 'DESC')
+                    ->where('tipo', 'artigo')
+                    ->where('categoria', '21')
+                    ->postson()
+                    ->limit(1)
                     ->get();
         $noticiasCaragua = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
@@ -118,6 +124,7 @@ class WebController extends Controller
             'noticiasUbatuba'  => $noticiasUbatuba,
             'noticiasUbatuba1'  => $noticiasUbatuba1,
             'artigosDestaque' => $artigosDestaque,
+            'artigosDurval' => $artigosDurval,
             'noticiasCaragua' => $noticiasCaragua,
             'noticiasSaoSebastiao' => $noticiasSaoSebastiao,
             'noticiasIlhabela' => $noticiasIlhabela,

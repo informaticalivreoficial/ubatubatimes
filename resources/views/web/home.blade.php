@@ -11,14 +11,14 @@
                               <div class="col-md-6 pb-4">
                                   <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
                                         <div class="utf_post_thumb"> 
-                                          <a href="{{route('web.blog.artigo', ['slug' => $noticiau->slug ])}}">
+                                          <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">
                                             <img class="img_person" src="{{ $noticiau->cover() }}" alt="{{ $noticiau->titulo }}">
                                           </a> 
                                         </div>
                                         <div class="utf_post_content"> 
                                             <a class="utf_post_cat" href="#">Ubatuba</a>
                                             <h2 class="utf_post_title title-large"> 
-                                              <a href="{{route('web.blog.artigo', ['slug' => $noticiau->slug ])}}">{{ $noticiau->titulo }}</a> 
+                                              <a href="{{route('web.noticia', ['slug' => $noticiau->slug ])}}">{{ $noticiau->titulo }}</a> 
                                             </h2>
                                             <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $noticiau->views }}</span>	
                                             <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiau->created_at)->format('d/m/Y') }}</span> 
@@ -34,17 +34,40 @@
                               <div class="col-md-6 pb-4">
                                   <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
                                         <div class="utf_post_thumb"> 
-                                          <a href="{{route('web.noticia', ['slug' => $artD->slug ])}}">
+                                          <a href="{{route('web.blog.artigo', ['slug' => $artD->slug ])}}">
                                             <img class="img_person" src="{{ $artD->cover() }}" alt="{{ $artD->titulo }}">
                                           </a> 
                                         </div>
                                         <div class="utf_post_content"> 
                                             <a class="utf_post_cat" href="#">{{$artD->categoriaObject->titulo}}</a>
                                             <h2 class="utf_post_title title-large"> 
-                                              <a href="{{route('web.noticia', ['slug' => $artD->slug ])}}">{{ $artD->titulo }}</a> 
+                                              <a href="{{route('web.blog.artigo', ['slug' => $artD->slug ])}}">{{ $artD->titulo }}</a> 
                                             </h2>
                                             <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $artD->views }}</span>	
                                             <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($artD->created_at)->format('d/m/Y') }}</span> 
+                                        </div>
+                                  </div>
+                              </div>
+                          @endforeach
+                      </div>
+                  @endif
+                  @if (!empty($artigosDurval && $artigosDurval->count() > 0))
+                      <div class="row">
+                          @foreach ($artigosDurval as $artD1)
+                              <div class="col-md-6 pb-4">
+                                  <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
+                                        <div class="utf_post_thumb"> 
+                                          <a href="{{route('web.blog.artigo', ['slug' => $artD1->slug ])}}">
+                                            <img class="img_person" src="{{ $artD1->cover() }}" alt="{{ $artD1->titulo }}">
+                                          </a> 
+                                        </div>
+                                        <div class="utf_post_content"> 
+                                            <a class="utf_post_cat" href="#">{{$artD1->categoriaObject->titulo}}</a>
+                                            <h2 class="utf_post_title title-large"> 
+                                              <a href="{{route('web.blog.artigo', ['slug' => $artD1->slug ])}}">{{ $artD1->titulo }}</a> 
+                                            </h2>
+                                            <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $artD1->views }}</span>	
+                                            <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($artD1->created_at)->format('d/m/Y') }}</span> 
                                         </div>
                                   </div>
                               </div>
@@ -57,14 +80,14 @@
                               <div class="col-md-6 pb-4">
                                   <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
                                         <div class="utf_post_thumb"> 
-                                          <a href="{{route('web.blog.artigo', ['slug' => $noticiau1->slug ])}}">
+                                          <a href="{{route('web.noticia', ['slug' => $noticiau1->slug ])}}">
                                             <img class="img_person" src="{{ $noticiau1->cover() }}" alt="{{ $noticiau1->titulo }}">
                                           </a> 
                                         </div>
                                         <div class="utf_post_content"> 
                                             <a class="utf_post_cat" href="#">Ubatuba</a>
                                             <h2 class="utf_post_title title-large"> 
-                                              <a href="{{route('web.blog.artigo', ['slug' => $noticiau1->slug ])}}">{{ $noticiau1->titulo }}</a> 
+                                              <a href="{{route('web.noticia', ['slug' => $noticiau1->slug ])}}">{{ $noticiau1->titulo }}</a> 
                                             </h2>
                                             <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $noticiau1->views }}</span>	
                                             <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiau1->created_at)->format('d/m/Y') }}</span> 
