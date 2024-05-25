@@ -13,7 +13,7 @@ class RssFeedController extends Controller
 {
     public function feed()
     {
-        $posts = Post::whereDate('created_at', Carbon::today())
+        $posts = Post::whereDate('created_at', Carbon::now()->subDays(5))
                 ->where('tipo', 'artigo')
                 ->postson()
                 ->limit(10)
@@ -23,7 +23,7 @@ class RssFeedController extends Controller
                 ->postson()
                 ->limit(10)
                 ->get();
-        $noticias = Post::whereDate('created_at', Carbon::today())
+        $noticias = Post::whereDate('created_at', Carbon::now()->subDays(5))
                 ->where('tipo', 'noticia')
                 ->postson()
                 ->limit(10)

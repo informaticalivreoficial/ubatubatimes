@@ -443,40 +443,12 @@ class WebController extends Controller
         ]);
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     public function paginate($items, $perPage = 25, $page = null, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
-
-    // public function pagina($slug)
-    // {
-    //     $projetosCount = Portifolio::count();
-    //     $clientesCount = User::where('client', 1)->count();
-    //     $post = Post::where('slug', $slug)->where('tipo', 'pagina')->postson()->first();        
-    //     $post->views = $post->views + 1;
-    //     $post->save();
-
-    //     $head = $this->seo->render($post->titulo ?? 'Informática Livre',
-    //         $post->titulo,
-    //         route('web.pagina', ['slug' => $post->slug]),
-    //         $post->cover() ?? $this->configService->getMetaImg()
-    //     );
-
-    //     return view('web.pagina', [
-    //         'head' => $head,
-    //         'post' => $post,
-    //         'projetosCount' => $projetosCount,
-    //         'clientesCount' => $clientesCount
-    //     ]);
-    // }
-    
     
     public function atendimento()
     {
@@ -498,7 +470,7 @@ class WebController extends Controller
                 metrics: ['totalUsers', 'sessions', 'screenPageViews'], 
                 dimensions: ['month'],
         );
-        //dd($visitas365);
+
         $v = [];
         foreach($visitas365->all() as $key => $visitas){            
             $v[] = $visitas['totalUsers'] + $visitas['screenPageViews']; 

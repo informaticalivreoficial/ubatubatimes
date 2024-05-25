@@ -106,12 +106,10 @@ class Empresa extends Model
     
     public function getmetaimg()
     {
-        $image = $this->metaimg;        
-        if(empty($this->metaimg) || !Storage::disk()->exists($image)) {
+        if(empty($this->metaimg) || !Storage::disk()->exists($this->metaimg)) {
             return url(asset('backend/assets/images/image.jpg'));
         } 
-        //return Storage::url(Cropper::thumb($this->metaimg, env('METAIMG_WIDTH'), env('METAIMG_HEIGHT')));
-        return Storage::url($this->metaimg);
+        return Storage::url($this->metaimg);        
     }
 
     public function cover()
