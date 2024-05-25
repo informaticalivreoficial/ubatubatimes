@@ -98,9 +98,9 @@ class PostController extends Controller
                 $postGb->save();
                 unset($postGb);
 
-                $post = Post::find($id);
-                $autor = User::find($post->autor);
-                $autor->notify(new PostCreatedUpdated($post));                
+                //$post = Post::find($id);
+                //$autor = User::find($post->autor);
+                //$autor->notify(new PostCreatedUpdated($post));                
             }
         });               
     }
@@ -155,9 +155,9 @@ class PostController extends Controller
                 $postGb->save();
                 unset($postGb);
 
-                $post = Post::find($id);
-                $autor = User::find($post->autor);
-                $autor->notify(new PostCreatedUpdated($post));
+                //$post = Post::find($id);
+                //$autor = User::find($post->autor);
+                //$autor->notify(new PostCreatedUpdated($post));
             }    
     }
 
@@ -200,9 +200,9 @@ class PostController extends Controller
             $postGb->save();
             unset($postGb);
 
-            $post = Post::find($id);
-            $autor = User::find($post->autor);
-            $autor->notify(new PostCreatedUpdated($post));
+            //$post = Post::find($id);
+            //$autor = User::find($post->autor);
+            //$autor->notify(new PostCreatedUpdated($post));
         }
     }
 
@@ -247,9 +247,9 @@ class PostController extends Controller
             $postGb->save();
             unset($postGb);
 
-            $post = Post::find($id);
-            $autor = User::find($post->autor);
-            $autor->notify(new PostCreatedUpdated($post));
+            //$post = Post::find($id);
+            //$autor = User::find($post->autor);
+            //$autor->notify(new PostCreatedUpdated($post));
         }
     }
 
@@ -294,9 +294,9 @@ class PostController extends Controller
             $postGb->save();
             unset($postGb);
 
-            $post = Post::find($id);
-            $autor = User::find($post->autor);
-            $autor->notify(new PostCreatedUpdated($post));
+            //$post = Post::find($id);
+            //$autor = User::find($post->autor);
+            //$autor->notify(new PostCreatedUpdated($post));
         }         
     }
 
