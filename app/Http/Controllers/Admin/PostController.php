@@ -208,13 +208,13 @@ class PostController extends Controller
 
     public function crowlerNoticiasSaoSebastiao()
     {
-        $urlSaoSebastiao  = 'https://www.saosebastiao.sp.gov.br';
-        $pageSaoSebastiao = $this->crowler->request('GET', $urlSaoSebastiao);
+        $urlSSB  = 'https://www.saosebastiao.sp.gov.br/noticia-lista.asp';
+        $pageSSB = $this->crowler->request('GET', $urlSSB);
         $result = [
             'tipo' => 'noticia',
             'autor' => 1,
-            'titulo' => $pageSaoSebastiao->filter('.post-list-content article .post-core h3')->eq(0)->text(),
-            'slug' => Str::slug($pageSaoSebastiao->filter('.post-list-content article .post-core h3')->eq(0)->text()),
+            'titulo' => $pageSSB->filter('.notice-list-page article .notice-core h2')->eq(0)->text(),
+            //'slug' => Str::slug($pageSSB->filter('.notice-list-page article .notice-core h2')->eq(0)->text()),
             'cat_pai' => 14,
             'categoria' => 17,
             'status' => 1,
@@ -222,20 +222,24 @@ class PostController extends Controller
             'created_at' => now(),
             'publish_at' => now(),
         ];
-        
+
         $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
 
         if($posts == null){     
-            $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');
+            $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSSB->filter('.notice-list-page article .notice-core h2 a')->eq(0)->attr('href');
             $linkContent = $this->crowler->request('GET', $link);   
+            $slug = ['slug' => Str::slug($result['titulo'])];
+            $content = ['content' => $linkContent->filter('.post-core .post-content .post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>'];     
+            $result = array_merge($result, $slug, $content);
             
-            $content = ['content' => $linkContent->filter('.post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>'];     
-            $result = array_merge($result, $content);
+            $imgurl = $link . '/' . $linkContent->filter('.c-slider .slide-list .slide')->eq(0)->attr('style');
+
+            $v = explode("url('", $imgurl);
+            $v1 = explode("');", $v[1]);
+            $v2 = 'https://www.saosebastiao.sp.gov.br/' . $v1[0];
             
-            $imgurl = $urlSaoSebastiao. '/' . $pageSaoSebastiao->filter('.post-list-content .featured-post .post-image a img')->eq(0)->attr('src');
-            
-            $contents = file_get_contents($imgurl);
-            $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+            $contents = file_get_contents($v2);
+            $name = substr($v2, strrpos($v2, '/') + 1);
 
             $criarPost = DB::table('posts')->updateOrInsert($result);
             $id = DB::getPdo()->lastInsertId();
@@ -251,6 +255,52 @@ class PostController extends Controller
             //$autor = User::find($post->autor);
             //$autor->notify(new PostCreatedUpdated($post));
         }
+
+        
+
+        // $urlSaoSebastiao  = 'https://www.saosebastiao.sp.gov.br';
+        // $pageSaoSebastiao = $this->crowler->request('GET', $urlSaoSebastiao);
+        // $result = [
+        //     'tipo' => 'noticia',
+        //     'autor' => 1,
+        //     'titulo' => $pageSaoSebastiao->filter('.post-list-content article .post-core h3')->eq(0)->text(),
+        //     'slug' => Str::slug($pageSaoSebastiao->filter('.post-list-content article .post-core h3')->eq(0)->text()),
+        //     'cat_pai' => 14,
+        //     'categoria' => 17,
+        //     'status' => 1,
+        //     'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
+        //     'created_at' => now(),
+        //     'publish_at' => now(),
+        // ];
+        
+        // $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
+
+        // if($posts == null){     
+        //     $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');
+        //     $linkContent = $this->crowler->request('GET', $link);   
+            
+        //     $content = ['content' => $linkContent->filter('.post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>'];     
+        //     $result = array_merge($result, $content);
+            
+        //     $imgurl = $urlSaoSebastiao. '/' . $pageSaoSebastiao->filter('.post-list-content .featured-post .post-image a img')->eq(0)->attr('src');
+            
+        //     $contents = file_get_contents($imgurl);
+        //     $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+
+        //     $criarPost = DB::table('posts')->updateOrInsert($result);
+        //     $id = DB::getPdo()->lastInsertId();
+        //     Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
+                
+        //     $postGb = new PostGb();
+        //     $postGb->post = $id;
+        //     $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
+        //     $postGb->save();
+        //     unset($postGb);
+
+            //$post = Post::find($id);
+            //$autor = User::find($post->autor);
+            //$autor->notify(new PostCreatedUpdated($post));
+        //}
     }
 
     public function crowlerNoticiasIlhabela()
