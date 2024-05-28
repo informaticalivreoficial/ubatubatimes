@@ -41,7 +41,7 @@
                 </div>
                 <div class="entry-content">
                     {!!$post->content!!}
-
+                    <p>{{$post->thumb_legenda}}</p>
                     @if($post->images()->get()->count()) 
                         <div class="row mt-3">                   
                             @foreach($post->images()->get() as $image)                                
