@@ -125,8 +125,8 @@ class Empresa extends Model
         if(empty($cover['path']) || !Storage::disk()->exists($cover['path'])) {
             return $this->nologoCover();
         }
-        //return Storage::url(Cropper::thumb($cover['path'], 720, 480));
-        return Storage::url($cover['path']);
+        return Storage::url(Cropper::thumb($cover['path'], 720, 480));
+        //return Storage::url($cover['path']);
     }
 
     public function nocover()
@@ -147,13 +147,13 @@ class Empresa extends Model
     }
     
     public function logoCover()
-    {       
-        if(empty($this->logomarca) || !Storage::disk()->exists($this->logomarca)) {
-            return url(asset('backend/assets/images/image.jpg'));
-        }
+    {   
+        return $this->logomarca
+                    ? Storage::url(Cropper::thumb($this->logomarca, 300, 300))
+                    : url(asset('backend/assets/images/image.jpg'));        
 
         //return Storage::url(Cropper::thumb($this->logomarca, 300, 300));
-        return Storage::url($this->logomarca);
+        //return Storage::url($this->logomarca);
     }
 
     public function nologoCover()

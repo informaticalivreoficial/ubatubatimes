@@ -111,12 +111,12 @@ class EmpresaController extends Controller
         $empresa = $this->empresaService->getEmpresaById($id);        
 
         if(!empty($request->file('logomarca'))){
-            Storage::delete($empresa->logomarca);
+            Storage::delete(env('AWS_PASTA') . $empresa->logomarca);
             $empresa->logomarca = '';
         }
 
         if(!empty($request->file('metaimg'))){
-            Storage::delete($empresa->metaimg);
+            Storage::delete(env('AWS_PASTA') . $empresa->metaimg);
             $empresa->metaimg = '';
         }
 
@@ -198,15 +198,15 @@ class EmpresaController extends Controller
             if(!empty($imageDelete)){
                 Storage::delete($imageDelete->path);
                 $imageDelete->delete();
-                Storage::deleteDirectory('empresas/' . $empresa->uuid . '/' . $empresa->id);
-                Storage::deleteDirectory('empresas/' . $empresa->uuid);
+                Storage::deleteDirectory(env('AWS_PASTA') . 'empresas/' . $empresa->uuid . '/' . $empresa->id);
+                Storage::deleteDirectory(env('AWS_PASTA') . 'empresas/' . $empresa->uuid);
             }
             if(!empty($anuncio)){
                 Storage::delete($anuncio['300x250']);
                 Storage::delete($anuncio['468x90']);
                 Storage::delete($anuncio['336x280']);
                 Storage::delete($anuncio['728x90']);
-                Storage::deleteDirectory('anuncios/' . $anuncio->id);
+                Storage::deleteDirectory(env('AWS_PASTA') . 'anuncios/' . $anuncio->id);
                 $anuncio->delete();
             }
             $empresa->delete();
