@@ -125,8 +125,8 @@ class Empresa extends Model
         if(empty($cover['path']) || !Storage::disk()->exists($cover['path'])) {
             return $this->nologoCover();
         }
-        return Storage::url(Cropper::thumb($cover['path'], 720, 480));
-        //return Storage::url($cover['path']);
+        //return Storage::url(Cropper::thumb($cover['path'], 720, 480));
+        return Storage::url($cover['path']);
     }
 
     public function nocover()
