@@ -84,18 +84,18 @@ class AdminController extends Controller
         
         
         //Analitcs
-        // $visitasHoje = Analytics::fetchMostVisitedPages(Period::days(1));
+        $visitasHoje = Analytics::fetchMostVisitedPages(Period::days(1));
         
-        // $visitas365 = Analytics::fetchTotalVisitorsAndPageViews(Period::months(5));
+        $visitas365 = Analytics::fetchTotalVisitorsAndPageViews(Period::months(5));
         
-        // $top_browser = Analytics::fetchTopBrowsers(Period::months(5), 10);
+        $top_browser = Analytics::fetchTopBrowsers(Period::months(5), 10);
 
-        // $analyticsData = Analytics::get(
-        //         Period::months(6), 
-        //         metrics: ['totalUsers', 'sessions', 'screenPageViews'], 
-        //         dimensions: ['month'],
-        // );   
-        // $sortedData = $analyticsData->sortBy('month');     
+        $analyticsData = Analytics::get(
+                Period::months(6), 
+                metrics: ['totalUsers', 'sessions', 'screenPageViews'], 
+                dimensions: ['month'],
+        );   
+        $sortedData = $analyticsData->sortBy('month');     
          
         return view('admin.dashboard',[ 
             'time' => $time,
@@ -124,10 +124,10 @@ class AdminController extends Controller
             'paginasTop' => $paginasTop,
             'paginastotalviews' => $totalViewsPaginas,
             //Analytics
-        //     'visitasHoje' => $visitasHoje,
-        //     //'visitas365' => $visitas365,
-        //     'analyticsData' => $sortedData,
-        //     'top_browser' => $top_browser
+             'visitasHoje' => $visitasHoje,
+             'visitas365' => $visitas365,
+             'analyticsData' => $sortedData,
+             'top_browser' => $top_browser
         ]);
     }
 }
