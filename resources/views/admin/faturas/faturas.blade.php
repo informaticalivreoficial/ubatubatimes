@@ -18,6 +18,7 @@
 
 @section('content')
 
+    <livewire:administrador.vendas.faturas />
 <section class="content">
     <!-- Default box -->
       <div class="card card-solid">
