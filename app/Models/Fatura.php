@@ -12,27 +12,16 @@ class Fatura extends Model
     protected $table = 'faturas';
 
     protected $fillable = [
-        'nome',
-        'pfpf',
-        'pfpj',
-        'email',
-        'telefone',
-        'cpf',
-        'company',
-        'alias_name',
-        'cnpj',
-        'titulo',
-        'tipo_boleto',
-        'numero_parcelas',
-
         'anuncio',
         'empresa',
         'transaction_id',
         'paid_date',
         'vencimento',
-        'pedido',
         'valor',
-        'status'      
+        'status',
+        'url_slip',
+        'url_slip_pdf',
+        'digitable_line'
     ];
 
     /**
@@ -70,40 +59,21 @@ class Fatura extends Model
         }
     }
 
-    public function setPfpfAttribute($value)
-    {
-        $this->attributes['pfpf'] = ($value == true || $value == 'on' ? 1 : 0);
-    }
-
-    public function setPfpjAttribute($value)
-    {
-        $this->attributes['pfpj'] = ($value == true || $value == 'on' ? 1 : 0);
-    }
+    
 
     public function setValorAttribute($value)
     {
         $this->attributes['valor'] = (!empty($value) ? floatval($this->convertStringToDouble($value)) : null);
     }
 
-    public function setCpfAttribute($value)
-    {
-        $this->attributes['cpf'] = (!empty($value) ? $this->clearField($value) : null);
-    }
-
-    public function setCnpjAttribute($value)
-    {
-        $this->attributes['cnpj'] = (!empty($value) ? $this->clearField($value) : null);
-    }
+    
 
     // public function setVencimentoAttribute($value)
     // {
     //     $this->attributes['vencimento'] = (!empty($value) ? $this->convertStringToDate($value) : null);
     // }
 
-    public function setTelefoneAttribute($value)
-    {
-        $this->attributes['telefone'] = (!empty($value) ? $this->clearField($value) : null);
-    }
+    
 
     private function convertStringToDouble($param)
     {
