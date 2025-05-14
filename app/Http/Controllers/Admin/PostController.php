@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Redirect;
 use Goutte\Client;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpClient\HttpClient;
 use Vedmant\FeedReader\Facades\FeedReader;
 
 class PostController extends Controller
@@ -208,98 +211,142 @@ class PostController extends Controller
 
     public function crowlerNoticiasSaoSebastiao()
     {
-        $urlSSB  = 'https://www.saosebastiao.sp.gov.br';
-        $pageSSB = $this->crowler->request('GET', $urlSSB);
-        
-        $titulo = $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text();
-        
-        $posts = Post::where('tipo', 'noticia')->where('titulo', $titulo)->first();
+        $urlBase = 'https://saosebastiao.sp.gov.br';
 
-        if($posts == null){     
-            $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSSB->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');            
-            $linkContent = $this->crowler->request('GET', $link); 
-            $imgurl = $link . '/' . $linkContent->filter('.c-slider .slide-list .slide')->eq(0)->attr('style');            
-            $v = explode("url('", $imgurl);
-            $v1 = explode("');", $v[1]);
-            $v2 = 'https://www.saosebastiao.sp.gov.br/' . $v1[0];            
-            $contents = file_get_contents($v2);
-            $name = substr($v2, strrpos($v2, '/') + 1);
+        // Cria um client com timeout mais alto
+        $client = HttpClient::create(['timeout' => 30]);
+        $crowler = new \Symfony\Component\DomCrawler\Crawler();
 
-            $data = [
-                'tipo' => 'noticia',
-                'autor' => 1,
-                'titulo' => $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text(),
-                'slug' => Str::slug($pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text()),
-                'content' => $linkContent->filter('.post .post-inner .post-core .post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>',
-                'cat_pai' => 14,
-                'categoria' => 17,
-                'status' => 1,
-                'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
-                'created_at' => now(),
-                'publish_at' => now(),
-            ];
-            
-            $criarPost = DB::table('posts')->updateOrInsert($data);
-            $id = DB::getPdo()->lastInsertId();
-            Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
-                
-            $postGb = new PostGb();
-            $postGb->post = $id;
-            $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
-            $postGb->save();
-            unset($postGb);
-
-            $post = Post::find($id);
-            $autor = User::find($post->autor);
-            $autor->notify(new PostCreatedUpdated($post));
+        try {
+            $response = $client->request('GET', $urlBase);
+            $html = $response->getContent();
+            $crowler->addHtmlContent($html);
+        } catch (\Exception $e) {
+            Log::error('[SSB] Erro ao acessar página principal: ' . $e->getMessage());
+            return;
         }
 
-        
+        try {
+            $titulo = $crowler->filter('.post-list-content article .post-core h3')->eq(0)->text();
+        } catch (\Exception $e) {
+            Log::error('[SSB] Não foi possível extrair o título: ' . $e->getMessage());
+            return;
+        }
 
-        // $urlSaoSebastiao  = 'https://www.saosebastiao.sp.gov.br';
-        // $pageSaoSebastiao = $this->crowler->request('GET', $urlSaoSebastiao);
-        // $result = [
-        //     'tipo' => 'noticia',
-        //     'autor' => 1,
-        //     'titulo' => $pageSaoSebastiao->filter('.post-list-content article .post-core h3')->eq(0)->text(),
-        //     'slug' => Str::slug($pageSaoSebastiao->filter('.post-list-content article .post-core h3')->eq(0)->text()),
-        //     'cat_pai' => 14,
-        //     'categoria' => 17,
-        //     'status' => 1,
-        //     'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
-        //     'created_at' => now(),
-        //     'publish_at' => now(),
-        // ];
-        
-        // $posts = Post::where('tipo', 'noticia')->where('titulo', $result['titulo'])->first();
+        $existe = Post::where('tipo', 'noticia')->where('titulo', $titulo)->first();
+        if ($existe) {
+            Log::info('[SSB] Notícia já cadastrada: ' . $titulo);
+            return;
+        }
 
-        // if($posts == null){     
-        //     $link = 'https://www.saosebastiao.sp.gov.br/' . $pageSaoSebastiao->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');
-        //     $linkContent = $this->crowler->request('GET', $link);   
-            
-        //     $content = ['content' => $linkContent->filter('.post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>'];     
-        //     $result = array_merge($result, $content);
-            
-        //     $imgurl = $urlSaoSebastiao. '/' . $pageSaoSebastiao->filter('.post-list-content .featured-post .post-image a img')->eq(0)->attr('src');
-            
-        //     $contents = file_get_contents($imgurl);
-        //     $name = substr($imgurl, strrpos($imgurl, '/') + 1);
+        try {
+            $linkRelativo = $crowler->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');
+            $link = $urlBase . '/' . ltrim($linkRelativo, '/');
+            $responsePost = $client->request('GET', $link);
+            $htmlPost = $responsePost->getContent();
+            $postCrawler = new Crawler($htmlPost);
+        } catch (\Exception $e) {
+            Log::error('[SSB] Erro ao acessar conteúdo da notícia: ' . $e->getMessage());
+            return;
+        }
 
-        //     $criarPost = DB::table('posts')->updateOrInsert($result);
-        //     $id = DB::getPdo()->lastInsertId();
-        //     Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
-                
-        //     $postGb = new PostGb();
-        //     $postGb->post = $id;
-        //     $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
-        //     $postGb->save();
-        //     unset($postGb);
+        try {
+            $styleAttr = $postCrawler->filter('.c-slider .slide-list .slide')->eq(0)->attr('style');
+            preg_match("/url\('(.*?)'\)/", $styleAttr, $matches);
+            $imageUrl = $urlBase . '/' . ltrim($matches[1] ?? '', '/');
+            $imageContents = file_get_contents($imageUrl);
+            $imageName = basename($imageUrl);
+        } catch (\Exception $e) {
+            Log::warning('[SSB] Erro ao capturar imagem. Continuando sem imagem. ' . $e->getMessage());
+            $imageContents = null;
+            $imageName = null;
+        }
 
-            //$post = Post::find($id);
-            //$autor = User::find($post->autor);
-            //$autor->notify(new PostCreatedUpdated($post));
-        //}
+        try {
+            $htmlContent = $postCrawler->filter('.post .post-inner .post-core .post-content-inner')->html();
+        } catch (\Exception $e) {
+            Log::error('[SSB] Erro ao capturar conteúdo da notícia: ' . $e->getMessage());
+            return;
+        }
+
+        $data = [
+            'tipo' => 'noticia',
+            'autor' => 1,
+            'titulo' => $titulo,
+            'slug' => Str::slug($titulo),
+            'content' => $htmlContent . '<br>Fonte: <a target="_blank" href="' . $urlBase . '">Divulgação Prefeitura Municipal de São Sebastião</a>',
+            'cat_pai' => 14,
+            'categoria' => 17,
+            'status' => 1,
+            'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
+            'created_at' => now(),
+            'publish_at' => now(),
+        ];
+
+        DB::table('posts')->updateOrInsert(['slug' => $data['slug']], $data);
+        $id = DB::getPdo()->lastInsertId();
+
+        if ($imageContents && $id) {
+            Storage::disk()->put(env('AWS_PASTA') . "noticias/{$id}/{$imageName}", $imageContents);
+
+            $postGb = new PostGb();
+            $postGb->post = $id;
+            $postGb->path = env('AWS_PASTA') . "noticias/{$id}/{$imageName}";
+            $postGb->save();
+        }
+
+        Log::info('[SSB] Notícia criada com sucesso: ' . $titulo);
     }
+
+    // public function crowlerNoticiasSaoSebastiao()
+    // {
+    //     $urlSSB  = 'https://saosebastiao.sp.gov.br';
+    //     $pageSSB = $this->crowler->request('GET', $urlSSB);
+        
+    //     $titulo = $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text();
+        
+    //     $posts = Post::where('tipo', 'noticia')->where('titulo', $titulo)->first();
+
+    //     if($posts == null){     
+    //         $link = 'https://saosebastiao.sp.gov.br/' . $pageSSB->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');            
+    //         $linkContent = $this->crowler->request('GET', $link); 
+    //         $imgurl = $link . '/' . $linkContent->filter('.c-slider .slide-list .slide')->eq(0)->attr('style');            
+    //         $v = explode("url('", $imgurl);
+    //         $v1 = explode("');", $v[1]);
+    //         $v2 = 'https://saosebastiao.sp.gov.br/' . $v1[0];            
+    //         $contents = file_get_contents($v2);
+    //         $name = substr($v2, strrpos($v2, '/') + 1);
+
+    //         $data = [
+    //             'tipo' => 'noticia',
+    //             'autor' => 1,
+    //             'titulo' => $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text(),
+    //             'slug' => Str::slug($pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text()),
+    //             'content' => $linkContent->filter('.post .post-inner .post-core .post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>',
+    //             'cat_pai' => 14,
+    //             'categoria' => 17,
+    //             'status' => 1,
+    //             'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
+    //             'created_at' => now(),
+    //             'publish_at' => now(),
+    //         ];
+            
+    //         $criarPost = DB::table('posts')->updateOrInsert($data);
+    //         $id = DB::getPdo()->lastInsertId();
+    //         Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
+                
+    //         $postGb = new PostGb();
+    //         $postGb->post = $id;
+    //         $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
+    //         $postGb->save();
+    //         unset($postGb);
+
+    //         $post = Post::find($id);
+    //         $autor = User::find($post->autor);
+    //         $autor->notify(new PostCreatedUpdated($post));
+    //     }
+        
+    // }
 
     public function crowlerNoticiasIlhabela()
     {
