@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Goutte\Client;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpClient\HttpClient;
 use Vedmant\FeedReader\Facades\FeedReader;
 
 class PostController extends Controller
@@ -208,53 +209,124 @@ class PostController extends Controller
 
     public function crowlerNoticiasSaoSebastiao()
     {
-        $urlSSB  = 'https://saosebastiao.sp.gov.br';
-        $pageSSB = $this->crowler->request('GET', $urlSSB);
-        
-        $titulo = $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text();
-        
-        $posts = Post::where('tipo', 'noticia')->where('titulo', $titulo)->first();        
+        $client = new Client(HttpClient::create([
+            'timeout' => 30,
+            'verify_peer' => false, // cuidado: desabilite só em dev
+            'verify_host' => false,
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+            ],
+        ]));
 
-        if($posts == null){     
-            $link = 'https://saosebastiao.sp.gov.br/' . $pageSSB->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');            
-            $linkContent = $this->crowler->request('GET', $link); 
-            $imgurl = $link . '/' . $linkContent->filter('.c-slider .slide-list .slide')->eq(0)->attr('style');            
-            $v = explode("url('", $imgurl);
-            $v1 = explode("');", $v[1]);
-            $v2 = 'https://saosebastiao.sp.gov.br/' . $v1[0];            
-            $contents = file_get_contents($v2);
-            $name = substr($v2, strrpos($v2, '/') + 1);
+        $urlBase = 'https://www.saosebastiao.sp.gov.br';
+        $urlNoticias = $urlBase . '/noticia-lista.asp';
 
-            $data = [
-                'tipo' => 'noticia',
-                'autor' => 1,
-                'titulo' => $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text(),
-                'slug' => Str::slug($pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text()),
-                'content' => $linkContent->filter('.post .post-inner .post-core .post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>',
-                'cat_pai' => 14,
-                'categoria' => 17,
-                'status' => 1,
-                'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
-                'created_at' => now(),
-                'publish_at' => now(),
-            ];
-            
-            $criarPost = DB::table('posts')->updateOrInsert($data);
-            $id = DB::getPdo()->lastInsertId();
-            //Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
-                
-            // $postGb = new PostGb();
-            // $postGb->post = $id;
-            // $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
-            // $postGb->save();
-            // unset($postGb);
+        // Acessa a lista de notícias
+        $crawler = $client->request('GET', $urlNoticias);
 
-            $post = Post::find($id);
-            $autor = User::find($post->autor);
-            $autor->notify(new PostCreatedUpdated($post));
+        // Pega o link da primeira notícia
+        $linkRelativo = $crawler->filter('.notice-list-page .notice-core h2 a')->first()->attr('href');
+        $titulo = $crawler->filter('.notice-list-page .notice-core h2')->first()->text();
+        $link = $urlBase . '/' . ltrim($linkRelativo, '/');
+
+        // Acessa a notícia completa
+        $noticia = $client->request('GET', $link);
+
+        // Conteúdo HTML da notícia
+        $conteudo = $noticia->filter('.post-content-inner')->html();
+
+        // Tenta capturar a imagem de capa (se houver)
+        $img = '';
+        try {
+            $styleAttr = $noticia->filter('.c-slider .slide')->first()->attr('style'); // exemplo: background-image: url('uploads/imagem.jpg');
+            preg_match("/url\\('(.*?)'\\)/", $styleAttr, $matches);
+            if (isset($matches[1])) {
+                $img = $urlBase . '/' . ltrim($matches[1], '/');
+
+                // Baixa a imagem (opcional)
+                $imageContent = file_get_contents($img);
+                $imageName = basename($img);
+                $path = 'noticias/' . Str::slug($titulo) . '/' . $imageName;
+
+                //Storage::disk('public')->put($path, $imageContent);
+            }
+        } catch (\Exception $e) {
+            logger()->warning('Imagem não encontrada ou erro ao baixar.');
         }
-        
+
+        // Apenas debug
+        // dd([
+        //     'titulo' => $titulo,
+        //     'link' => $link,
+        //     'imagem' => $img,
+        //     'conteudo_html' => $conteudo,
+        // ]);
+
+        $data = [
+            'tipo' => 'noticia',
+            'autor' => 1,
+            'titulo' => $titulo,
+            'slug' => Str::slug($titulo),
+            'content' => $conteudo . '<br>Fonte: <a target="_blank" href="https://saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>',
+            'cat_pai' => 14,
+            'categoria' => 17,
+            'status' => 1,
+            'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
+            'created_at' => now(),
+            'publish_at' => now(),
+        ];
+        $criarPost = DB::table('posts')->updateOrInsert($data);
     }
+
+    // public function crowlerNoticiasSaoSebastiao()
+    // {
+    //     $urlSSB  = 'https://saosebastiao.sp.gov.br/noticia-lista.asp';
+    //     $pageSSB = $this->crowler->request('GET', $urlSSB);
+        
+    //     $titulo = $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text();
+        
+    //     $posts = Post::where('tipo', 'noticia')->where('titulo', $titulo)->first();        
+    //     dd($pageSSB);
+    //     if($posts == null){     
+    //         $link = 'https://saosebastiao.sp.gov.br/' . $pageSSB->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');            
+    //         $linkContent = $this->crowler->request('GET', $link); 
+    //         $imgurl = $link . '/' . $linkContent->filter('.c-slider .slide-list .slide')->eq(0)->attr('style');            
+    //         $v = explode("url('", $imgurl);
+    //         $v1 = explode("');", $v[1]);
+    //         $v2 = 'https://saosebastiao.sp.gov.br/' . $v1[0];            
+    //         $contents = file_get_contents($v2);
+    //         $name = substr($v2, strrpos($v2, '/') + 1);
+
+    //         $data = [
+    //             'tipo' => 'noticia',
+    //             'autor' => 1,
+    //             'titulo' => $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text(),
+    //             'slug' => Str::slug($pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text()),
+    //             'content' => $linkContent->filter('.post .post-inner .post-core .post-content-inner')->html() . '<br>Fonte: <a target="_blank" href="http://www.saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>',
+    //             'cat_pai' => 14,
+    //             'categoria' => 17,
+    //             'status' => 1,
+    //             'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
+    //             'created_at' => now(),
+    //             'publish_at' => now(),
+    //         ];
+            
+    //         $criarPost = DB::table('posts')->updateOrInsert($data);
+    //         $id = DB::getPdo()->lastInsertId();
+    //         //Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
+                
+    //         // $postGb = new PostGb();
+    //         // $postGb->post = $id;
+    //         // $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
+    //         // $postGb->save();
+    //         // unset($postGb);
+
+    //         $post = Post::find($id);
+    //         $autor = User::find($post->autor);
+    //         $autor->notify(new PostCreatedUpdated($post));
+    //     }
+        
+    // }
 
     public function crowlerNoticiasIlhabela()
     {
