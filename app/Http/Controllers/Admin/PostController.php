@@ -21,8 +21,6 @@ use Goutte\Client;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 use Vedmant\FeedReader\Facades\FeedReader;
-use GuzzleHttp\Client as GuzzleClient;
-use Symfony\Component\HttpClient\HttpClient;
 
 class PostController extends Controller
 {
@@ -30,31 +28,7 @@ class PostController extends Controller
     
     public function __construct()
     {
-        $this->crowler = new Client(HttpClient::create([
-            'timeout' => 30,
-            'verify_peer' => false, // opcional: cuidado em produção
-            'verify_host' => false, // opcional: cuidado em produção
-            'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            ],
-        ]));
-    }
-
-    protected function tryRequest($url, $maxRetries = 3)
-    {
-        $attempts = 0;
-
-        while ($attempts < $maxRetries) {
-            try {
-                return $this->crowler->request('GET', $url);
-            } catch (\Exception $e) {
-                $attempts++;
-                sleep(2); // espera 2 segundos antes da próxima tentativa
-                if ($attempts >= $maxRetries) {
-                    throw $e;
-                }
-            }
-        }
+        $this->crowler = new Client();
     }
 
     public function index(Request $request)
@@ -235,17 +209,15 @@ class PostController extends Controller
     public function crowlerNoticiasSaoSebastiao()
     {
         $urlSSB  = 'https://saosebastiao.sp.gov.br';
-        $pageSSB = $this->tryRequest($urlSSB);
+        $pageSSB = $this->crowler->request('GET', $urlSSB);
         
         $titulo = $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text();
         
-        $posts = Post::where('tipo', 'noticia')->where('titulo', $titulo)->first();
-
-        sleep(3);
+        $posts = Post::where('tipo', 'noticia')->where('titulo', $titulo)->first();        
 
         if($posts == null){     
             $link = 'https://saosebastiao.sp.gov.br/' . $pageSSB->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');            
-            $linkContent = $this->tryRequest($link);
+            $linkContent = $this->crowler->request('GET', $link); 
             $imgurl = $link . '/' . $linkContent->filter('.c-slider .slide-list .slide')->eq(0)->attr('style');            
             $v = explode("url('", $imgurl);
             $v1 = explode("');", $v[1]);
@@ -269,13 +241,13 @@ class PostController extends Controller
             
             $criarPost = DB::table('posts')->updateOrInsert($data);
             $id = DB::getPdo()->lastInsertId();
-            Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
+            //Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' . $name, $contents);
                 
-            $postGb = new PostGb();
-            $postGb->post = $id;
-            $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
-            $postGb->save();
-            unset($postGb);
+            // $postGb = new PostGb();
+            // $postGb->post = $id;
+            // $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $name;
+            // $postGb->save();
+            // unset($postGb);
 
             $post = Post::find($id);
             $autor = User::find($post->autor);
