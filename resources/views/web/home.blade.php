@@ -51,26 +51,24 @@
                                 </div>
                             @endforeach                       
                         @endif
-                        @if (!empty($estradas && $estradas->count() > 0))                        
-                            @foreach ($estradas as $est)
-                                <div class="col-md-6 pb-4">
-                                    <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
-                                            <div class="utf_post_thumb"> 
-                                            <a href="{{route('web.blog.artigo', ['slug' => $est->slug ])}}">
-                                                <img class="img_person" src="{{ $est->cover() }}" alt="{{ $est->titulo }}">
-                                            </a> 
-                                            </div>
-                                            <div class="utf_post_content"> 
-                                                <a class="utf_post_cat" href="#">{{$est->categoriaObject->titulo}}</a>
-                                                <h2 class="utf_post_title title-large"> 
-                                                <a href="{{route('web.blog.artigo', ['slug' => $est->slug ])}}">{{ $est->titulo }}</a> 
-                                                </h2>
-                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $est->views }}</span>	
-                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($est->created_at)->format('d/m/Y') }}</span> 
-                                            </div>
-                                    </div>
+                        @if ($estradas) 
+                            <div class="col-md-6 pb-4">
+                                <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
+                                        <div class="utf_post_thumb"> 
+                                        <a href="{{route('web.blog.artigo', ['slug' => $estradas->slug ])}}">
+                                            <img class="img_person" src="{{ $estradas->cover() }}" alt="{{ $estradas->titulo }}">
+                                        </a> 
+                                        </div>
+                                        <div class="utf_post_content"> 
+                                            <a class="utf_post_cat" href="#">{{$estradas->categoriaObject->titulo}}</a>
+                                            <h2 class="utf_post_title title-large"> 
+                                            <a href="{{route('web.blog.artigo', ['slug' => $estradas->slug ])}}">{{ $estradas->titulo }}</a> 
+                                            </h2>
+                                            <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $estradas->views }}</span>	
+                                            <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($estradas->created_at)->format('d/m/Y') }}</span> 
+                                        </div>
                                 </div>
-                            @endforeach                        
+                            </div>        
                         @endif
                     </div>
                   @if (!empty($noticiasUbatuba1 && $noticiasUbatuba1->count() > 0))
