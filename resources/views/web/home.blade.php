@@ -52,21 +52,21 @@
                             @endforeach                       
                         @endif
                         @if (!empty($estradas && $estradas->count() > 0))                        
-                            @foreach ($estradas as $artD1)
+                            @foreach ($estradas as $est)
                                 <div class="col-md-6 pb-4">
                                     <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
                                             <div class="utf_post_thumb"> 
-                                            <a href="{{route('web.blog.artigo', ['slug' => $artD1->slug ])}}">
-                                                <img class="img_person" src="{{ $artD1->cover() }}" alt="{{ $artD1->titulo }}">
+                                            <a href="{{route('web.blog.artigo', ['slug' => $est->slug ])}}">
+                                                <img class="img_person" src="{{ $est->cover() }}" alt="{{ $est->titulo }}">
                                             </a> 
                                             </div>
                                             <div class="utf_post_content"> 
-                                                <a class="utf_post_cat" href="#">{{$artD1->categoriaObject->titulo}}</a>
+                                                <a class="utf_post_cat" href="#">{{$est->categoriaObject->titulo}}</a>
                                                 <h2 class="utf_post_title title-large"> 
-                                                <a href="{{route('web.blog.artigo', ['slug' => $artD1->slug ])}}">{{ $artD1->titulo }}</a> 
+                                                <a href="{{route('web.blog.artigo', ['slug' => $est->slug ])}}">{{ $est->titulo }}</a> 
                                                 </h2>
-                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $artD1->views }}</span>	
-                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($artD1->created_at)->format('d/m/Y') }}</span> 
+                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $est->views }}</span>	
+                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($est->created_at)->format('d/m/Y') }}</span> 
                                             </div>
                                     </div>
                                 </div>
