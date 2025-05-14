@@ -209,14 +209,7 @@ class PostController extends Controller
 
     public function crowlerNoticiasSaoSebastiao()
     {
-        $client = new Client(HttpClient::create([
-            'timeout' => 30,
-            'verify_peer' => false, // cuidado: desabilite só em dev
-            'verify_host' => false,
-            'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-            ],
-        ]));
+        $client = new Client();
 
         $urlBase = 'https://www.saosebastiao.sp.gov.br';
         $urlNoticias = $urlBase . '/noticia-lista.asp';
