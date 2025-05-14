@@ -30,14 +30,31 @@ class PostController extends Controller
     
     public function __construct()
     {
-        $client = HttpClient::create([
+        $this->crowler = new Client(HttpClient::create([
             'timeout' => 30,
+            'verify_peer' => false, // opcional: cuidado em produção
+            'verify_host' => false, // opcional: cuidado em produção
             'headers' => [
                 'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
             ],
-        ]);
+        ]));
+    }
 
-        $this->crowler = new Client($client);
+    protected function tryRequest($url, $maxRetries = 3)
+    {
+        $attempts = 0;
+
+        while ($attempts < $maxRetries) {
+            try {
+                return $this->crowler->request('GET', $url);
+            } catch (\Exception $e) {
+                $attempts++;
+                sleep(2); // espera 2 segundos antes da próxima tentativa
+                if ($attempts >= $maxRetries) {
+                    throw $e;
+                }
+            }
+        }
     }
 
     public function index(Request $request)
@@ -218,7 +235,7 @@ class PostController extends Controller
     public function crowlerNoticiasSaoSebastiao()
     {
         $urlSSB  = 'https://saosebastiao.sp.gov.br';
-        $pageSSB = $this->crowler->request('GET', $urlSSB);
+        $pageSSB = $this->tryRequest($urlSSB);
         
         $titulo = $pageSSB->filter('.post-list-content article .post-core h3')->eq(0)->text();
         
@@ -228,7 +245,7 @@ class PostController extends Controller
 
         if($posts == null){     
             $link = 'https://saosebastiao.sp.gov.br/' . $pageSSB->filter('.post-list-content article .post-core h3 a')->eq(0)->attr('href');            
-            $linkContent = $this->crowler->request('GET', $link); 
+            $linkContent = $this->tryRequest($link);
             $imgurl = $link . '/' . $linkContent->filter('.c-slider .slide-list .slide')->eq(0)->attr('style');            
             $v = explode("url('", $imgurl);
             $v1 = explode("');", $v[1]);
