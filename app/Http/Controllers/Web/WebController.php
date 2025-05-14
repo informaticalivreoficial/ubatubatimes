@@ -67,8 +67,7 @@ class WebController extends Controller
                     ->where('tipo', 'noticia')
                     ->where('categoria', 22)
                     ->postson()
-                    ->limit(1)
-                    ->get();
+                    ->first();
         $noticiasCaragua = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
                     ->where('categoria', 16)
