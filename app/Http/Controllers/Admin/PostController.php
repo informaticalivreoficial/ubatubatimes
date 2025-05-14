@@ -207,68 +207,60 @@ class PostController extends Controller
         }
     }
 
-    public function crowlerNoticiasSaoSebastiao()
+    public function crowlerNoticiasNovaTamoios()
     {
-        $client = new Client();
-
-        $urlBase = 'https://www.saosebastiao.sp.gov.br';
-        $urlNoticias = $urlBase . '/noticia-lista.asp';
+        $urlBase = 'https://concessionariatamoios.com.br';
+        $urlNoticias = $urlBase . '/noticias';
 
         // Acessa a lista de notícias
-        $crawler = $client->request('GET', $urlNoticias);
+        $crawler = $this->crowler->request('GET', $urlNoticias);
 
-        // Pega o link da primeira notícia
-        $linkRelativo = $crawler->filter('.notice-list-page .notice-core h2 a')->first()->attr('href');
-        $titulo = $crawler->filter('.notice-list-page .notice-core h2')->first()->text();
-        $link = $urlBase . '/' . ltrim($linkRelativo, '/');
+         // Pega o link da primeira notícia
+        $linkRelativo = $crawler->filter('.col-sm-9 .row h3 a')->first()->attr('href');
+        
+        $titulo = $crawler->filter('.col-sm-9 .row h3')->first()->text();
+        $link = $urlBase . '/' . ltrim($linkRelativo, '/');        
 
         // Acessa a notícia completa
-        $noticia = $client->request('GET', $link);
+        $noticia = $this->crowler->request('GET', $link);
 
         // Conteúdo HTML da notícia
-        $conteudo = $noticia->filter('.post-content-inner')->html();
+        $conteudo = $noticia->filter('.news-content')->html();
 
         // Tenta capturar a imagem de capa (se houver)
         $img = '';
         try {
-            $styleAttr = $noticia->filter('.c-slider .slide')->first()->attr('style'); // exemplo: background-image: url('uploads/imagem.jpg');
-            preg_match("/url\\('(.*?)'\\)/", $styleAttr, $matches);
-            if (isset($matches[1])) {
-                $img = $urlBase . '/' . ltrim($matches[1], '/');
-
-                // Baixa a imagem (opcional)
-                $imageContent = file_get_contents($img);
-                $imageName = basename($img);
-                $path = 'noticias/' . Str::slug($titulo) . '/' . $imageName;
-
-                //Storage::disk('public')->put($path, $imageContent);
-            }
+            $src = $noticia->filter('.thumbnail-news a')->first()->attr('href');            
+            $img = $urlBase . '/' . ltrim($src, '/');
+            $imageContent = file_get_contents($img);
+            $imageName = basename($img);            
         } catch (\Exception $e) {
             logger()->warning('Imagem não encontrada ou erro ao baixar.');
         }
-
-        // Apenas debug
-        // dd([
-        //     'titulo' => $titulo,
-        //     'link' => $link,
-        //     'imagem' => $img,
-        //     'conteudo_html' => $conteudo,
-        // ]);
-
+    
         $data = [
             'tipo' => 'noticia',
             'autor' => 1,
             'titulo' => $titulo,
             'slug' => Str::slug($titulo),
-            'content' => $conteudo . '<br>Fonte: <a target="_blank" href="https://saosebastiao.sp.gov.br/">Divulgação Prefeitura Municipal de São Sebastião</a>',
+            'content' => $conteudo . '<br>Fonte: <a target="_blank" href="https://www23.concessionariatamoios.com.br/">Divulgação Concessionária Tamoios</a>',
             'cat_pai' => 14,
-            'categoria' => 17,
+            'categoria' => 22,
             'status' => 1,
-            'thumb_legenda' => 'Foto: Divulgação Prefeitura Municipal de São Sebastião',
+            'thumb_legenda' => 'Foto: Divulgação Concessionária Tamoios',
             'created_at' => now(),
             'publish_at' => now(),
         ];
+
         $criarPost = DB::table('posts')->updateOrInsert($data);
+        $id = DB::getPdo()->lastInsertId();
+        Storage::disk()->put(env('AWS_PASTA') . 'noticias/' . $id . '/' .$imageName, $imageContent);
+            
+        $postGb = new PostGb();
+        $postGb->post = $id;
+        $postGb->path = env('AWS_PASTA') . 'noticias/' . $id . '/' . $imageName;
+        $postGb->save();
+        unset($postGb);
     }
 
     // public function crowlerNoticiasSaoSebastiao()
@@ -480,9 +472,6 @@ class PostController extends Controller
 
     public function trash()
     {
-        // if(Auth::user()->editor == 1){
-        
-        // }
         $postTrash = Post::orderBy('created_at', 'DESC')
                     ->orderBy('status', 'ASC')
                     ->onlyTrashed()
@@ -617,7 +606,7 @@ class PostController extends Controller
                 $imageDelete = PostGb::where('post', $post->id)->first();
                 if($imageDelete){
                     Storage::delete($imageDelete->path);
-                    Storage::deleteDirectory('noticias/'.$post->id);
+                    Storage::deleteDirectory(env('AWS_PASTA') . '/noticias/'.$post->id);
                 }
                 $post->forceDelete();
             } 

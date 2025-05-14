@@ -51,8 +51,8 @@
                                 </div>
                             @endforeach                       
                         @endif
-                        @if (!empty($artigosDurval && $artigosDurval->count() > 0))                        
-                            @foreach ($artigosDurval as $artD1)
+                        @if (!empty($estradas && $estradas->count() > 0))                        
+                            @foreach ($estradas as $artD1)
                                 <div class="col-md-6 pb-4">
                                     <div class="utf_post_overaly_style contentTop hot-post-top clearfix">
                                             <div class="utf_post_thumb"> 
