@@ -21,6 +21,8 @@ use Goutte\Client;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 use Vedmant\FeedReader\Facades\FeedReader;
+use GuzzleHttp\Client as GuzzleClient;
+use Symfony\Component\HttpClient\HttpClient;
 
 class PostController extends Controller
 {
@@ -28,7 +30,14 @@ class PostController extends Controller
     
     public function __construct()
     {
-        $this->crowler = new Client();
+        $client = HttpClient::create([
+            'timeout' => 30,
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+            ],
+        ]);
+
+        $this->crowler = new Client($client);
     }
 
     public function index(Request $request)
