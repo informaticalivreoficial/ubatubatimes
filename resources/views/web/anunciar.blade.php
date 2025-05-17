@@ -54,7 +54,6 @@
             color: #6c6c6c;
         }
     </style>
-	@vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
