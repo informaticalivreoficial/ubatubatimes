@@ -23,14 +23,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- STYLE  -->
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/bootstrap.min.css'))}}" >
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/style.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/responsive.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/font-awesome.min.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/owl.carousel.min.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/owl.theme.default.min.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/colorbox.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/renato.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/bootstrap.min.css'))}}" >
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/style.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/responsive.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/font-awesome.min.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/owl.carousel.min.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/owl.theme.default.min.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/colorbox.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/renato.css'))}}">
 
 	<!-- Google Fonts --> 
 	<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,500,600,700,800&display=swap" rel="stylesheet"> 
@@ -53,6 +53,7 @@
     @hasSection('css')
         @yield('css')
     @endif
+	@vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -302,13 +303,13 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/jquery.min.js'))}}"></script>
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/popper.min.js'))}}"></script>
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/bootstrap.min.js'))}}"></script>
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/owl.carousel.min.js'))}}"></script>	
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/jquery.colorbox.js'))}}"></script>	
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/smoothscroll.js'))}}"></script>
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/custom_script.js'))}}"></script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/jquery.min.js'))}}"></script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/popper.min.js'))}}"></script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/bootstrap.min.js'))}}"></script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/owl.carousel.min.js'))}}"></script>	
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/jquery.colorbox.js'))}}"></script>	
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/smoothscroll.js'))}}"></script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/custom_script.js'))}}"></script>
 
 	@hasSection('js')
         @yield('js')

@@ -42,24 +42,20 @@ class WebController extends Controller
     {        
         $noticiasUbatuba = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
-                    ->where('categoria', '!=', 16)
-                    ->where('categoria', '!=', 17)
-                    ->where('categoria', '!=', 18)
+                    ->where('categoria', 15)
                     ->postson()
                     ->limit(2)
                     ->get();
         $noticiasUbatuba1 = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'noticia')
-                    ->where('categoria', '!=', 16)
-                    ->where('categoria', '!=', 17)
-                    ->where('categoria', '!=', 18)
+                    ->where('categoria', 15)
                     ->postson()
                     ->offset(2)
                     ->limit(2)
                     ->get();
         $artigosDestaque = Post::orderBy('created_at', 'DESC')
                     ->where('tipo', 'artigo')
-                    ->where('categoria', '!=', 21)
+                    ->where('categoria', 9)
                     ->postson()
                     ->limit(1)
                     ->get();

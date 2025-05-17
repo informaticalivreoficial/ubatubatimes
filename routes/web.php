@@ -183,7 +183,7 @@ Route::prefix('admin')->middleware('auth')->group( function(){
     //Route::get('posts/clear-noticias', [PostController::class, 'crowlerNoticiasSaoSebastiao'])->name('posts.crowlerNoticiasUbatuba');
     //Route::get('posts/clear-trash', [PostController::class, 'clearTrash'])->name('posts.clearTrash');
     //Route::get('posts/crowler', [PostController::class, 'crowlerFundartUbatuba'])->name('posts.crowlerFundartUbatuba');
-    //Route::get('posts/crowler', [PostController::class, 'crowlerNoticiasNovaTamoios'])->name('posts.crowlerNoticiasSaoSebastiao');
+    Route::get('posts/crowler', [PostController::class, 'crowlerNoticiasNovaTamoios'])->name('posts.crowlerNoticiasSaoSebastiao');
 });
 
 Auth::routes();
