@@ -54,6 +54,7 @@
             color: #6c6c6c;
         }
     </style>
+	@livewireStyles
 </head>
 
 <body>
@@ -115,5 +116,7 @@
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/popper.min.js'))}}"></script>
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/bootstrap.min.js'))}}"></script>
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/smoothscroll.js'))}}"></script>	
+
+	@livewireScripts
 </body>
 </html>
