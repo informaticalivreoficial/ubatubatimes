@@ -12,16 +12,16 @@ class OrcamentoRetorno extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $retorno;
+    private $data;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(array $retorno)
+    public function __construct(array $data)
     {
-        $this->retorno = $retorno;
+        $this->data = $data;
     }
 
     /**
@@ -31,13 +31,14 @@ class OrcamentoRetorno extends Mailable
      */
     public function build()
     {
-        return $this->replyTo($this->retorno['siteemail'], $this->retorno['sitename'])
-            ->to($this->retorno['reply_email'], $this->retorno['reply_name'])
-            ->from($this->retorno['siteemail'], $this->retorno['sitename'])
+        return $this
+            ->from($this->data['siteemail'], $this->data['sitename'])
+            ->to($this->data['reply_email'], $this->data['reply_name'])
+            ->replyTo($this->data['siteemail'], $this->data['sitename'])
             ->subject('⚓️ Solicitação de orçamento para anúncio')
             ->markdown('emails.orcamento-retorno', [
-                'nome' => $this->retorno['reply_name'],
-                'sitename' => $this->retorno['sitename']
+                'name' => $this->data['reply_name'],
+                'sitename' => $this->data['sitename']
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Web;
 
+use App\Mail\Web\OrcamentoRetorno;
 use App\Mail\Web\SendOrcamento;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
@@ -27,7 +28,7 @@ class ContactForm extends Component
             abort(403, 'Spam detectado');
         }
 
-        $this->validate([
+        $validated = $this->validate([
             'name' => 'required|min:3',
             'email' => 'required|email',
             'message' => 'required|min:10',
@@ -36,13 +37,15 @@ class ContactForm extends Component
         $data = [
             'sitename' => config('app.name'),
             'siteemail' => config('mail.from.address'),
-            'reply_name' => $this->name,
-            'reply_email' => $this->email,
+            'reply_name' => $validated['name'],
+            'reply_email' => $validated['email'],
+            'reply_whatsapp' => $this->whatsapp,
             'whatsapp' => $this->whatsapp,
-            'message' => $this->message,       
+            'message' => $validated['message'],       
         ];
 
         Mail::send(new SendOrcamento($data));
+        Mail::send(new OrcamentoRetorno($data));
         $this->reset(['name', 'email', 'whatsapp', 'message']);
         $this->enviado = true;
         session()->flash('success', 'Mensagem enviada com sucesso!');        
