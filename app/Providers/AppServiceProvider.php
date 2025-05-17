@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +35,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle)
+                ->middleware('web')
+                ->name('livewire.update');
+        });
+
+        Livewire::setScriptRoute(function ($handle) {
+            return Route::get('/livewire/livewire.js', $handle)
+                ->name('livewire.js');
+        });
+
+
+
+
         //URL::forceScheme('https');
         Empresa::observe(EmpresaObserver::class);
 
@@ -69,9 +83,5 @@ class AppServiceProvider extends ServiceProvider
         View()->share('positionTopohome', $positionTopohome);
 
         Paginator::useBootstrap();
-
-        Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/livewire/update', $handle);
-        });
     }
 }
