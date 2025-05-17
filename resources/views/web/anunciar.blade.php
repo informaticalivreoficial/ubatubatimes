@@ -23,12 +23,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- STYLE  -->
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/bootstrap.min.css'))}}" >
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/style.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/responsive.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/font-awesome.min.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/owl.theme.default.min.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(mix('frontend/assets/css/renato.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/bootstrap.min.css'))}}" >
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/style.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/responsive.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/font-awesome.min.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/owl.theme.default.min.css'))}}">
+	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/renato.css'))}}">
 
 	<!-- Google Fonts --> 
 	<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,500,600,700,800&display=swap" rel="stylesheet"> 
@@ -60,8 +60,7 @@
 </head>
 
 <body>
-	<div class="body-inner">
-		
+	<div class="body-inner">	
 		
 		<div class="container">
             <div class="row m-2">
@@ -87,44 +86,10 @@
                 <div class="col-12 mb-3">
                     <h2>Preencha o Formulário</h2>
                     <p>Ah, fique tranquilo também odiamos SPAM!!</p>
-                    <form action="" method="POST" autocomplete="off" class="j_formsubmit">
-                        @csrf
-                        <div class="form-group row">
-                            <div class="col-lg-12">
-                                <div id="js-contact-result"></div>
-                                <!-- HONEYPOT -->
-                                <input type="hidden" class="noclear" name="bairro" value="" />
-                                <input type="text" class="noclear" style="display: none;" name="cidade" value="" />
-                            </div>                  
-                        </div>
-                        <div class="form-group row form_hide">
-                            <div class="col-lg-4">
-                                <label>Nome</label>
-                                <input type="text" class="form-control" name="nome">
-                            </div>                          
-                            <div class="col-lg-4">
-                                <label>Email</label>
-                                <input type="text" class="form-control" name="email">
-                            </div>                          
-                            <div class="col-lg-4">
-                                <label>WhatsApp</label>
-                                <input type="text" class="form-control" name="telefone">
-                            </div>                          
-                        </div>
-                        <div class="form-group row form_hide">
-                            <div class="col-lg-12">
-                                <label>Nos conte um pouco sobre sua empresa</label>
-                                <textarea name="mensagem" rows="10" class="form-control"></textarea>
-                            </div>                  
-                        </div>                       
-                        
-                        <button type="submit" id="botao" class="btn btn-primary form_hide">Enviar Agora</button>
-                      </form>
+                    <livewire:web.contact-form />
                 </div>
-            </div>
-            
-        </div>
-		
+            </div>            
+        </div>		
 		
 		<div class="copyright">
 			<div class="container">
@@ -149,60 +114,9 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/jquery.min.js'))}}"></script>
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/popper.min.js'))}}"></script>
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/bootstrap.min.js'))}}"></script>
-	<script type="text/javascript" src="{{url(mix('frontend/assets/js/smoothscroll.js'))}}"></script>
-
-	<script>
-        $(function () {
-    
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-    
-            // Seletor, Evento/efeitos, CallBack, Ação
-            $('.j_formsubmit').submit(function (){
-                var form = $(this);
-                var dataString = $(form).serialize();
-    
-                $.ajax({
-                    url: "{{ route('web.sendOrcamento') }}",
-                    data: dataString,
-                    type: 'GET',
-                    dataType: 'JSON',
-                    beforeSend: function(){
-                        form.find("#botao").attr("disabled", true);
-                        form.find('#botao').html("Carregando...");                
-                        form.find('.alert').fadeOut(500, function(){
-                            $(this).remove();
-                        });
-                    },
-                    success: function(resposta){
-                        $('html, body').animate({scrollTop:$('#js-contact-result').offset().top-100}, 'slow');
-                        if(resposta.error){
-                            form.find('#js-contact-result').html('<div class="alert alert-danger error-msg">'+ resposta.error +'</div>');
-                            form.find('.error-msg').fadeIn();                    
-                        }else{
-                            form.find('#js-contact-result').html('<div class="alert alert-success error-msg">'+ resposta.sucess +'</div>');
-                            form.find('.error-msg').fadeIn();                    
-                            form.find('input[class!="noclear"]').val('');
-                            form.find('textarea[class!="noclear"]').val('');
-                            form.find('.form_hide').fadeOut(500);
-                        }
-                    },
-                    complete: function(resposta){
-                        form.find("#botao").attr("disabled", false);
-                        form.find('#botao').html("Enviar Agora");                                
-                    }
-                });
-    
-                return false;
-            });
-    
-        });
-    </script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/jquery.min.js'))}}"></script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/popper.min.js'))}}"></script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/bootstrap.min.js'))}}"></script>
+	<script type="text/javascript" src="{{url(asset('frontend/assets/js/smoothscroll.js'))}}"></script>	
 </body>
 </html>

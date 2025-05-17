@@ -31,15 +31,16 @@ class SendOrcamento extends Mailable
      */
     public function build()
     {
-        return $this->replyTo($this->data['reply_email'], $this->data['reply_name'])
-            ->to($this->data['siteemail'], $this->data['sitename'])
+        return $this
             ->from($this->data['siteemail'], $this->data['sitename'])
+            ->to($this->data['siteemail'], $this->data['sitename'])
+            ->replyTo($this->data['reply_email'], $this->data['reply_name'])
             ->subject('⚓️ Anúncio: ' . $this->data['reply_name'])
             ->markdown('emails.orcamento', [
-                'nome' => $this->data['reply_name'],
+                'name' => $this->data['reply_name'],
                 'email' => $this->data['reply_email'],
-                'telefone' => $this->data['telefone'],
-                'mensagem' => $this->data['mensagem']
+                'whatsapp' => $this->data['whatsapp'],
+                'message' => $this->data['message'],
         ]);
     }
 }

@@ -19,15 +19,15 @@
         <div style="background:#FFF; font:16px Trebuchet MS, Arial, Helvetica, sans-serif; color:#333; line-height:150%;">       
             <h1 style="font-size:20px; color:#000; background:#F4F4F4; padding:10px;">Dados da Mensagem</h1>
             <p style="padding-left:10px;">
-            <strong>Nome: </strong><strong style="color:#09F;">{{ $nome }}</strong>
+            <strong>Nome: </strong><strong style="color:#09F;">{{ $name }}</strong>
             <br />
             <strong>E-mail: </strong><strong style="color:#09F;">{{ $email }}</strong>
             <br />
-            <strong>Telefone: </strong><strong style="color:#09F;">{{ $telefone }}</strong>
+            <strong>Telefone: </strong><strong style="color:#09F;">{{ $whatsapp }}</strong>
             <br />
             <strong>Mensagem: </strong>            
             </p>
-            <p style="padding-left:10px;font:20px Trebuchet MS, Arial, Helvetica, sans-serif; color:#09F;">@php echo nl2br($mensagem); @endphp</p>
+            <p style="padding-left:10px;font:20px Trebuchet MS, Arial, Helvetica, sans-serif; color:#09F;">@php echo nl2br($message); @endphp</p>
         </div> 
     </div>
 {{-- Footer --}}
