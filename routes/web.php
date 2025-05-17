@@ -20,6 +20,11 @@ use App\Http\Controllers\Web\{
     SendEmailController,
     WebController
 };
+use Livewire\Livewire;
+
+Livewire::setUpdateRoute(function ($handle) {
+    return Route::post('/livewire/update', $handle);
+});
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
