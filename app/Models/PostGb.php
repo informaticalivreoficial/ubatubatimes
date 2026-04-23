@@ -21,8 +21,7 @@ class PostGb extends Model
 
     /**
      * Accerssors and Mutators
-     */
-
+    */
     public function getUrlCroppedAttribute()
     {
         return Storage::url($this->path);

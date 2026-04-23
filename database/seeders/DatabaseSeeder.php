@@ -18,6 +18,9 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,        
             CatPostsTableSeeder::class,
             PostsTableSeeder::class,
+            CatCompanySeeder::class,
+            CompanySeeder::class,
+            RolesSeeder::class,
         ]);
     }
 }

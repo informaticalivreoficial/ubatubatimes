@@ -15,6 +15,14 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'logomarca_width'  => env('LOGOMARCA_GERENCIADOR_WIDTH', 447),
+    'logomarca_height' => env('LOGOMARCA_GERENCIADOR_HEIGHT', 155),
+    'metaimg_width' => env('METAIMG_WIDTH', 800),
+    'metaimg_height' => env('METAIMG_HEIGHT', 418),
+
+    'max_images' => env('MAX_PROPERTY_IMAGES', 20),
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -106,7 +114,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'pt_BR',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,7 +169,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
+        //Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -229,7 +237,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Image' => Intervention\Image\Facades\Image::class,
+        //'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

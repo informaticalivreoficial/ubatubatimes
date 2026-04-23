@@ -14,26 +14,25 @@ class CreatePostsTable extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('autor');
-            $table->string('tipo');
-            $table->string('titulo');
-            $table->text('content')->nullable();
+            $table->id();
+            $table->foreignId('autor')->constrained('users')->cascadeOnDelete();
+            $table->string('type');
+            $table->string('title');
+            $table->longText('content')->nullable();
             $table->string('slug')->nullable();
-            $table->string('tags')->nullable();
+            $table->text('tags')->nullable();
             $table->bigInteger('views')->default(0);
-            $table->unsignedInteger('categoria');
+            $table->foreignId('category')->constrained('cat_post')->cascadeOnDelete();
             $table->integer('cat_pai')->nullable();
-            $table->integer('comentarios')->nullable();
+            $table->integer('comments')->nullable();
             $table->integer('status')->nullable();
-            $table->string('thumb_legenda')->nullable(); 
+            $table->integer('highlight')->nullable()->default(0);
+            $table->integer('menu')->nullable();
+            $table->string('thumb_caption')->nullable(); 
             $table->date('publish_at')->nullable();
 
-            $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('autor')->references('id')->on('users')->onDelete('CASCADE');
-            $table->foreign('categoria')->references('id')->on('cat_post')->onDelete('CASCADE');
+            $table->softDeletes();
         });
     }
 
