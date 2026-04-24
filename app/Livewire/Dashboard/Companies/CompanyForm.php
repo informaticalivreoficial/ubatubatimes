@@ -190,6 +190,7 @@ class CompanyForm extends Component
             'responsable_email' => $this->responsable_email,
             'responsable_cpf' => $this->responsable_cpf,
             'metatags' => $validated['metatags'],
+            'maps' => $this->maps,
 
             'status' => $validated['status'],
             'guia' => $this->guia ?? 0,

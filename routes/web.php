@@ -38,22 +38,22 @@ use App\Livewire\Dashboard\Users\ViewUser;
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
     /** Página Inicial */   
-    Route::get('/', [WebController::class, 'home'])->name('home');     
+    Route::get('/', [SiteController::class, 'home'])->name('home');     
 
     Route::get('/pagina/{slug}', [SiteController::class, 'page'])->name('page');
 
     //****************************** Páginas ******************************/
-    // Route::get('/politica-de-privacidade', [WebController::class, 'politica'])->name('politica');
-    // Route::get('/boletim-das-ondas', [WebController::class, 'ondas'])->name('ondas');
-    // Route::get('/previsao-do-tempo', [WebController::class, 'tempo'])->name('tempo');
-    // Route::get('/anunciar', [WebController::class, 'anunciar'])->name('anunciar');
+    Route::get('/politica-de-privacidade', [WebController::class, 'politica'])->name('politica');
+    Route::get('/boletim-das-ondas', [SiteController::class, 'ondas'])->name('ondas');
+    Route::get('/previsao-do-tempo', [WebController::class, 'tempo'])->name('tempo');
+    Route::get('/anunciar', [SiteController::class, 'anunciar'])->name('anunciar');
 
     // //****************************** Guia ******************************/
-    // Route::get('/guia-ubatuba', [GuiaController::class, 'guiaUbatuba'])->name('guiaUbatuba');
-    Route::get('/guia-ubatuba/{slug}', [SiteController::class, 'guiaEmpresa'])->name('guiaEmpresa');
-    // Route::get('/guia-ubatuba/categoria/{slug}', [GuiaController::class, 'guiaCategoria'])->name('guiaCategoria');
-    // Route::get('/guia-ubatuba/categoria/subcategoria/{slug}', [GuiaController::class, 'guiaSubCategoria'])->name('guiaSubCategoria');
-    // Route::get('/sendEmailEmpresa', [GuiaController::class, 'sendEmailEmpresa'])->name('sendEmailEmpresa');
+    Route::get('/guia-ubatuba', [GuiaController::class, 'guiaUbatuba'])->name('guiaUbatuba');
+    Route::get('/guia-ubatuba/{slug}', [GuiaController::class, 'guiaEmpresa'])->name('guiaEmpresa');
+    Route::get('/guia-ubatuba/categoria/{slug}', [GuiaController::class, 'guiaCategoria'])->name('guiaCategoria');
+    Route::get('/guia-ubatuba/categoria/subcategoria/{slug}', [GuiaController::class, 'guiaSubCategoria'])->name('guiaSubCategoria');
+    Route::get('/sendEmailEmpresa', [GuiaController::class, 'sendEmailEmpresa'])->name('sendEmailEmpresa');
     
     // //**************************** Emails ********************************************/
     // Route::get('/atendimento', [WebController::class, 'atendimento'])->name('atendimento');
@@ -63,19 +63,19 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     // Route::get('/sendFormCaptacao', [SendEmailController::class, 'sendFormCaptacao'])->name('sendFormCaptacao');
     
     // //****************************** Blog ***********************************************/
-    // Route::get('/blog/artigo/{slug}', [WebController::class, 'artigo'])->name('blog.artigo');
-    // Route::get('/blog/categoria/{slug}', [WebController::class, 'categoria'])->name('blog.categoria');
-    // Route::get('/blog', [WebController::class, 'artigos'])->name('blog.artigos');
-    // Route::match(['get', 'post'],'/blog/pesquisar', [WebController::class, 'searchBlog'])->name('blog.searchBlog');
+    Route::get('/blog/artigo/{slug}', [WebController::class, 'artigo'])->name('blog.artigo');
+    Route::get('/blog/categoria/{slug}', [WebController::class, 'categoria'])->name('blog.categoria');
+    Route::get('/blog', [WebController::class, 'artigos'])->name('blog.artigos');
+    Route::match(['get', 'post'],'/blog/pesquisar', [WebController::class, 'searchBlog'])->name('blog.searchBlog');
 
     // //*************************************** Páginas *******************************************/
-    // Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
-    // Route::get('/noticia/{slug}', [WebController::class, 'noticia'])->name('noticia');
-    // Route::get('/noticias', [WebController::class, 'noticias'])->name('noticias');
-    // Route::get('/noticias/categoria/{slug}', [WebController::class, 'categoria'])->name('noticia.categoria');
+    Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
+    Route::get('/noticia/{slug}', [WebController::class, 'noticia'])->name('noticia');
+    Route::get('/noticias', [WebController::class, 'noticias'])->name('noticias');
+    Route::get('/noticias/categoria/{slug}', [WebController::class, 'categoria'])->name('noticia.categoria');
     
     // //** Pesquisa */
-    // Route::match(['post', 'get'], '/pesquisa', [WebController::class, 'pesquisa'])->name('pesquisa');
+    Route::match(['post', 'get'], '/pesquisa', [WebController::class, 'pesquisa'])->name('pesquisa');
 
     // //** FEED */    
     // Route::get('feed', [RssFeedController::class, 'feed'])->name('feed');

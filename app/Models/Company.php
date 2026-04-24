@@ -108,7 +108,18 @@ class Company extends Model
 
     /**
      * Relationships
-    */     
+    */   
+    
+    public function categoriaObject()
+    {
+        return $this->belongsTo(CatCompany::class, 'category_id');
+    }
+
+    public function subcategoriaObject()
+    {
+        return $this->belongsTo(CatCompany::class, 'sub_category_id');
+    }
+
     public function images()
     {
         return $this->hasMany(CompanyGb::class, 'company', 'id')
@@ -147,6 +158,13 @@ class Company extends Model
         }
 
         return public_path('theme/images/image.jpg');
+    }
+
+    public function getMetatagsArrayAttribute()
+    {
+        return $this->metatags
+            ? array_map('trim', explode(',', $this->metatags))
+            : [];
     }
 
     public function setZipcodeAttribute($value)

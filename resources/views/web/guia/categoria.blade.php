@@ -2,110 +2,96 @@
 
 @section('content')
 
-<div class="page-title">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <ul class="breadcrumb">
-                    <li><a href="{{route('web.home')}}">Início</a></li>
-                    <li><a href="{{route('web.guiaUbatuba')}}">Guia</a></li>
-                    <li>{{$categoria->titulo}}</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>  
+<section class="py-8 bg-gray-50">
 
-<section class="utf_block_wrapper">
-    <div class="container">
-        <div class="row">
-            @if (!empty($categoria) && $categoria->count() > 0)
-            <div class="col-12">
-                <div class="block color-dark-blue">
-                    <h3 class="utf_block_title"><span>{{$categoria->titulo}}</span></h3>
-                    @if (!empty($empresas) && $empresas->count() > 0)
-                        <div class="row">
-                            @foreach ($empresas as $empresa)
-                                <div class="col-md-4 mb-4">
-                                    <div class="utf_post_block_style post-float clearfix">
-                                        <div class="imgbox"> 
-                                            <a href="{{route('web.guiaEmpresa',[ 'slug' => $empresa->slug ])}}"> 
-                                                <img src="{{$empresa->logoCover()}}" alt="{{$empresa->alias_name}}" /> 
-                                            </a> 
-                                        </div>                    
-                                        <div class="utf_post_content">
-                                            <h2 class="utf_post_title title-small" style="margin-bottom: 0px;"> 
-                                                <a style="color: #B03131 !important;" href="{{route('web.guiaEmpresa',[ 'slug' => $empresa->slug ])}}">
-                                                    {{$empresa->alias_name}}
-                                                </a> 
-                                            </h2>
-                                            <p>
-                                                <a class="alink" href="{{route('web.guiaEmpresa',[ 'slug' => $empresa->slug ])}}">
-                                                    {!!Words($empresa->content, 11)!!}
-                                                </a>                                                
-                                                <br>
-                                                <a href="{{route('web.guiaSubCategoria', [ 'slug' => $empresa->categoriaObject->slug ])}}">
-                                                    <b>{{$empresa->categoriaObject->titulo}}</b>
-                                                </a>                                                
-                                            </p>                                                                
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach                            
+    <div class="max-w-7xl mx-auto px-4">
+
+        {{-- Breadcrumb --}}
+        <nav class="text-sm text-gray-500 mb-6 flex flex-wrap gap-2">
+            <a href="{{ route('web.home') }}" class="hover:underline">Início</a>
+            <span>/</span>
+
+            <a href="{{ route('web.guiaUbatuba') }}" class="hover:underline">Guia</a>
+            <span>/</span>
+
+            <span class="text-gray-700 font-medium">
+                {{ $categoria->title }}
+            </span>
+        </nav>
+
+        {{-- Título --}}
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">
+            {{ $categoria->title }}
+        </h1>
+
+        {{-- Lista --}}
+        @if($empresas->isNotEmpty())
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                @foreach ($empresas as $empresa)
+
+                    <div class="bg-white rounded-xl shadow-sm border p-4 flex gap-4 hover:shadow-md transition">
+
+                        {{-- Logo --}}
+                        <a href="{{ route('web.guiaEmpresa', $empresa->slug) }}">
+                            <img 
+                                src="{{ $empresa->getlogo() }}"
+                                alt="{{ $empresa->alias_name }}"
+                                class="w-20 h-20 object-contain rounded border"
+                            >
+                        </a>
+
+                        {{-- Conteúdo --}}
+                        <div class="flex-1">
+
+                            <h2 class="text-sm font-semibold text-red-700 leading-tight">
+                                <a href="{{ route('web.guiaEmpresa', $empresa->slug) }}">
+                                    {{ $empresa->alias_name }}
+                                </a>
+                            </h2>
+
+                            <p class="text-xs text-gray-600 mt-1 leading-snug">
+                                {!! Words($empresa->content, 12) !!}
+                            </p>
+
+                            @if($empresa->categoriaObject)
+                                <a 
+                                    href="{{ route('web.guiaSubCategoria', $empresa->categoriaObject->slug) }}"
+                                    class="text-xs font-medium text-gray-500 hover:text-gray-700"
+                                >
+                                    {{ $empresa->categoriaObject->title }}
+                                </a>
+                            @endif
+
                         </div>
-                        <div class="paging">
-                            {{$empresas->links()}}                            
-                        </div>
-                    @endif
-                </div>
+
+                    </div>
+
+                @endforeach
+
             </div>
-            @endif
-        </div>
+
+            {{-- Paginação --}}
+            <div class="mt-8">
+                {{ $empresas->links() }}
+            </div>
+
+        @else
+
+            <div class="text-center py-12 text-gray-500">
+                Nenhuma empresa encontrada nesta categoria.
+            </div>
+
+        @endif
+
     </div>
+
 </section>
 @endsection
 
 @section('css')
     <style>
-        .pagination-custom{
-            margin: 0;
-            display: -ms-flexbox;
-            display: flex;
-            padding-left: 0;
-            list-style: none;
-            border-radius: 0.25rem;
-        }
-        .pagination-custom li a {
-            border-radius: 30px;
-            margin-right: 8px;
-            color:#7c7c7c;
-            border: 1px solid #ddd;
-            position: relative;
-            float: left;
-            padding: 6px 12px;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 25px;
-            font-weight: 600;
-        }
-        .pagination-custom>.active>a, .pagination-custom>.active>a:hover, .pagination-custom>li>a:hover {
-            color: #fff;
-            background: #ec0000;
-            border: 1px solid transparent;
-        }
-        .imgbox{
-            float: left;
-            padding-right: 10px;
-        }        
-        .imgbox img{
-            max-width: 120px;
-            min-height: 75px;
-            border-radius: 2px;
-            box-shadow: 0 2px 3px rgb(0 0 0 / 10%);
-        }   
-        .alink{
-            color: #333;
-        }     
+           
     </style>
 @endsection

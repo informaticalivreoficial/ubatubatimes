@@ -12,35 +12,31 @@ class ParceiroSend extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $data;
+    public array $data;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct(array $data)
     {
         $this->data = $data;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
-        return $this->replyTo($this->data['reply_email'], $this->data['reply_name'])
-            ->to($this->data['empresaemail'], $this->data['empresaname'])
-            //->cc(env('DESENVOLVEDOR_EMAIL'))
-            ->from($this->data['siteemail'], $this->data['sitename'])
-            ->subject('⚓️ Atendimento ' . $this->data['reply_name'])
-            ->markdown('emails.empresa-send', [
-                'nome' => $this->data['reply_name'],
-                'email' => $this->data['reply_email'],
-                'mensagem' => $this->data['mensagem'],
-                'nomedosite' => $this->data['config_site_name']
-        ]);
+        return tap(
+            $this->replyTo($this->data['reply_email'], $this->data['reply_name'])
+                ->to($this->data['empresaemail'], $this->data['empresaname'])
+                ->from($this->data['siteemail'], $this->data['sitename'])
+                ->subject('⚓️ Atendimento ' . $this->data['reply_name'])
+                ->markdown('emails.empresa-send', [
+                    'nome' => $this->data['reply_name'],
+                    'email' => $this->data['reply_email'],
+                    'mensagem' => $this->data['mensagem'],
+                    'nomedosite' => $this->data['config_site_name']
+                ]),
+            function ($mail) {
+                if (config('mail.copy_to_admin')) {
+                    $mail->cc(config('mail.from.address'));
+                }
+            }
+        );
     }
 }

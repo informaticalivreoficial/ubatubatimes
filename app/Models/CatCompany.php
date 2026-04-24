@@ -57,7 +57,7 @@ class CatCompany extends Model
 
     public function companies()
     {
-        return $this->hasMany(Company::class, 'category');
+        return $this->hasMany(Company::class, 'category_id');
     }
 
     /**

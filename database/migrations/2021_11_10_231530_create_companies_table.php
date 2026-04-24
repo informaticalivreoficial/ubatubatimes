@@ -32,9 +32,10 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->string('first_year')->nullable();
             $table->text('metatags')->nullable();
-            $table->string('maps')->nullable();
+            $table->text('maps')->nullable();
             $table->string('caption_img_cover')->nullable();
             $table->boolean('highlight')->default(false);
+            $table->bigInteger('views')->default(0);
 
             $table->string('magic_token', 64)->nullable()->unique();
             $table->timestamp('magic_token_expires_at')->nullable();

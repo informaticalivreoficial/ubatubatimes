@@ -15,6 +15,8 @@ return [
 
     'default' => env('MAIL_MAILER', 'smtp'),
 
+    'copy_to_admin' => env('MAIL_COPY_TO_ADMIN', false),
+
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Anuncio;
 use App\Models\CatPost;
+use App\Models\Config;
 use App\Models\Empresa;
 use App\Models\NewsletterCat;
 use App\Models\Post;
@@ -50,10 +51,10 @@ class AppServiceProvider extends ServiceProvider
         // Blade::aliasComponent('admin.components.message', 'message');
 
         try {
-            $configuracoes = \App\Models\Config::find(1);
-            View()->share('configuracoes', $configuracoes);
+            $config = Config::find(1);
+            View()->share('config', $config);
         } catch (\Exception $e) {
-            View()->share('configuracoes', null);
+            View()->share('config', null);
         }
 
         //Região Categorias de Notícias

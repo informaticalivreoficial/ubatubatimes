@@ -24,13 +24,13 @@
             <br />
             <strong>Mensagem: </strong>            
             </p>
-            <p style="padding-left:10px;font:20px Trebuchet MS, Arial, Helvetica, sans-serif; color:#09F;">@php echo nl2br($mensagem); @endphp</p>
+            <p style="padding-left:10px;font:20px Trebuchet MS, Arial, Helvetica, sans-serif; color:#09F;">{!! nl2br(e($mensagem)) !!}</p>
         </div> 
     </div>
 {{-- Footer --}}
 @slot('footer')
     @component('mail::footer')
-        <div style="width:100%; margin:20px 0; text-align:center; font-size:10px;"><pre>Sistema de consultas desenvolvido por {{env('DESENVOLVEDOR')}} <br> <a href="mailto:{{env('DESENVOLVEDOR_EMAIL')}}">{{env('DESENVOLVEDOR_EMAIL')}}</a></pre></div>
+        <div style="width:100%; margin:20px 0; text-align:center; font-size:10px;"><pre>Sistema de consultas desenvolvido por {{config('app.desenvolvedor')}} <br> <a href="mailto:{{config('app.desenvolvedor_email')}}">{{config('app.desenvolvedor_email')}}</a></pre></div>
     @endcomponent
 @endslot
 

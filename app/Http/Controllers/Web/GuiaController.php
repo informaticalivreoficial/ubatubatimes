@@ -3,79 +3,111 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Mail\Web\ParceiroSend;
-use App\Models\CatEmpresa;
-use App\Models\Empresa;
+use App\Models\CatCompany;
+use App\Models\Company;
 use Illuminate\Http\Request;
-use App\Services\ConfigService;
 use App\Support\Seo;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Config;
 
 class GuiaController extends Controller
 {
-    protected $configService;
-    protected $seo;
+    protected $seo, $config;
 
-    public function __construct(ConfigService $configService)
+    public function __construct()
     {
-        $this->configService = $configService;
         $this->seo = new Seo();
+        $this->config = Config::where('id', 1)->first();
     }
 
     public function guiaUbatuba()
     {
-        $catEmpresas = CatEmpresa::orderBy('titulo', 'ASC')->available()->whereNull('id_pai')->get();
-        $empresas = Empresa::orderBy('cliente', 'DESC')->inRandomOrder()->available()->get();
+        $catEmpresas = CatCompany::query()
+            ->with(['companies' => function ($q) {
+                $q->available()
+                ->select([
+                    'id',
+                    'alias_name',
+                    'slug',
+                    'logo',
+                    'content',
+                    'category_id'
+                ])
+                ->inRandomOrder()
+                ->limit(5); // 🔥 limita por categoria (na prática do eager load)
+            }])
+            ->whereNull('id_pai')
+            ->active()
+            ->orderBy('title')
+            ->get();
 
-        $head = $this->seo->render('Guia de Ubatuba - ' . $this->configService->getConfig()->nomedosite ?? $this->configService->getConfig()->nomedosite,
-            $this->configService->getConfig()->descricao ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+        $head = $this->seo->render(
+            'Guia de Ubatuba - ' . ($this->config->app_name ?? ''),
+            $this->config->information ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.guiaUbatuba'),
             url(asset('frontend/assets/images/site-guia.png'))
         );
 
-        return view('web.guia.index',[
+        return view('web.guia.index', [
             'head' => $head,
             'catEmpresas' => $catEmpresas,
-            'empresas' => $empresas,
         ]);
     }
 
     public function guiaEmpresa($slug)
     {
-        $empresa = Empresa::where('slug', $slug)->available()->first();
-        $empresas = Empresa::orderBy('cliente', 'DESC')
-                ->where('id', '!=', $empresa->id)
-                ->where('categoria', $empresa->categoria)
-                ->available()
-                ->inRandomOrder()
-                ->get();
+        $empresa = Company::query()
+            ->with([
+                'categoriaObject:id,slug,title',
+                'subcategoriaObject:id,slug,title',
+                'images' // 🔥 resolve N+1
+            ])
+            ->where('slug', $slug)
+            ->available()
+            ->firstOrFail();
 
-        $empresa->views = $empresa->views + 1;
-        $empresa->save();
+        // 🔹 Empresas relacionadas
+        $empresasRelacionadas = Company::query()
+            ->select(['id','alias_name','slug','logo','category_id','client'])
+            ->where('id', '!=', $empresa->id)
+            ->where('category_id', $empresa->category_id)
+            ->available()
+            ->orderByDesc('client') // clientes primeiro
+            ->inRandomOrder()
+            ->limit(10) // 🔥 essencial
+            ->get();
 
-        $head = $this->seo->render($empresa->alias_name ?? $this->configService->getConfig()->nomedosite,
+        // 🔹 Incrementa views (otimizado)
+        $empresa->increment('views');
+
+        $head = $this->seo->render(
+            $empresa->alias_name ?? $this->config->app_name,
             strip_tags($empresa->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
-            route('web.guiaEmpresa', [ 'slug' => $empresa->slug ]),
+            route('web.guiaEmpresa', ['slug' => $empresa->slug]),
             $empresa->getMetaImg() ?? url(asset('frontend/assets/images/site-guia.png'))
         );
 
-        return view('web.guia.empresa',[
+        return view('web.guia.empresa', [
             'head' => $head,
             'empresa' => $empresa,
-            'empresas' => $empresas,
+            'empresas' => $empresasRelacionadas,
         ]);
     }
 
     public function guiaCategoria($slug)
     {
-        $categoria = CatEmpresa::where('slug', $slug)->available()->first();
-        $empresas = Empresa::orderBy('cliente', 'DESC')
-                ->where('cat_pai', $categoria->id)
-                ->available()
-                ->inRandomOrder()
-                ->paginate(30);
+        $categoria = CatCompany::where('slug', $slug)->active()->first();
+        $empresas = Company::query()
+            ->with([
+                'categoriaObject:id,slug,title',
+                'images:id,company,path,cover'
+            ])
+            ->where('category_id', $categoria->id)
+            ->available()
+            ->orderByDesc('client')
+            ->latest()
+            ->paginate(30);
 
-        $head = $this->seo->render('Anúncios - ' . $categoria->titulo ?? $this->configService->getConfig()->nomedosite,
+        $head = $this->seo->render('Anúncios - ' . ($categoria->title ?? $this->config->app_name),
             strip_tags($categoria->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.guiaCategoria', [ 'slug' => $categoria->slug ]),
             url(asset('frontend/assets/images/site-guia.png'))
@@ -90,64 +122,28 @@ class GuiaController extends Controller
 
     public function guiaSubCategoria($slug)
     {
-        $subcategoria = CatEmpresa::where('slug', $slug)->available()->first();
-        $empresas = Empresa::orderBy('cliente', 'DESC')
-                ->where('categoria', $subcategoria->id)
-                ->available()
-                ->inRandomOrder()
-                ->paginate(30);
+        $subcategoria = CatCompany::with('parent')
+            ->where('slug', $slug)
+            ->active()
+            ->firstOrFail();
 
-        $head = $this->seo->render('Anúncios - ' . $subcategoria->titulo ?? $this->configService->getConfig()->nomedosite,
-            strip_tags($subcategoria->content) ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
-            route('web.guiaCategoria', [ 'slug' => $subcategoria->slug ]),
-            url(asset('frontend/assets/images/site-guia.png'))
+        $empresas = Company::with('categoriaObject')
+            ->available()
+            ->where('sub_category_id', $subcategoria->id)
+            ->inRandomOrder()
+            ->paginate(30);
+
+        $head = $this->seo->render(
+            'Anúncios - ' . ($subcategoria->title ?? $this->config->app_name),
+            strip_tags($subcategoria->content) ?: 'Informática Livre desenvolvimento de sistemas web desde 2005',
+            route('web.guiaSubCategoria', $subcategoria->slug),
+            asset('frontend/assets/images/site-guia.png')
         );
-        
-        return view('web.guia.subcategoria',[
+
+        return view('web.guia.subcategoria', [
             'head' => $head,
             'subcategoria' => $subcategoria,
             'empresas' => $empresas,
         ]);
-    }
-
-    public function sendEmailEmpresa(Request $request)
-    {        
-        $empresa = Empresa::where('id', $request->empresa_id)->first();
-        if($request->nome == ''){
-            $json = "Por favor preencha o campo <strong>Nome</strong>";
-            return response()->json(['error' => $json]);
-        }
-        if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
-            $json = "O campo <strong>Email</strong> está vazio ou não tem um formato válido!";
-            return response()->json(['error' => $json]);
-        }
-        if($request->mensagem == ''){
-            $json = "Por favor preencha sua <strong>Mensagem</strong>";
-            return response()->json(['error' => $json]);
-        }
-        if(!empty($request->bairro) || !empty($request->cidade)){
-            $json = "<strong>ERRO</strong> Você está praticando SPAM!"; 
-            return response()->json(['error' => $json]);
-        }else{
-            
-            $data = [
-                'sitename' => $this->configService->getConfig()->nomedosite,
-                'siteemail' => env('MAIL_FROM_ADDRESS'),
-                'empresaname' => $empresa->alias_name,
-                'empresaemail' => $empresa->email,
-                'reply_name' => $request->nome,
-                'reply_email' => $request->email,
-                'mensagem' => $request->mensagem,
-                'config_site_name' => $this->configService->getConfig()->nomedosite,
-            ];
-            //dd($data);
-            $empresa->email_send_count = $empresa->email_send_count + 1;
-            $empresa->save();
-            
-            Mail::send(new ParceiroSend($data));
-            
-            $json = 'Obrigado '.getPrimeiroNome($request->nome).' sua mensagem foi enviada para <b>'.$empresa->alias_name.'</b> com sucesso!'; 
-            return response()->json(['sucess' => $json]);
-        }
-    }
+    }    
 }

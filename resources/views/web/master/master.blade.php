@@ -7,13 +7,13 @@
 	<meta name="theme-color" content="#ec0000">
 	<meta name="msvalidate.01" content="AB238289F13C246C5E386B6770D9F10E" />
 
-    <meta name="copyright" content="{{$configuracoes->ano_de_inicio}} - {{$configuracoes->nomedosite}}">
+    <meta name="copyright" content="{{$config->init_date}} - {{$config->app_name}}">
     <meta name="language" content="pt-br" /> 
-    <meta name="author" content="{{env('DESENVOLVEDOR')}}"/>
+    <meta name="author" content="{{config('app.desenvolvedor')}}"/>
     <meta name="designer" content="Renato Montanari">
     <meta name="publisher" content="Renato Montanari">
-    <meta name="url" content="{{$configuracoes->dominio}}" />
-    <meta name="keywords" content="{{$configuracoes->metatags}}">
+    <meta name="url" content="{{$config->domain}}" />
+    <meta name="keywords" content="{{$config->metatags}}">
     <meta name="distribution" content="web">
     <meta name="rating" content="general">
     <meta name="date" content="Dec 26">
@@ -23,6 +23,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- STYLE  -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+
+
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/bootstrap.min.css'))}}" >
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/style.css'))}}">
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/responsive.css'))}}">
@@ -38,11 +41,11 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700,800&display=swap" rel="stylesheet">
 
 	<!-- Favicon and touch icons  -->
-	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="144x144">
-	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="114x114">
-	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="72x72">
-	<link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed">
-	<link href="{{$configuracoes->getfaveicon()}}" rel="shortcut icon">
+	<link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="144x144">
+	<link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="114x114">
+	<link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="72x72">
+	<link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed">
+	<link href="{{$config->getfaveicon()}}" rel="shortcut icon">
 
 	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -101,7 +104,7 @@
 					<div class="col-md-3 col-sm-12">
 						<div class="logo"> 
 							<a href="{{route('web.home')}}"> 
-								<img src="{{$configuracoes->getLogomarca()}}" alt="{{$configuracoes->nomedosite}}"> 
+								<img src="{{$config->getlogo()}}" alt="{{$config->app_name}}"> 
 							</a> 
 						</div>
 					</div>   
@@ -189,39 +192,39 @@
 					<div class="col-lg-4 col-sm-12 col-xs-12 footer-widget contact-widget">
 							<h3 class="widget-title">Quem Somos</h3>
 							<ul>
-								<li>{{$configuracoes->descricao}}</li>
-								<li><i class="fa fa-home"></i> {{$configuracoes->cidade}} - {{$configuracoes->uf}}</li>
-								@if ($configuracoes->telefone1)
-									<li><i class="fa fa-phone"></i> <a href="tel:{{$configuracoes->telefone1}}">{{$configuracoes->telefone1}}</a></li>
+								<li>{{$config->descricao}}</li>
+								<li><i class="fa fa-home"></i> {{$config->cidade}} - {{$config->uf}}</li>
+								@if ($config->telefone1)
+									<li><i class="fa fa-phone"></i> <a href="tel:{{$config->telefone1}}">{{$config->telefone1}}</a></li>
 								@endif
-								@if ($configuracoes->telefone2)
-									<li><i class="fa fa-phone"></i> <a href="tel:{{$configuracoes->telefone2}}">{{$configuracoes->telefone2}}</a></li>
+								@if ($config->telefone2)
+									<li><i class="fa fa-phone"></i> <a href="tel:{{$config->telefone2}}">{{$config->telefone2}}</a></li>
 								@endif
-								@if ($configuracoes->telefone3)
-									<li><i class="fa fa-phone"></i> <a href="tel:{{$configuracoes->telefone3}}">{{$configuracoes->telefone3}}</a></li>
+								@if ($config->telefone3)
+									<li><i class="fa fa-phone"></i> <a href="tel:{{$config->telefone3}}">{{$config->telefone3}}</a></li>
 								@endif								
-								@if ($configuracoes->whatsapp)
-									<li><i class="fa fa-whatsapp"></i> <a target="_blank" href="{{\App\Helpers\WhatsApp::getNumZap($configuracoes->whatsapp ,$configuracoes->nomedosite)}}">{{$configuracoes->whatsapp}}</a></li>
+								@if ($config->whatsapp)
+									<li><i class="fa fa-whatsapp"></i> <a target="_blank" href="{{\App\Helpers\WhatsApp::getNumZap($config->whatsapp ,$config->app_name)}}">{{$config->whatsapp}}</a></li>
 								@endif								
-								@if ($configuracoes->email)
-									<li><i class="fa fa-envelope-o"></i> <a href="mailto:{{$configuracoes->email}}">{{$configuracoes->email}}</a></li>
+								@if ($config->email)
+									<li><i class="fa fa-envelope-o"></i> <a href="mailto:{{$config->email}}">{{$config->email}}</a></li>
 								@endif
-								@if ($configuracoes->email1)
-									<li><i class="fa fa-envelope-o"></i> <a href="mailto:{{$configuracoes->email1}}">{{$configuracoes->email1}}</a></li>
+								@if ($config->email1)
+									<li><i class="fa fa-envelope-o"></i> <a href="mailto:{{$config->email1}}">{{$config->email1}}</a></li>
 								@endif											 
 							</ul>
 							<ul class="unstyled utf_footer_social">
-								@if ($configuracoes->facebook)
-									<li><a target="_blank" href="{{$configuracoes->facebook}}" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+								@if ($config->facebook)
+									<li><a target="_blank" href="{{$config->facebook}}" title="Facebook"><i class="fa fa-facebook"></i></a></li>
 								@endif
-								@if ($configuracoes->twitter)
-									<li><a target="_blank" href="{{$configuracoes->twitter}}" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+								@if ($config->twitter)
+									<li><a target="_blank" href="{{$config->twitter}}" title="Twitter"><i class="fa fa-twitter"></i></a></li>
 								@endif
-								@if ($configuracoes->instagram)
-									<li><a target="_blank" href="{{$configuracoes->instagram}}" title="Instagram"><i class="fa fa-instagram"></i></a></li>
+								@if ($config->instagram)
+									<li><a target="_blank" href="{{$config->instagram}}" title="Instagram"><i class="fa fa-instagram"></i></a></li>
 								@endif
-								@if ($configuracoes->linkedin)
-									<li><a target="_blank" href="{{$configuracoes->linkedin}}" title="linkedin"><i class="fa fa-linkedin"></i></a></li>
+								@if ($config->linkedin)
+									<li><a target="_blank" href="{{$config->linkedin}}" title="linkedin"><i class="fa fa-linkedin"></i></a></li>
 								@endif
 							</ul>
 					</div>
@@ -288,7 +291,7 @@
 				<div class="row">
 					<div class="col-sm-12 col-md-12 text-center">
 						<div class="utf_copyright_info"> 
-							<span>© {{$configuracoes->ano_de_inicio}} Copyright {{$configuracoes->nomedosite}}.Todos os direitos reservados.</span> 
+							<span>© {{$config->init_date}} Copyright {{$config->app_name}}.Todos os direitos reservados.</span> 
 						</div>
 					</div>        
 					<div class="col-sm-12 col-md-12 text-center">
@@ -305,6 +308,8 @@
 			</div>
 		</div>
 	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/jquery.min.js'))}}"></script>
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/popper.min.js'))}}"></script>

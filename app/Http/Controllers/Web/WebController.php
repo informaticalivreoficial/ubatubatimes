@@ -134,24 +134,7 @@ class WebController extends Controller
 		]);
     }
 
-    public function ondas()
-    {
-        $boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');
-        //Anúncio
-        $positionSidebarhome = Anuncio::where('plan_id', 8)->available()->limit(1)->get();
-
-        $head = $this->seo->render('Boletim das Ondas para Ubatuba' ?? 'Informática Livre',
-            'Boletim das Ondas para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
-            route('web.ondas'),
-            url(asset('frontend/assets/images/ondas.png'))
-        );
-
-        return view('web.boletim-das-ondas',[
-            'head' => $head,
-            'boletim' => $boletim,
-            'positionSidebarhome' => $positionSidebarhome,
-        ]);
-    }
+    
 
     public function tempo()
     {
