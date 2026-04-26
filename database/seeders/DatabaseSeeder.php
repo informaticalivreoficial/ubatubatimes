@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CatCompanySeeder::class,
             CompanySeeder::class,
             RolesSeeder::class,
+            PlanSeeder::class,
         ]);
     }
 }

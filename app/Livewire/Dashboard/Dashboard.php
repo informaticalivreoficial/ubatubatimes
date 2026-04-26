@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\Ad;
 use App\Models\Company;
 use App\Models\Invoice;
 use Livewire\Component;
@@ -13,18 +14,22 @@ class Dashboard extends Component
     public function render()
     {
         $companyCount = Company::count();
-        $companyYearCount = Company::whereYear('created_at', now()->year)->count();   
+        $companyYearCount = Company::whereYear('created_at', now()->year)->count();  
         
-        // $invoicesCount = Invoice::count();
-        // $invoicesYearCount = Invoice::whereYear('created_at', now()->year)->count();
+        $invoices = Invoice::where('status', 'paid')->whereMonth('paid_at', now()->month)->sum('amount');
+        $invoicePending = Invoice::where('status', 'pending')->count();
+        $activeAds = Ad::where('active', true)->count();       
+        
 
         $title = 'Painel de Controle';
+
         return view('livewire.dashboard.dashboard', [
             'title' => $title,
             'companyCount' => $companyCount,
             'companyYearCount' => $companyYearCount,
-            //'invoicesCount' => $invoicesCount,
-            //'invoicesYearCount' => $invoicesYearCount
+            'invoices' => $invoices,
+            'invoicePending' => $invoicePending,
+            'activeAds' => $activeAds,
         ]);
     }
 }

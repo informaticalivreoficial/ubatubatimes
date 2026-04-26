@@ -108,7 +108,21 @@ class Company extends Model
 
     /**
      * Relationships
-    */   
+    */ 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function ads()
+    {
+        return $this->hasMany(Ad::class);
+    }
+
+    public function contracts()
+    {
+        return $this->hasMany(AdContract::class);
+    }
     
     public function categoriaObject()
     {

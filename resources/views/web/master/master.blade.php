@@ -52,8 +52,7 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5276530322225914" crossorigin="anonymous"></script>
-
+	
     @hasSection('css')
         @yield('css')
     @endif
@@ -109,19 +108,7 @@
 						</div>
 					</div>   
 					<div class="col-md-9 col-sm-12 header-right">
-						@if (!empty($positionTopohome) && $positionTopohome->count() > 0)
-							<div class="float-right mt-3"> 
-								<a target="_blank" id="j_click" href="{{$positionTopohome[0]->link ?? '#'}}">
-									<img src="{{$positionTopohome[0]->get728x90()}}" class="img-fluid" alt="{{$positionTopohome[0]->titulo}}">
-								</a> 
-							</div>
-						@else
-							<div class="float-right mt-3"> 
-								<a href="{{route('web.anunciar')}}">
-									<img src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" class="img-fluid" alt="Anuncie Aqui!">
-								</a> 
-							</div>
-						@endif						
+						<x-ad slot="home_top" />												
 					</div>
 				</div>
 			</div>

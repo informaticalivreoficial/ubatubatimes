@@ -34,6 +34,10 @@ use App\Livewire\Dashboard\Users\Form;
 use App\Livewire\Dashboard\Users\Time;
 use App\Livewire\Dashboard\Users\Users;
 use App\Livewire\Dashboard\Users\ViewUser;
+use App\Livewire\Dashboard\Vendas\AdContractForm;
+use App\Livewire\Dashboard\Vendas\AdContractIndex;
+use App\Livewire\Dashboard\Vendas\AdForm;
+use App\Livewire\Dashboard\Vendas\AdIndex;
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
@@ -105,6 +109,14 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     Route::get('posts/cadastrar', PostForm::class)->name('posts.create');
     Route::get('posts/categorias', CatPostForm::class)->name('posts.categories.index');
     Route::get('posts', Posts::class)->name('posts.index');
+
+    Route::get('ads', AdIndex::class)->name('ads.index');
+    Route::get('ads/create', AdForm::class)->name('ads.create');
+    Route::get('ads/{ad}/edit', AdForm::class)->name('ads.edit');
+
+    Route::get('contracts', AdContractIndex::class)->name('contracts.index');
+    Route::get('contracts/create', AdContractForm::class)->name('contracts.create');
+    Route::get('contracts/{contract}/edit', AdContractForm::class)->name('contracts.edit');
     
 });
 
