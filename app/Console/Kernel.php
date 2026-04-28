@@ -15,23 +15,17 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //Commands\SitemapUpdate::class,
     ];
-
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
+    
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:noticiaubatuba')->everyMinute()->withoutOverlapping();                
-        $schedule->command('app:noticiacaragua')->everyMinute()->withoutOverlapping();                
+        $schedule->command('app:noticiaubatuba')->everyMinute();            
+        $schedule->command('app:noticiacaragua')->everyMinute();                
         //$schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
-        $schedule->command('app:noticiailhabela')->everyMinute()->withoutOverlapping();      
-        //$schedule->command('app:fundartubatuba')->everyMinute()->withoutOverlapping();      
-        $schedule->command('app:novatamoioscreate')->everyMinute()->withoutOverlapping();      
-        $schedule->command('app:deletepost')->everyMinute()->withoutOverlapping();      
-        $schedule->command('app:clear-trash-cron')->everyMinute()->withoutOverlapping();      
+        $schedule->command('app:noticiailhabela')->everyMinute();      
+        $schedule->command('app:fundartubatuba')->everyMinute();   
+        $schedule->command('app:novatamoioscreate')->everyMinute();      
+        //$schedule->command('app:deletepost')->everyMinute()->withoutOverlapping();      
+        //$schedule->command('app:clear-trash-cron')->everyMinute()->withoutOverlapping();      
     }
 
     /**

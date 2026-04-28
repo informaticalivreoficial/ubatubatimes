@@ -61,7 +61,7 @@ class AdForm extends Component
 
         session()->flash('success', 'Anúncio salvo com sucesso!');
 
-        return redirect()->route('ads.index');
+        return redirect()->route('vendas.ads.index');
     }
 
     public function render()

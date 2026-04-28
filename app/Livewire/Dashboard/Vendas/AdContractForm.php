@@ -46,7 +46,7 @@ class AdContractForm extends Component
 
         session()->flash('success', 'Contrato salvo!');
 
-        return redirect()->route('contracts.index');
+        return redirect()->route('vendas.contracts.index');
     }
 
     public function render()

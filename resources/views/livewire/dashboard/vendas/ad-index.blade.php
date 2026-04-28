@@ -2,7 +2,7 @@
     <div class="flex justify-between mb-4">
         <h1 class="text-xl font-bold">Anúncios</h1>
 
-        <a href="{{ route('ads.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
+        <a href="{{ route('vendas.ads.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
             Novo Anúncio
         </a>
     </div>
@@ -33,7 +33,7 @@
                         @endif
                     </td>
                     <td class="p-2 flex gap-2">
-                        <a href="{{ route('ads.edit', $ad) }}">Editar</a>
+                        <a href="{{ route('vendas.ads.edit', $ad) }}">Editar</a>
                         <button wire:click="delete({{ $ad->id }})" class="text-red-500">
                             Excluir
                         </button>

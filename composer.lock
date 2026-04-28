@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d03df6cd386ec1014e7b86f6637aabcb",
+    "content-hash": "4d0888f78b769f3c298d2f4b6659e017",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -664,63 +664,6 @@
                 }
             ],
             "time": "2025-03-06T22:45:56+00:00"
-        },
-        {
-            "name": "fabpot/goutte",
-            "version": "v4.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfPHP/Goutte.git",
-                "reference": "e3f28671c87a48a0f13ada1baea0d95acc2138c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/e3f28671c87a48a0f13ada1baea0d95acc2138c3",
-                "reference": "e3f28671c87a48a0f13ada1baea0d95acc2138c3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.3",
-                "symfony/browser-kit": "^4.4|^5.0|^6.0",
-                "symfony/css-selector": "^4.4|^5.0|^6.0",
-                "symfony/deprecation-contracts": "^2.1|^3",
-                "symfony/dom-crawler": "^4.4|^5.0|^6.0",
-                "symfony/http-client": "^4.4|^5.0|^6.0",
-                "symfony/mime": "^4.4|^5.0|^6.0"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "^6.0"
-            },
-            "type": "application",
-            "autoload": {
-                "psr-4": {
-                    "Goutte\\": "Goutte"
-                },
-                "exclude-from-classmap": [
-                    "Goutte/Tests"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "A simple PHP Web Scraper",
-            "homepage": "https://github.com/FriendsOfPHP/Goutte",
-            "keywords": [
-                "scraper"
-            ],
-            "support": {
-                "issues": "https://github.com/FriendsOfPHP/Goutte/issues",
-                "source": "https://github.com/FriendsOfPHP/Goutte/tree/v4.0.3"
-            },
-            "abandoned": "symfony/browser-kit",
-            "time": "2023-04-01T09:05:33+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -4451,16 +4394,16 @@
         },
         {
             "name": "spatie/browsershot",
-            "version": "5.2.3",
+            "version": "5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/browsershot.git",
-                "reference": "d2e4ac7c69162999940172a674bf83ddc5ac59ea"
+                "reference": "91ba83158c4c7cdee34562cca7936ed995b87f3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/browsershot/zipball/d2e4ac7c69162999940172a674bf83ddc5ac59ea",
-                "reference": "d2e4ac7c69162999940172a674bf83ddc5ac59ea",
+                "url": "https://api.github.com/repos/spatie/browsershot/zipball/91ba83158c4c7cdee34562cca7936ed995b87f3e",
+                "reference": "91ba83158c4c7cdee34562cca7936ed995b87f3e",
                 "shasum": ""
             },
             "require": {
@@ -4507,7 +4450,7 @@
                 "webpage"
             ],
             "support": {
-                "source": "https://github.com/spatie/browsershot/tree/5.2.3"
+                "source": "https://github.com/spatie/browsershot/tree/5.3.0"
             },
             "funding": [
                 {
@@ -4515,7 +4458,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-18T16:10:58+00:00"
+            "time": "2026-04-27T08:01:04+00:00"
         },
         {
             "name": "spatie/crawler",
@@ -5001,78 +4944,6 @@
                 }
             ],
             "time": "2026-01-12T07:42:22+00:00"
-        },
-        {
-            "name": "symfony/browser-kit",
-            "version": "v6.4.32",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "f49947cf0cbd7d685281ef74e05b98f5e75b181f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/f49947cf0cbd7d685281ef74e05b98f5e75b181f",
-                "reference": "f49947cf0cbd7d685281ef74e05b98f5e75b181f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1",
-                "symfony/dom-crawler": "^5.4|^6.0|^7.0"
-            },
-            "require-dev": {
-                "symfony/css-selector": "^5.4|^6.0|^7.0",
-                "symfony/http-client": "^5.4|^6.0|^7.0",
-                "symfony/mime": "^5.4|^6.0|^7.0",
-                "symfony/process": "^5.4|^6.0|^7.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\BrowserKit\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Simulates the behavior of a web browser, allowing you to make requests, click on links and submit forms programmatically",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/browser-kit/tree/v6.4.32"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2026-01-13T10:09:10+00:00"
         },
         {
             "name": "symfony/cache",
@@ -6417,7 +6288,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -6476,7 +6347,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -6500,16 +6371,16 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "ad1b7b9092976d6c948b8a187cec9faaea9ec1df"
+                "reference": "4864388bfbd3001ce88e234fab652acd91fdc57e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/ad1b7b9092976d6c948b8a187cec9faaea9ec1df",
-                "reference": "ad1b7b9092976d6c948b8a187cec9faaea9ec1df",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/4864388bfbd3001ce88e234fab652acd91fdc57e",
+                "reference": "4864388bfbd3001ce88e234fab652acd91fdc57e",
                 "shasum": ""
             },
             "require": {
@@ -6558,7 +6429,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -6578,11 +6449,11 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-10T16:19:22+00:00"
+            "time": "2026-04-26T13:13:48+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-idn.git",
@@ -6645,7 +6516,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -6669,7 +6540,7 @@
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
@@ -6730,7 +6601,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -6754,7 +6625,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -6815,7 +6686,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -6839,7 +6710,7 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
@@ -6899,7 +6770,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -6923,7 +6794,7 @@
         },
         {
             "name": "symfony/polyfill-php83",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php83.git",
@@ -6979,7 +6850,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php83/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-php83/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -7003,7 +6874,7 @@
         },
         {
             "name": "symfony/polyfill-uuid",
-            "version": "v1.36.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-uuid.git",
@@ -7062,7 +6933,7 @@
                 "uuid"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-uuid/tree/v1.36.0"
+                "source": "https://github.com/symfony/polyfill-uuid/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -8044,16 +7915,16 @@
         },
         {
             "name": "voku/portable-ascii",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/portable-ascii.git",
-                "reference": "d870a33f0f79d2b4579740b0620200221ee44aeb"
+                "reference": "8e1051fe39379367aecf014f41744ce7539a856f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/d870a33f0f79d2b4579740b0620200221ee44aeb",
-                "reference": "d870a33f0f79d2b4579740b0620200221ee44aeb",
+                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/8e1051fe39379367aecf014f41744ce7539a856f",
+                "reference": "8e1051fe39379367aecf014f41744ce7539a856f",
                 "shasum": ""
             },
             "require": {
@@ -8090,7 +7961,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/portable-ascii/issues",
-                "source": "https://github.com/voku/portable-ascii/tree/2.1.0"
+                "source": "https://github.com/voku/portable-ascii/tree/2.1.1"
             },
             "funding": [
                 {
@@ -8114,117 +7985,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-16T23:10:39+00:00"
-        },
-        {
-            "name": "webmasterdro/paghiper-php-sdk",
-            "version": "3.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webmasterdro/paghiper-php-sdk.git",
-                "reference": "e4721f74635e6b081acfb272b9ddd4eaefc3825f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webmasterdro/paghiper-php-sdk/zipball/e4721f74635e6b081acfb272b9ddd4eaefc3825f",
-                "reference": "e4721f74635e6b081acfb272b9ddd4eaefc3825f",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^7.0",
-                "php": ">=7.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "WebMaster\\PagHiper\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Pedro Lima",
-                    "email": "pedro-octavio@hotmail.com"
-                }
-            ],
-            "description": "Biblioteca de integração PHP PagHiper",
-            "keywords": [
-                "paghiper"
-            ],
-            "support": {
-                "issues": "https://github.com/webmasterdro/paghiper-php-sdk/issues",
-                "source": "https://github.com/webmasterdro/paghiper-php-sdk/tree/3.1.2"
-            },
-            "time": "2022-03-17T17:16:32+00:00"
-        },
-        {
-            "name": "weidner/goutte",
-            "version": "2.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dweidner/laravel-goutte.git",
-                "reference": "4b6407b42e6f118657843544d15e167e8f299435"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dweidner/laravel-goutte/zipball/4b6407b42e6f118657843544d15e167e8f299435",
-                "reference": "4b6407b42e6f118657843544d15e167e8f299435",
-                "shasum": ""
-            },
-            "require": {
-                "fabpot/goutte": "^4.0",
-                "illuminate/support": "^8|^9|^10.0",
-                "php": ">=7.3"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^6|^8.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Weidner\\Goutte\\GoutteServiceProvider"
-                    ],
-                    "aliases": {
-                        "Goutte": "Weidner\\Goutte\\GoutteFacade"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Weidner\\Goutte\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Weidner",
-                    "email": "hallo@danielweidner.de",
-                    "homepage": "https://danielweidner.de"
-                }
-            ],
-            "description": "Laravel Facade for Goutte, a simple PHP Web Scraper",
-            "homepage": "https://github.com/dweidner/laravel-goutte",
-            "keywords": [
-                "goutte",
-                "laravel",
-                "weidner"
-            ],
-            "support": {
-                "issues": "https://github.com/dweidner/laravel-goutte/issues",
-                "source": "https://github.com/dweidner/laravel-goutte/tree/2.3.0"
-            },
-            "abandoned": "symfony/browser-kit",
-            "time": "2023-03-16T08:45:21+00:00"
+            "time": "2026-04-26T05:33:54+00:00"
         }
     ],
     "packages-dev": [

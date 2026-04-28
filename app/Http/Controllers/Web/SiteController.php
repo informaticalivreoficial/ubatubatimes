@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\CatPost;
 use App\Models\Post;
 use App\Support\Seo;
 use App\Models\Config;
 use App\Services\OndasService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 class SiteController extends Controller
 {
@@ -144,6 +147,61 @@ class SiteController extends Controller
             'dados' => $dados,
             'resumo' => $resumo,
             //'positionSidebarhome' => $positionSidebarhome,
+        ]);
+    }
+
+    public function noticia($slug)
+    {
+        $post = Post::where('slug', $slug)->where('type', 'noticia')->postson()->first();
+
+        if($post == null){
+            return Redirect::route('web.home');
+        }
+        
+        $categorias = CatPost::orderBy('title', 'ASC')
+            ->where('type', 'noticia')
+            ->active()
+            ->whereNotNull('id_pai')
+            ->get();
+        $postsMais = Post::orderBy('views', 'DESC')
+            ->where('id', '!=', $post->id)
+            ->where('type', 'noticia')
+            ->limit(4)
+            ->postson()
+            ->get();
+        $postsTags = Post::orderBy('views', 'DESC')
+            ->where('type', 'noticia')
+            ->where('tags', '!=', '')
+            ->where('id', '!=', $post->id)
+            ->postson()
+            ->limit(11)
+            ->get();
+        
+        $post->views = $post->views + 1;
+        $post->save();
+
+        $postprevious = Post::where('id', '<', $post->id)->postson()->where('type', 'noticia')->first();
+        $postnext = Post::where('id', '>', $post->id)->postson()->where('type', 'noticia')->first();
+
+        //$positionSidebarPost = Anuncio::where('plan_id', 1)->available()->limit(2)->get(); 
+        //$positionFooterPost = Anuncio::where('plan_id', 6)->available()->limit(1)->get();       
+
+        $head = $this->seo->render($post->title ?? 'Ubatuba Times',
+             Str::words($post->content, 20, '...') ?? 'Informações e notícias sobre Ubatuba',
+             route('web.noticia', ['slug' => $post->slug]),
+             $post->cover() ?? url(asset('theme/images/image.jpg'))
+        );           
+
+        return view('web.noticia', [
+            'head' => $head,
+            'post' => $post,
+            'postsMais' => $postsMais,
+            'categorias' => $categorias,
+            'postsTags' => $postsTags,
+            'postprevious' => $postprevious,
+            'postnext' => $postnext,
+            //'positionSidebarPost' => $positionSidebarPost,
+            //'positionFooterPost' => $positionFooterPost,
         ]);
     }
 }

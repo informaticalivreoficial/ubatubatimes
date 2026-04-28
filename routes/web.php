@@ -38,14 +38,13 @@ use App\Livewire\Dashboard\Vendas\AdContractForm;
 use App\Livewire\Dashboard\Vendas\AdContractIndex;
 use App\Livewire\Dashboard\Vendas\AdForm;
 use App\Livewire\Dashboard\Vendas\AdIndex;
+use App\Livewire\Dashboard\Vendas\InvoiceIndex;
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
     /** Página Inicial */   
-    Route::get('/', [SiteController::class, 'home'])->name('home');     
-
-    Route::get('/pagina/{slug}', [SiteController::class, 'page'])->name('page');
-
+    Route::get('/', [SiteController::class, 'home'])->name('home'); 
+    
     //****************************** Páginas ******************************/
     Route::get('/politica-de-privacidade', [WebController::class, 'politica'])->name('politica');
     Route::get('/boletim-das-ondas', [SiteController::class, 'ondas'])->name('ondas');
@@ -74,7 +73,7 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
     // //*************************************** Páginas *******************************************/
     Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
-    Route::get('/noticia/{slug}', [WebController::class, 'noticia'])->name('noticia');
+    Route::get('/noticia/{slug}', [SiteController::class, 'noticia'])->name('noticia');
     Route::get('/noticias', [WebController::class, 'noticias'])->name('noticias');
     Route::get('/noticias/categoria/{slug}', [WebController::class, 'categoria'])->name('noticia.categoria');
     
@@ -110,13 +109,15 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     Route::get('posts/categorias', CatPostForm::class)->name('posts.categories.index');
     Route::get('posts', Posts::class)->name('posts.index');
 
-    Route::get('ads', AdIndex::class)->name('ads.index');
-    Route::get('ads/create', AdForm::class)->name('ads.create');
-    Route::get('ads/{ad}/edit', AdForm::class)->name('ads.edit');
+    Route::get('anuncios', AdIndex::class)->name('vendas.ads.index');
+    Route::get('anuncios/create', AdForm::class)->name('vendas.ads.create');
+    Route::get('anuncios/{ad}/edit', AdForm::class)->name('vendas.ads.edit');
 
-    Route::get('contracts', AdContractIndex::class)->name('contracts.index');
-    Route::get('contracts/create', AdContractForm::class)->name('contracts.create');
-    Route::get('contracts/{contract}/edit', AdContractForm::class)->name('contracts.edit');
+    Route::get('contratos', AdContractIndex::class)->name('vendas.contracts.index');
+    Route::get('contratos/create', AdContractForm::class)->name('vendas.contracts.create');
+    Route::get('contratos/{contract}/edit', AdContractForm::class)->name('vendas.contracts.edit');
+
+    Route::get('faturas', InvoiceIndex::class)->name('vendas.invoices.index');
     
 });
 

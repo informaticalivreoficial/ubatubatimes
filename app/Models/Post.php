@@ -36,7 +36,7 @@ class Post extends Model
 
     protected $casts = [
         'status' => 'boolean',
-        'coments' => 'boolean',
+        'comments' => 'boolean',
     ];
 
     protected $dates = ['deleted_at']; // marca a coluna como uma data
@@ -54,7 +54,7 @@ class Post extends Model
 
         static::deleting(function ($post) {
             // Deleta a pasta inteira com todas as imagens
-            Storage::disk('public')->deleteDirectory("posts/{$post->id}");
+            Storage::disk('public')->deleteDirectory("posts/{$post->type}/{$post->id}");
 
             // Deleta os registros do banco
             $post->images()->delete();

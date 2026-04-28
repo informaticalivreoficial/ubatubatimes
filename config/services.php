@@ -34,4 +34,10 @@ return [
         'key' => env('TIDE_KEY'),
     ],
 
+    'paghiper' => [
+        'api_key' => env('PAGHIPER_API_KEY'),
+        'token' => env('PAGHIPER_TOKEN'),
+        'sandbox' => env('PAGHIPER_SANDBOX', true),
+    ],
+
 ];

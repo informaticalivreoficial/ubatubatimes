@@ -18,20 +18,57 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-12 col-sm-6 my-2">
+            <div class="row">    
+                <!-- ESQUERDA (busca + filtros) -->
+                <div class="col-12 col-sm-8 my-2">
                     <div class="card-tools">
-                        <div style="width: 250px;">
-                            <form class="input-group input-group-sm" action="" method="post">
-                                <input type="text" wire:model.live="search" class="form-control float-right" placeholder="Pesquisar">               
-                                
-                            </form>
+                        <div class="d-flex flex-wrap" style="gap: 6px;">
+
+                            <!-- Busca -->
+                            <input type="text"
+                                wire:model.live.debounce.500ms="search"
+                                class="form-control form-control-sm"
+                                style="max-width: 200px;"
+                                placeholder="Pesquisar">
+
+                            <!-- Tipo -->
+                            <select wire:model.live="filterType"
+                                    class="form-control form-control-sm"
+                                    style="max-width: 140px;">
+                                <option value="">Tipo</option>
+                                <option value="artigo">Artigo</option>
+                                <option value="noticia">Notícia</option>
+                                <option value="pagina">Página</option>
+                            </select>
+
+                            <!-- Autor -->
+                            <select wire:model.live="filterAutor"
+                                    class="form-control form-control-sm"
+                                    style="max-width: 180px;">
+                                <option value="">Autor</option>
+                                @foreach($autores as $autor)
+                                    <option value="{{ $autor->id }}">{{ $autor->name }}</option>
+                                @endforeach
+                            </select>
+
+                            <!-- Limpar -->
+                            <button wire:click="clearFilters"
+                                    class="btn btn-sm btn-light">
+                                Limpar
+                            </button>
+
                         </div>
-                      </div>
+                    </div>
                 </div>
-                <div class="col-12 col-sm-6 my-2 text-right">
-                    <a wire:navigate href="{{route('posts.create')}}" class="btn btn-sm btn-default"><i class="fas fa-plus mr-2"></i> Cadastrar Novo</a>
+
+                <!-- DIREITA (botão) -->
+                <div class="col-12 col-sm-4 my-2 text-sm-right">
+                    <a wire:navigate href="{{ route('posts.create') }}" 
+                    class="btn btn-sm btn-default">
+                        <i class="fas fa-plus mr-2"></i> Cadastrar Novo
+                    </a>
                 </div>
+
             </div>
         </div>
 
@@ -77,10 +114,10 @@
                                             :checked="$post->status"
                                             size="sm"
                                             color="green"
-                                        />                                        
+                                        />      
                                         <a target="_blank" href="{{ route('web.' . (
                                                                     $post->type == 'artigo' ? 'blog.artigo' : (
-                                                                    $post->type == 'noticia' ? 'blog.noticia' : 'page')), $post->slug) }}" 
+                                                                    $post->type == 'noticia' ? 'noticia' : 'pagina')), $post->slug) }}" 
                                             class="btn btn-xs btn-info" 
                                             title="Visualizar">
                                             <i class="fas fa-search"></i>

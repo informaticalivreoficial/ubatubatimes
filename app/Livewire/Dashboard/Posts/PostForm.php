@@ -64,7 +64,7 @@ class PostForm extends Component
             'title' => 'required|min:3|string|max:191',
             'content' => 'required|string',
             'status' => 'required|boolean',
-            'publish_at' => 'nullable|date_format:d/m/Y',
+            'publish_at' => 'nullable|date',
             'thumb_caption' => 'nullable|string|max:255',
             'comments' => 'required|boolean',
             'tags' => 'nullable|array',
@@ -82,14 +82,14 @@ class PostForm extends Component
 
     public function mount(Post $post)
     {
-        $this->autores = User::role(['super-admin', 'manager', 'employee'])
-            ->orderBy('name')
-            ->get();
-
-        // ✅ Definir autor padrão APENAS se não houver autores disponíveis
-        if ($this->autores->isEmpty()) {
-            $this->autor = auth()->id();
-        }
+        $this->autores = User::query()
+        ->when(!auth()->user()->isSuperAdmin(), function ($query) {
+            $query->whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'super-admin');
+            });
+        })
+        ->orderBy('name')
+        ->get();        
 
         // Carregar tipos disponíveis
         $this->types = PostType::labels();
@@ -104,12 +104,10 @@ class PostForm extends Component
             $this->category = $post->category; // ✅ Corrigido
             $this->status = $post->status ?? 1;
             $this->publish_at = $post->publish_at ? $post->publish_at : now()->format('d/m/Y');
-            //$this->publish_at = $post->publish_at?->format('d/m/Y H:i');
             $this->thumb_caption = $post->thumb_caption ?? '';
-            $this->comments = $post->comments ?? 0;
+            $this->comments = $post->comments ?? false;
             $this->tags = is_string($post->tags) ? explode(',', $post->tags) : ($post->tags ?? []);
 
-            
             // Carregar imagens salvas se houver
             $this->savedImages = $post->images ?? [];
 
@@ -145,10 +143,13 @@ class PostForm extends Component
 
     public function save(string $mode = 'draft')
     {
-       
-        $validated = $this->validate();
-        $validated['status'] = $mode === 'published' ? 1 : 0;
-           
+        // $validated = $this->validate();
+        // $validated['status'] = $mode === 'published' ? 1 : 0;
+          try {
+    $validated = $this->validate();
+} catch (\Illuminate\Validation\ValidationException $e) {
+    dd($e->errors());
+}
         try {
             // Preparar dados
             $data = [
@@ -165,21 +166,21 @@ class PostForm extends Component
             ];
         
             // Salvar ou atualizar
-            if ($this->post->exists) {
+            if ($this->post->exists) {                
                 $this->post->update($data);
             } else {
                 $this->post = Post::create($data);
             }
 
-            $maxImages = env('MAX_PROPERTY_IMAGES', 20);
+            $maxImages = config('app.max_images');
             $existingImages = $this->post->images()->count();
             $allowed = $maxImages - $existingImages;
             if (count($this->images ?? []) > $allowed) {
                 $this->dispatch('swal:warning', [
                     'title' => 'Atenção!',
-                    'text' => "Você já atingiu o limite máximo de {$maxImages} imagens para este post.",
+                    'text' => "Limite de {$maxImages} imagens atingido.",
                     'icon' => 'warning',
-                    'showConfirmButton' => false,
+                    'showConfirmButton' => false
                 ]);
                 return;
             }
@@ -226,11 +227,11 @@ class PostForm extends Component
             //return redirect()->route('posts.index');
 
         } catch (\Exception $e) {
-            
-            $this->dispatch('swal', [
-                'icon' => 'error',
+            $this->dispatch('swal:warning', [
                 'title' => 'Erro ao salvar',
                 'text' => $e->getMessage(),
+                'icon' => 'warning',
+                'showConfirmButton' => false
             ]);
         }
     }

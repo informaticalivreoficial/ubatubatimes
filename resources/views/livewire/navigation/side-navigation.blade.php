@@ -76,12 +76,39 @@
                     </ul>
                 </li>
                 
-                    <li class="nav-item">
-                        <a href="{{route('companies.index')}}" class="nav-link {{ Route::is('companies.*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-industry"></i>
-                            <p>Empresas</p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{route('companies.index')}}" class="nav-link {{ Route::is('companies.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-industry"></i>
+                        <p>Empresas</p>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ Route::is('vendas.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Route::is('vendas.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-money-check"></i>
+                        <p> Vendas <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('vendas.ads.index')}}" class="nav-link {{ Route::is('vendas.ads.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Anúncios <span class="badge badge-info right">{{--$clientCount--}}</span></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('vendas.contracts.index')}}" class="nav-link {{ Route::is('vendas.contracts.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Contratos <span class="badge badge-info right">{{--$timeCount--}}</span></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('vendas.invoices.index')}}" class="nav-link {{ Route::is('vendas.invoices.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Faturas <span class="badge badge-info right">{{--$timeCount--}}</span></p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 
                  
                 <li class="nav-item {{ Route::is('posts.*') ? 'menu-open' : '' }}">

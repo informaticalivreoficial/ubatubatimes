@@ -23,7 +23,11 @@ class PostFactory extends Factory
             'autor' => User::factory(),
             'category' => CatPost::factory(),
 
-            'type' => 'blog',
+            'type' => $this->faker->randomElement([
+                'noticia',
+                'artigo',
+                'pagina',
+            ]),
             'title' => $this->faker->sentence(),
             'content' => $this->faker->paragraphs(3, true),
             'slug' => Str::slug($this->faker->unique()->sentence()),
