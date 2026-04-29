@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Navigation;
 
+use App\Models\Company;
 use App\Models\Config;
 use App\Models\Post;
 use App\Models\Property;
@@ -31,6 +32,8 @@ class SideNavigation extends Component
         //    ['status', '=', 'entregue'],
         //    ['section', '=', 'finalizado'],
         //])->count();
+
+        $companiesCount = Company::count();
         $config = Config::first();
 
         return view('livewire.navigation.side-navigation',[
@@ -38,6 +41,7 @@ class SideNavigation extends Component
             //'timeCount' => $timeCount,   
             //'postsCount' => $postsCount, 
             //'propertyCount' => $propertyCount,
+            'companiesCount' => $companiesCount,
             'config' => $config,
         ]);
     }

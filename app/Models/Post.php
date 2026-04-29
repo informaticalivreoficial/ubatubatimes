@@ -145,9 +145,19 @@ class Post extends Model
 
     public function setPublishAtAttribute($value)
     {
-        $this->attributes['publish_at'] = $value 
-            ? Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d') 
-            : null;
+        if (!$value) {
+            $this->attributes['publish_at'] = null;
+            return;
+        }
+
+        // Se já é Carbon ou datetime, formata direto
+        if ($value instanceof \Carbon\Carbon || $value instanceof \DateTime) {
+            $this->attributes['publish_at'] = $value->format('Y-m-d');
+            return;
+        }
+
+        // Se é string no formato d/m/Y (vindo do front)
+        $this->attributes['publish_at'] = \Carbon\Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
     }
 
     public function getPublishAtAttribute($value)

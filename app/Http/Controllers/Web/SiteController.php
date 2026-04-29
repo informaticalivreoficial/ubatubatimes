@@ -24,33 +24,33 @@ class SiteController extends Controller
 
     public function home()
     {        
-        $noticiasUbatuba = Post::orderBy('created_at', 'DESC')
-                    ->where('type', 'noticia')
-                    ->where('category', 15)
-                    ->postson()
-                    ->limit(2)
-                    ->get();
-        $noticiasUbatuba1 = Post::orderBy('created_at', 'DESC')
-                    ->where('type', 'noticia')
-                    ->where('category', 15)
-                    ->postson()
-                    ->offset(2)
-                    ->limit(2)
-                    ->get();
+        $todasUbatuba = Post::orderBy('created_at', 'DESC')
+            ->where('type', 'noticia')
+            ->where('category', 73)
+            ->postson()
+            ->limit(4)
+            ->get();
+
+        $noticiasUbatuba  = $todasUbatuba->take(2);   // primeiras 2
+        $noticiasUbatuba1 = $todasUbatuba->skip(2);   // últimas 2
+
         $artigosDestaque = Post::orderBy('created_at', 'DESC')
-                    ->where('type', 'artigo')
-                    ->where('category', 9)
-                    ->postson()
-                    ->limit(1)
-                    ->get();
+            ->where('type', 'artigo')
+            ->where('category', 81)
+            ->postson()
+            ->limit(1)
+            ->get();
+
         $estradas = Post::orderBy('created_at', 'DESC')
-                    ->where('type', 'noticia')
-                    ->where('category', 22)
-                    ->postson()
-                    ->first();
+            ->where('type', 'noticia')
+            ->where('category', 77)
+            ->postson()
+            ->first();
+
+        
         $noticiasCaragua = Post::orderBy('created_at', 'DESC')
                     ->where('type', 'noticia')
-                    ->where('category', 16)
+                    ->where('category', 74)
                     ->postson()
                     ->limit(4)
                     ->get();
@@ -62,26 +62,25 @@ class SiteController extends Controller
                     ->get();
         $noticiasIlhabela = Post::orderBy('created_at', 'DESC')
                     ->where('type', 'noticia')
-                    ->where('category', 18)
+                    ->where('category', 76)
                     ->postson()
                     ->limit(4)
                     ->get();
         $artigos = Post::orderBy('created_at', 'DESC')
                     ->where('type', 'artigo')
-                    ->where('category', '!=', 9)
-                    ->where('category', '!=', 7)
+                    ->whereNotIn('category', [79, 81])
                     ->postson()
                     ->limit(4)
                     ->get();
         $praiasDeUbatuba = Post::orderBy('created_at', 'DESC')
                     ->where('type', 'artigo')
-                    ->where('category', 9)
+                    ->where('category', 81)
                     ->postson()
                     ->limit(5)
                     ->get();
         $gastronomiaDeUbatuba = Post::orderBy('created_at', 'DESC')
                     ->where('type', 'artigo')
-                    ->where('category', 7)
+                    ->where('category', 79)
                     ->postson()
                     ->limit(4)
                     ->get();
@@ -109,7 +108,7 @@ class SiteController extends Controller
             'noticiasSaoSebastiao' => $noticiasSaoSebastiao,
             'noticiasIlhabela' => $noticiasIlhabela,
             //'boletim' => $boletim,
-            //'artigos' => $artigos,
+            'artigos' => $artigos,
             'praiasDeUbatuba' => $praiasDeUbatuba,
             'gastronomiaDeUbatuba' => $gastronomiaDeUbatuba,
             //'positionSidebarhome' => $positionSidebarhome,

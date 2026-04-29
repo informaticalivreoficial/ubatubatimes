@@ -22,6 +22,7 @@ use App\Http\Controllers\Web\{
 };
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\Dashboard\Companies\CatCompanies;
 use App\Livewire\Dashboard\Companies\Companies;
 use App\Livewire\Dashboard\Companies\CompanyForm;
 use App\Livewire\Dashboard\Dashboard;
@@ -94,9 +95,11 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     Route::get('configuracoes', Settings::class)->name('settings');
     Route::get('sitemap-generator', SitemapGenerator::class)->name('sitemap.generator');
 
+    //*********************** Empresas **********************************************/
     Route::get('empresas', Companies::class)->name('companies.index');
     Route::get('empresas/cadastrar-empresa', CompanyForm::class)->name('companies.create');
-    Route::get('empresas/{company}/editar-empresa', CompanyForm::class)->name('companies.edit'); 
+    Route::get('empresas/{company}/editar-empresa', CompanyForm::class)->name('companies.edit');
+    Route::get('empresas/categorias', CatCompanies::class)->name('companies.categories.index'); 
 
     //*********************** Usuários **********************************************/
     Route::get('usuarios/clientes', Users::class)->name('users.index');
@@ -111,6 +114,7 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     Route::get('posts/categorias', CatPosts::class)->name('posts.categories.index');
     Route::get('posts', Posts::class)->name('posts.index');
 
+    //*********************** Vendas *********************************************/
     Route::get('anuncios', AdIndex::class)->name('vendas.ads.index');
     Route::get('anuncios/create', AdForm::class)->name('vendas.ads.create');
     Route::get('anuncios/{ad}/edit', AdForm::class)->name('vendas.ads.edit');

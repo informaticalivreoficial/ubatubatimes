@@ -75,12 +75,29 @@
                         </li>
                     </ul>
                 </li>
-                
-                <li class="nav-item">
-                    <a href="{{route('companies.index')}}" class="nav-link {{ Route::is('companies.*') ? 'active' : '' }}">
+
+                <li class="nav-item {{ Route::is('companies.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Route::is('companies.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-industry"></i>
-                        <p>Empresas</p>
+                        <p>Empresas <i class="fas fa-angle-left right"></i></p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('companies.index')}}" class="nav-link {{ Route::is('companies.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    Listar Todos
+                                    <span class="badge badge-info right">{{ $companiesCount }}</span>
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('companies.categories.index')}}" class="nav-link {{ Route::is('companies.categories.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Categorias</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item {{ Route::is('vendas.*') ? 'menu-open' : '' }}">

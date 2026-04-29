@@ -60,12 +60,14 @@ class CompanyForm extends Component
     public ?string $first_year = null;
     public ?string $maps = null;
 
-    public string $status    = '0';
-    public string $guia      = '0';
-    public string $client    = '0';
-    public string $highlight = '0';
-
-           
+    public ?string $status    = '0';
+    public ?string $guia      = '0';
+    public ?string $client    = '0';
+    public ?string $highlight = '0';
+    public ?string $facebook = null;
+    public ?string $twitter = null;
+    public ?string $instagram = null;
+    public ?string $linkedin = null;
 
     //Contact
     public $phone, $cell_phone, $whatsapp, $email, $additional_email, $telegram;
@@ -196,6 +198,9 @@ class CompanyForm extends Component
             'guia' => $this->guia ?? 0,
             'client' => $this->client ?? 0,
             'highlight' => $this->highlight ?? 0,
+            'url' => $this->url,
+            'first_year' => $this->first_year,
+            'content' => $this->content,
 
             'category_id' => $this->category_id,
             'sub_category_id' => $this->sub_category_id,
@@ -215,6 +220,11 @@ class CompanyForm extends Component
             'document_company' => $this->document_company,
             'document_company_secondary' => $this->document_company_secondary,
             'information' => $this->information,
+
+            'facebook' => $this->facebook,
+            'twitter' => $this->twitter,
+            'instagram' => $this->instagram,
+            'linkedin' => $this->linkedin,
 
             'phone' => $this->phone,
             'whatsapp' => $this->whatsapp,

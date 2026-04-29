@@ -81,11 +81,8 @@
                         </div>
                         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
                             <div class="form-group">
-                                <label class="labelforms"><b>*CPF</b></label>
-                                <input type="text" class="form-control @error('responsable_cpf') is-invalid @enderror" placeholder="000.000.000-00" id="responsable_cpf" wire:model="responsable_cpf" x-mask="999.999.999-99" />
-                                @error('responsable_cpf')
-                                    <span class="error erro-feedback">{{ $message }}</span>
-                                @enderror
+                                <label class="labelforms"><b>CPF</b></label>
+                                <input type="text" class="form-control" placeholder="000.000.000-00" id="responsable_cpf" wire:model="responsable_cpf" x-mask="999.999.999-99" />                                
                             </div>                                        
                         </div>
                         <div class="col-12 col-md-4"> 
