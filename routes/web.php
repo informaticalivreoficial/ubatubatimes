@@ -26,6 +26,7 @@ use App\Livewire\Dashboard\Companies\Companies;
 use App\Livewire\Dashboard\Companies\CompanyForm;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Posts\CatPostForm;
+use App\Livewire\Dashboard\Posts\CatPosts;
 use App\Livewire\Dashboard\Posts\PostForm;
 use App\Livewire\Dashboard\Posts\Posts;
 use App\Livewire\Dashboard\Settings;
@@ -39,6 +40,7 @@ use App\Livewire\Dashboard\Vendas\AdContractIndex;
 use App\Livewire\Dashboard\Vendas\AdForm;
 use App\Livewire\Dashboard\Vendas\AdIndex;
 use App\Livewire\Dashboard\Vendas\InvoiceIndex;
+use App\Models\CatPost;
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
@@ -106,7 +108,7 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     //*********************** Posts *********************************************/
     Route::get('posts/{post}/editar', PostForm::class)->name('posts.edit');
     Route::get('posts/cadastrar', PostForm::class)->name('posts.create');
-    Route::get('posts/categorias', CatPostForm::class)->name('posts.categories.index');
+    Route::get('posts/categorias', CatPosts::class)->name('posts.categories.index');
     Route::get('posts', Posts::class)->name('posts.index');
 
     Route::get('anuncios', AdIndex::class)->name('vendas.ads.index');

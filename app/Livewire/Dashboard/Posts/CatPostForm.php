@@ -49,7 +49,7 @@ class CatPostForm extends Component
             'title' => 'required|string|max:255',
             'type' => Rule::requiredIf($this->parentId === null),
             'status' => 'required|boolean',
-            'parentId' => 'nullable|exists:cat_portifolios,id',
+            'parentId' => 'nullable|exists:cat_post,id',
         ]);
 
         CatPost::updateOrCreate(

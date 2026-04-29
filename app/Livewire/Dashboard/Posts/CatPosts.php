@@ -20,12 +20,10 @@ class CatPosts extends Component
     protected $updatesQueryString = ['search'];
 
     public string $sortField = 'created_at';
-
     public string $sortDirection = 'desc';
 
     protected $listeners = ['category-saved' => '$refresh'];
 
-    #{Url}
     public function updatingSearch(): void
     {
         $this->resetPage();
@@ -41,20 +39,18 @@ class CatPosts extends Component
         }
 
         $this->resetPage();
-    }    
+    }
 
-    public function toggleStatus($id)
+    public function toggleStatus($id): void
     {
         $category = CatPost::with('children')->findOrFail($id);
 
-        $newStatus = ! (bool) $category->status;
+        $newStatus = !(bool) $category->status;
 
-        // atualiza a categoria clicada
         $category->update([
             'status' => $newStatus,
         ]);
 
-        // se for PAI, replica para as filhas
         if ($category->children->isNotEmpty()) {
             $category->children()->update([
                 'status' => $newStatus,
@@ -62,11 +58,11 @@ class CatPosts extends Component
         }
     }
 
-    public function setDeleteId($id)
-    {        
-        $category = CatPost::findOrFail($id);
+    public function setDeleteId($id): void
+    {
+        $category = CatPost::withCount(['children', 'posts'])->findOrFail($id);
 
-        if($category->children()->count() > 0){
+        if ($category->children_count > 0) {
             $this->dispatch('swal', [
                 'title' => 'Erro!',
                 'icon'  => 'error',
@@ -75,19 +71,21 @@ class CatPosts extends Component
             return;
         }
 
-        if($category->countposts() > 0){
+        $text = null;
+
+        if ($category->posts_count > 0) {
             $text = 'Essa categoria possui posts cadastrados e todos serão removidos. Deseja excluir mesmo assim?';
         }
 
         $this->dispatch('swal:confirm', [
-            'title' => 'Excluir ' . ($category->children()->count() > 0 ? 'SubCategoria' : 'Categoria'),
-            'text' => (isset($text) ? $text : 'Essa ação não pode ser desfeita.'),
+            'title' => 'Excluir Categoria',
+            'text' => $text ?? 'Essa ação não pode ser desfeita.',
             'icon' => 'warning',
             'confirmButtonText' => 'Sim, excluir',
             'cancelButtonText' => 'Cancelar',
             'confirmEvent' => 'deleteCategory',
             'confirmParams' => [$id],
-        ]);       
+        ]);
     }
 
     #[On('deleteCategory')]
@@ -99,7 +97,7 @@ class CatPosts extends Component
 
         $this->dispatch('swal', [
             'title' => 'Excluído!',
-            'text'  => ($category->children()->count() > 0 ? 'SubCategoria' : 'Categoria') . ' excluída com sucesso.',
+            'text'  => 'Categoria excluída com sucesso.',
             'icon'  => 'success',
             'timer' => 2000,
             'showConfirmButton' => false,
@@ -108,10 +106,11 @@ class CatPosts extends Component
 
     public function render()
     {
-        $title = 'Categorias de Posts';
-        $searchableFields = ['title','content','slug'];
+        $searchableFields = ['title', 'content', 'slug'];
+
         $categories = CatPost::query()
             ->whereNull('id_pai')
+            ->with('children') // 🔥 aqui
             ->when($this->search, function ($query) use ($searchableFields) {
                 $query->where(function ($q) use ($searchableFields) {
                     foreach ($searchableFields as $field) {
@@ -121,8 +120,9 @@ class CatPosts extends Component
             })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate($this->perPage);
-        return view('livewire.dashboard.posts.cat-posts',[
-            'title' => $title,
+        
+        return view('livewire.dashboard.posts.cat-posts', [
+            'title' => 'Categorias de Posts',
             'categories' => $categories,
         ]);
     }

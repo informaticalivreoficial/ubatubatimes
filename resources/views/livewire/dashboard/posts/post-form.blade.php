@@ -127,12 +127,17 @@
                                 </div>
                             </div> 
                             <div class="col-12 col-md-3 col-lg-3">
-                                <div class="form-group" x-data="{ value: @entangle('publish_at').defer }" x-init="initFlatpickr()" x-ref="datepicker">
-                                    <label class="labelforms"><b>Data da Publicação</b></label>
-                                    <input type="text" class="form-control" wire:model="publish_at" id="datepicker" />                                                                                                                                                                          
+                                <div class="form-group">
+                                    <label class="labelforms"><b>Data de Publicação</b></label>
+
+                                    <input
+                                        type="text"
+                                        id="datepicker"
+                                        class="form-control"
+                                        wire:model="publish_at"
+                                    />
                                 </div>
-                            </div> 
-                                          
+                            </div>      
                         </div>
                         <div class="row mb-2">
                             <div class="col-12 mb-1"> 
@@ -278,36 +283,35 @@
 </div>
 
 <script>
+    let fp = null;
+
     function initFlatpickr() {
-        let input = document.getElementById('datepicker');
+        const input = document.getElementById('datepicker');
         if (!input) return;
 
-        flatpickr(input, {
+        if (fp) {
+            fp.destroy();
+        }
+
+        fp = flatpickr(input, {
             dateFormat: "d/m/Y",
             allowInput: true,
-            minDate: "today",
-            //defaultDate: input.value, // Carrega a data inicial corretamente
-            onChange: function(selectedDates, dateStr) {
-                input.dispatchEvent(new Event('input')); // Força atualização no Alpine.js
-            },
-            locale: {
-                firstDayOfWeek: 1,
-                weekdays: {
-                    shorthand: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
-                    longhand: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
-                },
-                months: {
-                    shorthand: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                    longhand: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-                },
-                today: "Hoje",
-                clear: "Limpar",
-                weekAbbreviation: "Sem",
-                scrollTitle: "Role para aumentar",
-                toggleTitle: "Clique para alternar",
+            maxDate: "today",
+
+            // 🔥 converte valor do banco (Y-m-d → d/m/Y)
+            defaultDate: input.value
+                ? input.value.split('-').reverse().join('/')
+                : null,
+
+            onChange: function (selectedDates, dateStr, instance) {
+                input.value = instance.formatDate(selectedDates[0], 'd/m/Y');
+                input.dispatchEvent(new Event('input'));
             }
         });
-    }    
+    }
+
+    document.addEventListener("livewire:load", initFlatpickr);
+    document.addEventListener("livewire:navigated", initFlatpickr); // Livewire 3    
 
     function tagInputComponent(tagsBinding) {
         return {
@@ -325,16 +329,4 @@
             }
         };
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        Livewire.on('swal', (data) => {
-            Swal.fire({
-                icon: data[0].icon,
-                title: data[0].title,
-                text: data[0].text,
-                timer: data[0].timer ?? null,
-                showConfirmButton: data[0].showConfirmButton ?? true,
-            });
-        });
-    });
 </script>

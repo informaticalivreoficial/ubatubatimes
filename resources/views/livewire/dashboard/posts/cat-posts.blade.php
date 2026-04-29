@@ -91,8 +91,8 @@
                                         </div>                                                                         
                                     </td>
                                 </tr>
-                                @if ($category->children()->count() > 0)
-                                    @foreach($category->children()->get() as $subcategory)                        
+                                @if ($category->children->count())
+                                    @foreach($category->children as $subcategory)                        
                                     <tr style="{{ ($subcategory->status == true ? '' : 'background: #fffed8 !important;')  }}">                            
                                         <td><i class="fas fa-angle-double-right text-green-600 mr-2"></i>  {{$subcategory->title}}</td>
                                         <td class="text-center">{{ $subcategory->status ? 'Sim' : 'Não' }}</td>

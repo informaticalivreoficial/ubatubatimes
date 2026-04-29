@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Cropper;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -38,9 +39,7 @@ class Post extends Model
         'status' => 'boolean',
         'comments' => 'boolean',
     ];
-
-    protected $dates = ['deleted_at']; // marca a coluna como uma data
-
+    
     protected static function boot()
     {
         parent::boot();        
@@ -143,16 +142,21 @@ class Post extends Model
         
         return Storage::url($cover['path']);
     }  
-    
-    public function setStatusAttribute($value)
+
+    public function setPublishAtAttribute($value)
     {
-        $this->attributes['status'] = ($value == '1' ? 1 : 0);
+        $this->attributes['publish_at'] = $value 
+            ? Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d') 
+            : null;
     }
-    
-    // public function setPublishAtAttribute($value)
-    // {
-    //     $this->attributes['publish_at'] = (!empty($value) ? $this->convertStringToDate($value) : null);
-    // }
+
+    public function getPublishAtAttribute($value)
+    {
+        return $value 
+            ? Carbon::parse($value)->format('d/m/Y') 
+            : null;
+    }
+ 
     
     public function setSlug()
     {
@@ -173,14 +177,6 @@ class Post extends Model
     
             $this->attributes['slug'] = $slug;
         }
-    }
+    }   
     
-    private function convertStringToDate(?string $param)
-    {
-        if (empty($param)) {
-            return null;
-        }
-        list($day, $month, $year) = explode('/', $param);
-        return (new \DateTime($year . '-' . $month . '-' . $day))->format('Y-m-d');
-    }
 }

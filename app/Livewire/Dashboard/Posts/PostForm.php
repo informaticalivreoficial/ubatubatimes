@@ -64,7 +64,7 @@ class PostForm extends Component
             'title' => 'required|min:3|string|max:191',
             'content' => 'required|string',
             'status' => 'required|boolean',
-            'publish_at' => 'nullable|date',
+            'publish_at' => 'nullable|date_format:d/m/Y',
             'thumb_caption' => 'nullable|string|max:255',
             'comments' => 'required|boolean',
             'tags' => 'nullable|array',
@@ -103,7 +103,7 @@ class PostForm extends Component
             $this->type = $post->type;
             $this->category = $post->category; // ✅ Corrigido
             $this->status = $post->status ?? 1;
-            $this->publish_at = $post->publish_at ? $post->publish_at : now()->format('d/m/Y');
+            $this->publish_at = $post->publish_at;
             $this->thumb_caption = $post->thumb_caption ?? '';
             $this->comments = $post->comments ?? false;
             $this->tags = is_string($post->tags) ? explode(',', $post->tags) : ($post->tags ?? []);
@@ -116,7 +116,6 @@ class PostForm extends Component
         } else {
             // Modo criação
             $this->post = new Post();
-            $this->publish_at = $post->publish_at ? $post->publish_at : now()->format('d/m/Y');
         }
     }
 
@@ -143,13 +142,9 @@ class PostForm extends Component
 
     public function save(string $mode = 'draft')
     {
-        // $validated = $this->validate();
-        // $validated['status'] = $mode === 'published' ? 1 : 0;
-          try {
-    $validated = $this->validate();
-} catch (\Illuminate\Validation\ValidationException $e) {
-    dd($e->errors());
-}
+        $validated = $this->validate();
+        $validated['status'] = $mode === 'published' ? 1 : 0;
+        
         try {
             // Preparar dados
             $data = [
@@ -164,7 +159,7 @@ class PostForm extends Component
                 'comments' => $validated['comments'],
                 'tags' => !empty($validated['tags']) ? implode(',', $validated['tags']) : null,
             ];
-        
+            //dd($data);
             // Salvar ou atualizar
             if ($this->post->exists) {                
                 $this->post->update($data);
@@ -192,7 +187,7 @@ class PostForm extends Component
                 if ($index >= $allowed) break;
 
                 $filename = uniqid() . '.webp';
-                $path     = 'posts/' . $this->post->id . '/' . $filename;
+                $path = 'posts/' . $this->post->type . '/' . $this->post->id . '/' . $filename;
 
                 $img     = $manager->read($image->getRealPath());
                 $img->scaleDown(width: 1920);

@@ -87,8 +87,8 @@ class CrawlerFundartService
                 'title' => $title,
                 'slug' => $slug,
                 'content' => $content,
-                'cat_pai' => 3,
-                'category' => 12,
+                'cat_pai' => 56,
+                'category' => 73,
                 'status' => true,
             ]);
 

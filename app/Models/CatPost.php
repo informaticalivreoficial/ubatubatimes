@@ -29,9 +29,13 @@ class CatPost extends Model
 
     protected static function booted()
     {
-        static::saving(function ($catpost) {
-            $catpost->setSlug();
-        });        
+        static::creating(function ($model) {
+            $model->generateSlug();
+        });
+
+        static::updating(function ($model) {
+            $model->generateSlug();
+        });
     }
 
     /**
@@ -63,24 +67,27 @@ class CatPost extends Model
     /**
      * Accerssors and Mutators
      */ 
-    public function setSlug()
+    public function generateSlug(): void
     {
-        if (!empty($this->title)) {
-    
-            $baseSlug = Str::slug($this->title);
-            $slug = $baseSlug;
-            $count = 1;
-    
-            while (
-                CatPost::where('slug', $slug)
-                    ->where('id', '!=', $this->id)
-                    ->exists()
-            ) {
-                $slug = $baseSlug . '-' . str_pad($count, 2, '0', STR_PAD_LEFT);
-                $count++;
-            }
-    
-            $this->attributes['slug'] = $slug;
+        if (!$this->title) {
+            return;
         }
+
+        $baseSlug = Str::slug($this->title);
+        $slug = $baseSlug;
+        $count = 1;
+
+        while (
+            self::where('slug', $slug)
+                ->when($this->exists, function ($q) {
+                    $q->where('id', '!=', $this->id);
+                })
+                ->exists()
+        ) {
+            $slug = $baseSlug . '-' . str_pad($count, 2, '0', STR_PAD_LEFT);
+            $count++;
+        }
+
+        $this->slug = $slug;
     }
 }

@@ -85,8 +85,8 @@ class CrawlerTamoiosService
                 'title' => $title,
                 'slug' => $slug,
                 'content' => $content . '<br><br><small>Fonte: Concessionária Tamoios</small>',
-                'cat_pai' => 14,
-                'category' => 22,
+                'cat_pai' => 56,
+                'category' => 77,
                 'status' => 1,
             ]);
 
