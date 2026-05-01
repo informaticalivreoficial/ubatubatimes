@@ -12,6 +12,8 @@ use App\Services\PrevisaoTempoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use Analytics;
+use Spatie\Analytics\Period;
 
 class SiteController extends Controller
 {
@@ -177,14 +179,10 @@ class SiteController extends Controller
             ->limit(11)
             ->get();
         
-        $post->views = $post->views + 1;
-        $post->save();
+        $post->increment('views');
 
         $postprevious = Post::where('id', '<', $post->id)->postson()->where('type', 'noticia')->first();
         $postnext = Post::where('id', '>', $post->id)->postson()->where('type', 'noticia')->first();
-
-        //$positionSidebarPost = Anuncio::where('plan_id', 1)->available()->limit(2)->get(); 
-        //$positionFooterPost = Anuncio::where('plan_id', 6)->available()->limit(1)->get();       
 
         $head = $this->seo->render($post->title ?? 'Ubatuba Times',
              Str::words($post->content, 20, '...') ?? 'Informações e notícias sobre Ubatuba',
@@ -192,7 +190,7 @@ class SiteController extends Controller
              $post->cover() ?? url(asset('theme/images/image.jpg'))
         );           
 
-        return view('web.noticia', [
+        return view('web.blog.artigo', [
             'head' => $head,
             'post' => $post,
             'postsMais' => $postsMais,
@@ -200,8 +198,6 @@ class SiteController extends Controller
             'postsTags' => $postsTags,
             'postprevious' => $postprevious,
             'postnext' => $postnext,
-            //'positionSidebarPost' => $positionSidebarPost,
-            //'positionFooterPost' => $positionFooterPost,
         ]);
     }
 
@@ -332,6 +328,77 @@ class SiteController extends Controller
         return view('web.previsao-do-tempo',[
             'head' => $head,
             'boletim' => $previsaoTempoService->getBoletim(),
+        ]);
+    }
+
+    public function anunciar()
+    {
+        $labels = [];
+        $visitasMensais = [];
+
+        try {
+
+            $analytics = cache()->remember('analytics_12_months', 60, function () {
+
+                return Analytics::get(
+                    Period::months(12),
+                    metrics: ['totalUsers', 'screenPageViews'],
+                    dimensions: ['yearMonth'],
+                );
+
+            });
+
+            // 🔁 Fallback automático se não tiver dados suficientes
+            if ($analytics->isEmpty()) {
+                $analytics = Analytics::get(
+                    Period::months(6),
+                    metrics: ['totalUsers', 'screenPageViews'],
+                    dimensions: ['yearMonth'],
+                );
+            }
+
+            foreach ($analytics as $item) {
+
+                if (!isset($item['yearMonth'])) {
+                    continue;
+                }
+
+                $mes = \Carbon\Carbon::createFromFormat('Ym', $item['yearMonth'])
+                    ->translatedFormat('M');
+
+                $labels[] = ucfirst($mes);
+
+                $visitasMensais[] =
+                    ($item['totalUsers'] ?? 0) +
+                    ($item['screenPageViews'] ?? 0);
+            }
+
+        } catch (\Exception $e) {
+            // 🔒 segurança total (nunca quebra a página)
+            $labels = [];
+            $visitasMensais = [];
+        }
+
+        $visitasTotal = array_sum($visitasMensais);
+
+        $postsStats = [
+            'artigos' => \App\Models\Post::where('type', 'artigo')->count(),
+            'noticias' => \App\Models\Post::where('type', 'noticia')->count(),
+        ];
+
+        $head = $this->seo->render(
+            'Anuncie Aqui - ' . $this->config->app_name,
+            $this->config->information ?? 'Nossa equipe está pronta para melhor atender!',
+            route('web.anunciar'),
+            $this->config->getmetaimg() ?? 'https://informaticalivre.com.br/media/metaimg.jpg'
+        );
+
+        return view('web.anunciar', [
+            'head' => $head,
+            'visitas' => $visitasTotal,
+            'labels' => $labels,
+            'visitasMensais' => $visitasMensais,
+            'postsStats' => $postsStats,
         ]);
     }
 }

@@ -24,30 +24,46 @@
                         tabindex="-1"
                         style="position: absolute; left: -9999px;" 
                     />
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model.live="name">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model.defer="name">
                     @error('name') <span class="text-danger small">{{ $message }}</span> @enderror
                 </div>                          
                 <div class="col-lg-4">
                     <label>Email</label>
-                    <input type="text" class="form-control @error('email') is-invalid @enderror" wire:model.live="email">
+                    <input type="text" class="form-control @error('email') is-invalid @enderror" wire:model.defer="email">
                     @error('email') <span class="text-danger small">{{ $message }}</span> @enderror
                 </div>                          
                 <div class="col-lg-4">
                     <label>WhatsApp</label>
-                    <input type="text" x-mask="(99) 99999-9999" class="form-control" wire:model.live="whatsapp">
+                    <input type="text" x-mask="(99) 99999-9999" class="form-control" wire:model.defer="whatsapp">
                 </div>                          
             </div>
             <div class="form-group row">
                 <div class="col-lg-12">
                     <label>Nos conte um pouco sobre sua empresa</label>
-                    <textarea wire:model.live="message" rows="10" class="form-control @error('message') is-invalid @enderror"></textarea>
+                    <textarea wire:model.defer="message" rows="10" class="form-control @error('message') is-invalid @enderror"></textarea>
                     @error('message') <span class="text-danger small">{{ $message }}</span> @enderror
                 </div>                  
             </div>                       
             
-            <button wire:click="submit" wire:loading.attr="disabled" class="btn btn-primary">
-                <span wire:loading.remove wire:target="submit">Enviar Agora</span>
-                <span wire:loading wire:target="submit">Enviando...</span>
+            <button type="submit"
+                    wire:loading.attr="disabled"
+                    class="btn btn-primary flex items-center gap-2">
+
+                <span wire:loading.class="hidden" wire:target="submit">
+                    Enviar Agora
+                </span>
+
+                <span class="hidden flex items-center gap-2"
+                    wire:loading.class.remove="hidden"
+                    wire:target="submit">
+
+                    <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="4" fill="none"/>
+                    </svg>
+
+                    Enviando...
+                </span>
+
             </button>
         </form>
     @endif    

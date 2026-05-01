@@ -41,108 +41,6 @@ class WebController extends Controller
     
     
 
-    
-
-    public function noticia($slug)
-    {
-        $post = Post::where('slug', $slug)->where('tipo', 'noticia')->postson()->first();
-
-        if($post == null){
-            return Redirect::route('web.home');
-        }
-        
-        $categorias = CatPost::orderBy('titulo', 'ASC')
-            ->where('tipo', 'noticia')
-            ->available()
-            ->whereNotNull('id_pai')
-            ->get();
-        $postsMais = Post::orderBy('views', 'DESC')
-            ->where('id', '!=', $post->id)
-            ->where('tipo', 'noticia')
-            ->limit(4)
-            ->postson()
-            ->get();
-        $postsTags = Post::orderBy('views', 'DESC')
-            ->where('tipo', 'noticia')
-            ->where('tags', '!=', '')
-            ->where('id', '!=', $post->id)
-            ->postson()
-            ->limit(11)
-            ->get();
-        
-        $post->views = $post->views + 1;
-        $post->save();
-
-        $postprevious = Post::where('id', '<', $post->id)->postson()->where('tipo', 'noticia')->first();
-        $postnext = Post::where('id', '>', $post->id)->postson()->where('tipo', 'noticia')->first();
-
-        $positionSidebarPost = Anuncio::where('plan_id', 1)->available()->limit(2)->get(); 
-        $positionFooterPost = Anuncio::where('plan_id', 6)->available()->limit(1)->get();       
-
-        $head = $this->seo->render($post->titulo ?? 'Informática Livre',
-            $post->titulo,
-            route('web.noticia', ['slug' => $post->slug]),
-            $post->cover() ?? $this->configService->getMetaImg()
-        );
-
-        return view('web.blog.artigo', [
-            'head' => $head,
-            'post' => $post,
-            'postsMais' => $postsMais,
-            'categorias' => $categorias,
-            'postsTags' => $postsTags,
-            'postprevious' => $postprevious,
-            'postnext' => $postnext,
-            'positionSidebarPost' => $positionSidebarPost,
-            'positionFooterPost' => $positionFooterPost,
-        ]);
-    }
-    
-    
-
-    
-
-    
-    public function artigo(Request $request)
-    {
-        $post = Post::where('slug', $request->slug)->postson()->first();   
-        
-        if($post == null){
-            return Redirect::route('web.home');
-        }
-        
-        $categorias = CatPost::orderBy('titulo', 'ASC')
-            ->where('tipo', 'artigo')
-            ->get();
-        $postsMais = Post::orderBy('views', 'DESC')
-            ->where('id', '!=', $post->id)
-            ->where('tipo', 'artigo')
-            ->limit(4)
-            ->postson()
-            ->get();
-        
-        $post->views = $post->views + 1;
-        $post->save();
-
-        //Anúncios
-        $positionSidebarPost = Anuncio::where('plan_id', 4)->available()->limit(2)->get();
-        $positionFooterPost = Anuncio::where('plan_id', 10)->available()->limit(1)->get();
-
-        $head = $this->seo->render($post->titulo ?? 'Informática Livre',
-            $post->titulo,
-            route('web.blog.artigo', ['slug' => $post->slug]),
-            $post->cover() ?? $this->configService->getMetaImg()
-        );
-
-        return view('web.blog.artigo', [
-            'head' => $head,
-            'post' => $post,
-            'postsMais' => $postsMais,
-            'categorias' => $categorias,
-            'positionSidebarPost' => $positionSidebarPost,
-            'positionFooterPost' => $positionFooterPost,
-        ]);
-    }
 
     public function pesquisa(Request $request)
     {
@@ -254,29 +152,6 @@ class WebController extends Controller
         ]);
     }
 
-    public function anunciar()
-    {
-        $visitas365 = Analytics::get(
-                Period::months(12), 
-                metrics: ['totalUsers', 'sessions', 'screenPageViews'], 
-                dimensions: ['month'],
-        );
-
-        $v = [];
-        foreach($visitas365->all() as $key => $visitas){            
-            $v[] = $visitas['totalUsers'] + $visitas['screenPageViews']; 
-        }
-        
-        $head = $this->seo->render('Anuncie Aqui - ' . $this->configService->getConfig()->nomedosite,
-            $this->configService->getConfig()->descricao ?? 'Nossa equipe está pronta para melhor atender as demandas de nossos clientes!',
-            route('web.atendimento'),
-            $this->configService->getMetaImg() ?? 'https://informaticalivre.com.br/media/metaimg.jpg'
-        ); 
-
-        return view('web.anunciar', [
-            'head' => $head,
-            'visitas' => array_sum($v)            
-        ]);
-    }
+    
     
 }
