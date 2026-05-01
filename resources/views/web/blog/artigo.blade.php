@@ -8,8 +8,8 @@
             <div class="col-md-12">
                 <ul class="breadcrumb">
                     <li><a href="{{route('web.home')}}">Início</a></li>
-                    <li>{{($post->tipo == 'noticia' ? 'Notícia' : 'Blog')}}</li>
-                    <li>{{$post->titulo}}</li>
+                    <li>{{($post->type == 'noticia' ? 'Notícia' : 'Blog')}}</li>
+                    <li>{{$post->title}}</li>
                 </ul>
             </div>
         </div>
@@ -21,8 +21,8 @@
     <div class="row">
       <div class="col-lg-8 col-md-12">
         <div class="single-post">
-            <div class="utf_post_title-area"> <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoriaObject->slug ])}}">{{$post->categoriaObject->titulo}}</a>
-                <h2 class="utf_post_title">{{$post->titulo}}</h2>
+            <div class="utf_post_title-area"> <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoryObject->slug ])}}">{{$post->categoryObject->title}}</a>
+                <h2 class="utf_post_title">{{$post->title}}</h2>
                 <div class="utf_post_meta mb-2"> 
                     <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</span> 
                     <span class="post-hits"><i class="fa fa-eye"></i> {{$post->views}}</span> 
@@ -36,7 +36,7 @@
             <div class="utf_post_content-area">
                 <div class="post-media post-featured-image"> 
                     <a href="{{$post->nocover()}}" class="gallery-popup">
-                        <img src="{{$post->cover()}}" class="img-fluid" alt="{{$post->titulo}}">
+                        <img src="{{$post->cover()}}" class="img-fluid" alt="{{$post->title}}">
                     </a> 
                 </div>
                 <div class="entry-content">
@@ -48,7 +48,7 @@
                                 <div class="col-4 mb-3">
                                   <div class="utf_post_thumb">                            
                                       <a href="{{ $image->url_image }}" class="gallery-popup">
-                                          <img class="img-fluid" src="{{ $image->url_cropped }}" alt="{{ $post->titulo }}"> 
+                                          <img class="img-fluid" src="{{ $image->url_cropped }}" alt="{{ $post->title }}"> 
                                       </a>                            
                                   </div>
                                 </div>                                                        
@@ -68,21 +68,21 @@
         <nav class="post-navigation clearfix">
             @if (!empty($postprevious) && $postprevious->count() > 0)
                 <div class="post-previous"> 
-                    <a href="{{route(($postprevious->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postprevious->slug] )}}"> <span><i class="fa fa-angle-left"></i>Anterior</span>
-                        <h3>{{$postprevious->titulo}}</h3>
+                    <a href="{{route(($postprevious->type == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postprevious->slug] )}}"> <span><i class="fa fa-angle-left"></i>Anterior</span>
+                        <h3>{{$postprevious->title}}</h3>
                     </a> 
                 </div>
             @endif
             @if (!empty($postnext) && $postnext->count() > 0)
                 <div class="post-next"> 
-                    <a href="{{route(($postnext->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postnext->slug] )}}"> <span>Próximo <i class="fa fa-angle-right"></i></span>
-                        <h3>{{$postnext->titulo}}</h3>
+                    <a href="{{route(($postnext->type == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postnext->slug] )}}"> <span>Próximo <i class="fa fa-angle-right"></i></span>
+                        <h3>{{$postnext->title}}</h3>
                     </a> 
                 </div>
             @endif
         </nav>
         
-        @if ($post->tipo == 'artigo')
+        @if ($post->type == 'artigo')
             <div class="author-box">
                 <div class="author-img pull-left"> 
                     <img src="{{$post->user->getUrlAvatarAttribute()}}" alt="{{$post->user->name}}"> 
@@ -198,20 +198,16 @@
                     @foreach($positionSidebarPost as $p)
                         <div class="widget text-center">                                    
                             <a href="{{$p->link ?? '#'}}" target="_blank">
-                                <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->titulo}}" />
+                                <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->title}}" />
                             </a>                                                                      
                         </div>
                     @endforeach
                 @else
                     <div class="widget text-center">                                    
-                        <a href="{{route('web.anunciar')}}">
-                            <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
-                        </a>                                                                      
+                        <x-ad slot="article_sidebar" />                                                                      
                     </div>
                     <div class="widget text-center">                                    
-                        <a href="{{route('web.anunciar')}}">
-                            <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
-                        </a>                                                                      
+                        <x-ad slot="article_sidebar_1" />                                                                      
                     </div>
                 @endif
 
@@ -224,13 +220,13 @@
                                     <li class="clearfix" style="min-height: 130px;">
                                         <div class="utf_post_block_style post-float clearfix">
                                             <div class="utf_post_thumb"> 
-                                                <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}"> 
-                                                    <img class="img_person" src="{{$postmais->cover()}}" alt="{{$postmais->titulo}}" /> 
+                                                <a href="{{route(($postmais->type == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}"> 
+                                                    <img class="img_person" src="{{$postmais->cover()}}" alt="{{$postmais->title}}" /> 
                                                 </a> 
                                             </div>                      
                                             <div class="utf_post_content">
                                                 <h2 class="utf_post_title title-small"> 
-                                                    <a href="{{route(($postmais->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}">{{$postmais->titulo}}</a> 
+                                                    <a href="{{route(($postmais->type == 'artigo' ? 'web.blog.artigo' : 'web.noticia'), ['slug' => $postmais->slug] )}}">{{$postmais->title}}</a> 
                                                 </h2>
                                                 <div class="utf_post_meta"> 
                                                     <span class="utf_post_author"><i class="fa fa-eye"></i> {{$postmais->views}}</span> 
@@ -250,10 +246,10 @@
                     <h3 class="utf_block_title"><span>Categorias</span></h3>
                     <ul class="list-round mr_bottom-20">
                         @foreach ($categorias as $categoria)
-                            @if ($categoria->countposts() >= 1)
+                            @if ($categoria->posts->count() >= 1)
                                 <li>
-                                    <a href="{{route(($categoria->tipo == 'artigo' ? 'web.blog.categoria' : 'web.noticia.categoria'), ['slug' => $categoria->slug] )}}">
-                                        <span class="catTitle"> {{$categoria->titulo}}</span><span class="catCounter"> ({{$categoria->countposts()}})</span>
+                                    <a href="{{route(($categoria->type == 'artigo' ? 'web.blog.categoria' : 'web.noticia.categoria'), ['slug' => $categoria->slug] )}}">
+                                        <span class="catTitle"> {{$categoria->title}}</span><span class="catCounter"> ({{$categoria->posts->count()}})</span>
                                     </a> 
                                 </li>
                             @endif                        
@@ -272,7 +268,7 @@
                                 foreach($array as $tags){
                                     $tag = trim($tags);                                                       
                                     echo '<li>';
-                                    if($posttags->tipo == 'artigo'){
+                                    if($posttags->type == 'artigo'){
                                         echo '<a href="'.route('web.blog.artigo',['slug' => $posttags->slug]).'">';
                                     }else{
                                         echo '<a href="'.route('web.noticia',['slug' => $posttags->slug]).'">';
@@ -286,6 +282,7 @@
                   </div>
               @endif
 
+              {{--  
               @if ($newsletterForm)
                   <div class="widget">
                       <div class="utf_newsletter_block">
@@ -311,13 +308,14 @@
                       </div>
                   </div>
               @endif 
-              
+              --}}
+
               <div class="widget text-center">
                   <div class="fb-root fb-widget">
                       <div class="fb-page-responsive">
-                          <div data-href="{{$configuracoes->facebook}}" data-tabs="timeline" data-height="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" class="fb-page">
+                          <div data-href="{{$config->facebook}}" data-tabs="timeline" data-height="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" class="fb-page">
                               <div class="fb-xfbml-parse-ignore">
-                                <blockquote cite="{{$configuracoes->facebook}}"><a href="{{$configuracoes->facebook}}">{{$configuracoes->nomedosite}}</a></blockquote>
+                                <blockquote cite="{{$config->facebook}}"><a href="{{$config->facebook}}">{{$config->nomedosite}}</a></blockquote>
                               </div>
                           </div>
                       </div>
@@ -336,7 +334,7 @@
                     <div class="row">
                         <div class="col-md-12"> 
                             <a href="{{$f->link ?? '#'}}" target="_blank">
-                                <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->titulo}}" /> 
+                                <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->title}}" /> 
                             </a>
                         </div>
                     </div>
@@ -348,9 +346,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12"> 
-                        <a href="{{route('web.anunciar')}}" target="_blank">
-                            <img class="img-fluid" src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" alt="Anuncie Aqui!" /> 
-                        </a> 
+                        <x-ad slot="article_footer" /> 
                     </div>
                 </div>
             </div>                                                               
@@ -389,54 +385,7 @@
 @section('js')
 
 <script>
-  $(function () {
-
-      $.ajaxSetup({
-          headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          }
-      });
-
-      // Seletor, Evento/efeitos, CallBack, Ação
-      $('.j_submitnewsletter').submit(function (){
-          var form = $(this);
-          var dataString = $(form).serialize();
-
-          $.ajax({
-              url: "{{ route('web.sendNewsletter') }}",
-              data: dataString,
-              type: 'GET',
-              dataType: 'JSON',
-              beforeSend: function(){
-                  form.find("#js-subscribe-btn").attr("disabled", true);
-                  form.find('#js-subscribe-btn').html("Carregando...");                
-                  form.find('.alert').fadeOut(500, function(){
-                      $(this).remove();
-                  });
-              },
-              success: function(response){
-                  $('html, body').animate({scrollTop:$('#js-newsletter-result').offset().top-90}, 'slow');
-                  if(response.error){
-                      form.find('#js-newsletter-result').html('<div class="alert alert-danger error-msg">'+ response.error +'</div>');
-                      form.find('.error-msg').fadeIn();                    
-                  }else{
-                      form.find('#js-newsletter-result').html('<div class="alert alert-success error-msg">'+ response.sucess +'</div>');
-                      form.find('.error-msg').fadeIn();                    
-                      form.find('input[class!="noclear"]').val('');
-                      form.find('.form_hide').fadeOut(500);
-                  }
-              },
-              complete: function(response){
-                  form.find("#js-subscribe-btn").attr("disabled", false);
-                  form.find('#js-subscribe-btn').html("Inscrever");                                
-              }
-
-          });
-
-          return false;
-      });
-
-  });
+  
 </script>
 
 <div id="fb-root"></div>

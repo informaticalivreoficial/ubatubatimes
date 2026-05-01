@@ -4,12 +4,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1><i class="fas fa-search mr-2"></i> Categorias</h1>
+                    <h1><i class="fas fa-search mr-2"></i> Menus</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">                    
                         <li class="breadcrumb-item"><a href="{{route('admin')}}">Painel de Controle</a></li>
-                        <li class="breadcrumb-item active">Categorias</li>
+                        <li class="breadcrumb-item active">Menus</li>
                     </ol>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                       </div>
                 </div>
                 <div class="col-12 col-sm-6 my-2 text-right">
-                    <a @click="$dispatch('open-category-modal', { editId: null, categoryId: null })"
+                    <a @click="$dispatch('open-menu-modal', { editId: null, menuId: null })"
                         class="btn btn-sm btn-default">
                         <i class="fas fa-plus mr-2"></i> 
                         Cadastrar Novo
@@ -40,7 +40,7 @@
         </div>
 
         <div class="card-body">
-            @if($categories->count())
+            @if($menus->count())
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped projects">
                         <thead>
@@ -53,70 +53,70 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($categories as $category)
-                                <tr style="{{ ($category->status == true ? '' : 'background: #fffed8 !important;')  }}">
-                                    <td class="font-weight-bold"><i class="fas fa-angle-right text-green-700 mr-2"></i> {{$category->title}}</td>
-                                    <td class="text-center">{{ $category->status ? 'Sim' : 'Não' }}</td>
-                                    <td class="text-center">{{date('d/m/Y', strtotime($category->created_at))}}</td>
-                                    <td class="text-center">{{$category->type}}</td>
+                            @foreach($menus as $menu)
+                                <tr style="{{ ($menu->status == true ? '' : 'background: #fffed8 !important;')  }}">
+                                    <td><i class="fas fa-angle-right"></i> {{$menu->title}}</td>
+                                    <td class="text-center">{{ $menu->status ? 'Sim' : 'Não' }}</td>
+                                    <td class="text-center">{{date('d/m/Y', strtotime($menu->created_at))}}</td>
+                                    <td class="text-center">{{$menu->type}}</td>
                                     <td>
                                         <div class="flex items-center gap-2">
                                             <x-forms.switch-toggle
-                                                wire:key="safe-switch-{{ $category->id }}"
-                                                wire:click="toggleStatus({{ $category->id }})"
-                                                :checked="$category->status"
+                                                wire:key="safe-switch-{{ $menu->id }}"
+                                                wire:click="toggleStatus({{ $menu->id }})"
+                                                :checked="$menu->status"
                                                 size="sm"
                                                 color="green"
                                             />
                                             <a 
-                                                data-id="{{ $category->id }}"
-                                                x-on:click="$dispatch('open-category-modal', { editId: parseInt($el.dataset.id) })"
+                                                data-id="{{ $menu->id }}"
+                                                x-on:click="$dispatch('open-menu-modal', { editId: parseInt($el.dataset.id) })"
                                                 class="btn btn-xs btn-default">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             
                                             <a 
-                                                data-parent-id="{{ $category->id }}"
-                                                x-on:click="$dispatch('open-category-modal', { categoryId: parseInt($el.dataset.parentId) })" 
+                                                data-parent-id="{{ $menu->id }}"
+                                                x-on:click="$dispatch('open-menu-modal', { menuId: parseInt($el.dataset.parentId) })" 
                                             class="btn btn-sm btn-success">
-                                            Criar Subcategoria
+                                            Criar SubLink
                                             </a>  
 
                                             <button type="button" 
                                                 class="btn btn-xs bg-danger text-white" 
-                                                title="Excluir Categoria"
-                                                wire:click="setDeleteId({{ $category->id }})">
+                                                title="Excluir Link"
+                                                wire:click="setDeleteId({{ $menu->id }})">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>                                                                         
                                     </td>
                                 </tr>
-                                @if ($category->children()->count() > 0)
-                                    @foreach($category->children()->get() as $subcategory)                        
-                                    <tr style="{{ ($subcategory->status == true ? '' : 'background: #fffed8 !important;')  }}">                            
-                                        <td><i class="fas fa-angle-double-right text-green-600 mr-2"></i>  {{$subcategory->title}}</td>
-                                        <td class="text-center">{{ $subcategory->status ? 'Sim' : 'Não' }}</td>
-                                        <td class="text-center">{{date('d/m/Y', strtotime($subcategory->created_at))}}</td>
+                                @if ($menu->children()->count() > 0)
+                                    @foreach($menu->children()->get() as $submenu)                        
+                                    <tr style="{{ ($submenu->status == true ? '' : 'background: #fffed8 !important;')  }}">                            
+                                        <td><i class="fas fa-angle-double-right"></i>  {{$submenu->title}}</td>
+                                        <td class="text-center">{{ $submenu->status ? 'Sim' : 'Não' }}</td>
+                                        <td class="text-center">{{date('d/m/Y', strtotime($submenu->created_at))}}</td>
                                         <td class="text-center">---------</td>
                                         <td>   
                                             <div class="flex items-center gap-2">
                                                 <x-forms.switch-toggle
-                                                    wire:key="safe-switch-{{ $subcategory->id }}"
-                                                    wire:click="toggleStatus({{ $subcategory->id }})"
-                                                    :checked="$subcategory->status"
+                                                    wire:key="safe-switch-{{ $submenu->id }}"
+                                                    wire:click="toggleStatus({{ $submenu->id }})"
+                                                    :checked="$submenu->status"
                                                     size="sm"
                                                     color="green"
                                                 />
                                                 <a 
-                                                    data-edit-id="{{ $subcategory->id }}"
-                                                    x-on:click="$dispatch('open-category-modal', { editId: parseInt($el.dataset.editId) })" 
+                                                    data-edit-id="{{ $submenu->id }}"
+                                                    x-on:click="$dispatch('open-menu-modal', { editId: parseInt($el.dataset.editId) })" 
                                                     class="btn btn-xs btn-default"><i class="fas fa-pen"></i>
                                                 </a>
                                                 <button 
                                                     type="button" 
                                                     class="btn btn-xs bg-danger text-white" 
-                                                    title="Excluir Subcategoria"
-                                                    wire:click="setDeleteId({{ $subcategory->id }})">
+                                                    title="Excluir SubLink"
+                                                    wire:click="setDeleteId({{ $submenu->id }})">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -129,7 +129,7 @@
                     </table> 
                 </div>               
                 <div class="mt-3">
-                    {{$categories->links()}}
+                    {{$menus->links()}}
                 </div>         
             @else
                 <div class="alert alert-info mb-0">
@@ -139,27 +139,17 @@
             
             <div 
                 x-data="{ open: false }"
-                x-on:open-category-modal.window="
+                x-on:open-menu-modal.window="
                     open = true;
-                    Livewire.dispatch('loadCategory', { payload: $event.detail })
+                    Livewire.dispatch('loadMenu', { payload: $event.detail })
                 "
-                x-on:category-saved.window="open = false"
+                x-on:menu-saved.window="open = false"
                 x-show="open"
                 style="display: none"
                 class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-[1050]"
             >
-                <div class="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
-                    <livewire:dashboard.portifolio.portifolio-categories-form />
-                    <div class="mt-4 text-right">
-                        <button 
-                        @click="
-                            open = false;
-                            Livewire.dispatch('resetForm')
-                        " 
-                        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded">
-                            Fechar
-                        </button>
-                    </div>
+                <div class="bg-white w-full max-w-lg rounded-lg shadow-lg p-2">
+                    <livewire:dashboard.menu.menu-form />                    
                 </div>
             </div>
 
@@ -169,3 +159,4 @@
 
    
 </div>
+

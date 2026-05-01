@@ -103,6 +103,11 @@
                             <x-ad slot="home_sidebar" />                                                                      
                         </div>
                       </div>
+                      <div class="col-md-12">                        
+                        <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
+                            <x-ad slot="home_sidebar_1" />                                                                      
+                        </div>
+                      </div>
                   </div>
               </div>        
           </div>

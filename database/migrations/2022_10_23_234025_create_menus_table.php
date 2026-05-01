@@ -15,7 +15,7 @@ class CreateMenusTable extends Migration
     {
         Schema::create('menu', function (Blueprint $table) {
             $table->increments('id');
-            $table->foreignId('post')->constrained('posts')->cascadeOnDelete();
+            $table->unsignedInteger('post')->nullable();
             $table->integer('id_pai')->unsigned()->nullable();
             $table->string('title');
             $table->string('type');
@@ -25,6 +25,7 @@ class CreateMenusTable extends Migration
             $table->integer('status')->nullable();
             
             $table->timestamps();
+            $table->foreign('post')->references('id')->on('posts');
         });
     }
 

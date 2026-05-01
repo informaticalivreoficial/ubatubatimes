@@ -58,18 +58,18 @@ class AppServiceProvider extends ServiceProvider
         }
 
         //Região Categorias de Notícias
-        // $catnoticias = CatPost::where('tipo', 'noticia')
-        //                 ->available()
-        //                 ->whereNotNull('id_pai')
-        //                 ->get();
-        // View()->share('catnoticias', $catnoticias);
+        $catnoticias = CatPost::where('type', 'noticia')
+                        ->active()
+                        ->whereNotNull('id_pai')
+                        ->get();
+        View()->share('catnoticias', $catnoticias);
 
-        // //Colunas Categorias
-        // $catcolunas = CatPost::where('tipo', 'artigo')
-        //                 ->available()
-        //                 ->whereNotNull('id_pai')
-        //                 ->get();
-        // View()->share('catcolunas', $catcolunas);
+        //Colunas Categorias
+        $catcolunas = CatPost::where('type', 'artigo')
+                        ->active()
+                        ->whereNotNull('id_pai')
+                        ->get();
+        View()->share('catcolunas', $catcolunas);
 
         //Newsletter
         // $newsletter = NewsletterCat::whereNotNull('sistema')

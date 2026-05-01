@@ -7,7 +7,7 @@
             <div class="col-sm-12">
                 <ul class="breadcrumb">
                     <li><a href="{{route('web.home')}}">Início</a></li>
-                    <li>{{$type}} - {{$categoria->titulo}}</li>
+                    <li>{{$type}} - {{$categoria->title}}</li>
                 </ul>
             </div>
         </div>
@@ -25,14 +25,14 @@
                                 <div class="col-lg-4">
                                     <div class="utf_post_block_style post-grid clearfix">
                                         <div class="utf_post_thumb"> 
-                                            <a href="{{route(($post->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'),[ 'slug' => $post->slug ])}}"> 
+                                            <a href="{{route(($post->type == 'artigo' ? 'web.blog.artigo' : 'web.noticia'),[ 'slug' => $post->slug ])}}"> 
                                                 <img class="img_person" src="{{$post->cover()}}" alt="" /> 
                                             </a> 
                                         </div>
-                                        <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoriaObject->slug ])}}">{{$post->categoriaObject->titulo}}</a>
+                                        <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoryObject->slug ])}}">{{$post->categoryObject->title}}</a>
                                         <div class="utf_post_content">
                                             <h2 class="utf_post_title title-large"> 
-                                                <a href="{{route(($post->tipo == 'artigo' ? 'web.blog.artigo' : 'web.noticia'),['slug' => $post->slug])}}">{{$post->titulo}}</a> 
+                                                <a href="{{route(($post->type == 'artigo' ? 'web.blog.artigo' : 'web.noticia'),['slug' => $post->slug])}}">{{$post->title}}</a> 
                                             </h2>
                                             <div class="utf_post_meta"> 
                                                 <span class="utf_post_author"><i class="fa fa-eye"></i> {{$post->views}}</span> 

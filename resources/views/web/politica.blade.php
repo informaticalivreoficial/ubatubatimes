@@ -19,7 +19,7 @@
         <div class="col-12">            
             <div class="row justify-content-md-center">
                 <div class="col-12" style="color: #0c0707;">
-                    {!! $configuracoes->politicas_de_privacidade !!}
+                    {!! $config->privacy_policy !!}
                 </div>
             </div>
         </div>

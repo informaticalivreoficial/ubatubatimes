@@ -8,14 +8,14 @@
             <div class="col-sm-12">
                 <ul class="breadcrumb">
                     <li><a href="{{route('web.home')}}">Início</a></li>
-                    <li>{{(!empty($posts) && $posts[0]->tipo == 'noticia' ? 'Notícias' : 'Blog')}}</li>
+                    <li>{{($type == 'noticia' ? 'Notícias' : 'Blog')}}</li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
 
-@if(!empty($posts) && $posts->count() > 0)
+@if($posts->count() > 0)
     <section class="utf_block_wrapper">
         <div class="container">
             <div class="row">
@@ -26,13 +26,13 @@
                                 <div class="col-lg-4">
                                     <div class="utf_post_block_style post-grid clearfix">
                                         <div class="utf_post_thumb"> 
-                                            <a href="{{route(($post->tipo == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}"> 
-                                                <img class="img_person" src="{{$post->cover()}}" alt="{{$post->titulo}}" /> 
+                                            <a href="{{route(($post->type == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}"> 
+                                                <img class="img_person" src="{{$post->cover()}}" alt="{{$post->title}}" /> 
                                             </a> 
                                         </div>
-                                        <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoriaObject->slug ])}}">{{$post->categoriaObject->titulo}}</a>
+                                        <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoryObject->slug ])}}">{{$post->categoryObject->title}}</a>
                                         <div class="utf_post_content">
-                                            <h2 class="utf_post_title title-large"> <a href="{{route(($post->tipo == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}">{{$post->titulo}}</a> </h2>
+                                            <h2 class="utf_post_title title-large"> <a href="{{route(($post->type == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}">{{$post->title}}</a> </h2>
                                             <div class="utf_post_meta"> 
                                                 <span class="utf_post_author"><i class="fa fa-eye"></i> {{$post->views}}</span> 
                                                 <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</span> 
@@ -61,7 +61,7 @@
                         <div class="row">
                             <div class="col-md-12"> 
                                 <a href="{{$f->link ?? '#'}}" target="_blank">
-                                    <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->titulo}}" /> 
+                                    <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->title}}" /> 
                                 </a>
                             </div>
                         </div>
@@ -73,9 +73,11 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12"> 
-                            <a href="{{route('web.anunciar')}}" target="_blank">
-                                <img class="img-fluid" src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" alt="Anuncie Aqui!" /> 
-                            </a> 
+                            @if ($type == 'noticia')
+                                <x-ad slot="noticias_sidebar" />
+                            @else   
+                                <x-ad slot="articles_footer" /> 
+                            @endif                             
                         </div>
                     </div>
                 </div>                                                               

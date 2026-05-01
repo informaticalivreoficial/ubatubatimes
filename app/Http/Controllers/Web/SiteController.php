@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Support\Seo;
 use App\Models\Config;
 use App\Services\OndasService;
+use App\Services\PrevisaoTempoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
@@ -135,7 +136,7 @@ class SiteController extends Controller
         //Anúncio
         //$positionSidebarhome = Anuncio::where('plan_id', 8)->available()->limit(1)->get();
 
-        $head = $this->seo->render('Boletim das Ondas para Ubatuba' ?? 'Informática Livre',
+        $head = $this->seo->render('Boletim das Ondas para Ubatuba' ?? 'Ubatuba Times',
             'Boletim das Ondas para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.ondas'),
             url(asset('frontend/assets/images/ondas.png'))
@@ -201,6 +202,136 @@ class SiteController extends Controller
             'postnext' => $postnext,
             //'positionSidebarPost' => $positionSidebarPost,
             //'positionFooterPost' => $positionFooterPost,
+        ]);
+    }
+
+    public function categoria($slug)
+    {        
+        $categoria = CatPost::where('slug', '=', $slug)->first();
+        
+        $type = ($categoria->type == 'noticia' ? 'Notícias' : 'Artigos');
+
+        $posts = Post::orderBy('created_at', 'DESC')
+                    ->where('category', '=', $categoria->id)
+                    ->postson()
+                    ->paginate(21);
+
+        $categoria->increment('views');
+
+        $head = $this->seo->render($categoria->title . ' - '.$type.' - ' . $this->config->app_name ?? 'Ubatuba Times',
+            $categoria->title . ' - '.$type.' - ' . $this->config->app_name,
+            route('web.blog.categoria', ['slug' => $slug ]),
+            $this->config->getmetaimg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+        
+        return view('web.blog.categoria', [
+            'head' => $head,
+            'posts' => $posts,
+            'categoria' => $categoria,
+            'type' => $type,
+        ]);
+    }
+
+    public function artigo(Request $request)
+    {
+        $post = Post::postson()
+            ->where('slug', $request->slug)
+            ->firstOrFail();
+
+        $post->increment('views');
+
+        $categorias = CatPost::query()
+            ->where('type', 'artigo')
+            ->orderBy('title')
+            ->get();
+
+        $postsMais = Post::postson()
+            ->where('type', 'artigo')
+            ->where('id', '!=', $post->id)
+            ->orderByDesc('views')
+            ->limit(4)
+            ->get();
+
+        $head = $this->seo->render(
+            $post->title ?? 'Ubatuba Times',
+            $post->title,
+            route('web.blog.artigo', ['slug' => $post->slug]),
+            $post->cover() ?? $this->config->getmetaimg()
+        );
+
+        return view('web.blog.artigo', compact(
+            'head',
+            'post',
+            'postsMais',
+            'categorias'
+        ));
+    }
+
+    public function politica()
+    {
+        $head = $this->seo->render('Política de Privacidade - ' . $this->config->app_name ?? 'Ubatuba Times',
+            'Política de Privacidade - ' . $this->config->app_name,
+            route('web.politica'),
+            $this->config->getmetaimg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+
+        return view('web.politica',[
+            'head' => $head
+        ]);
+    }
+
+    public function noticias()
+    {
+        $posts = Post::orderBy('created_at', 'DESC')
+                ->where('type', '=', 'noticia')
+                ->postson()
+                ->paginate(21);
+
+        $categorias = CatPost::orderBy('title', 'ASC')
+                ->where('type', 'noticia')
+                ->get();
+
+        $head = $this->seo->render('Notícias - ' . $this->config->app_name ?? 'Ubatuba Times',
+            'Notícias - ' . $this->config->app_name,
+            route('web.noticias'),
+            $this->config->getmetaimg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+
+        return view('web.blog.artigos', [
+            'head' => $head,
+            'posts' => $posts,
+            'categorias' => $categorias,
+        ]);
+    }
+
+    public function artigos()
+    {
+        $posts = Post::orderBy('created_at', 'DESC')->where('type', '=', 'artigo')->postson()->paginate(21);        
+                
+        $head = $this->seo->render('Blog - ' . $this->config->app_name ?? 'Ubatuba Times',
+            'Blog - ' . $this->config->app_name,
+            route('web.blog.artigos'),
+            $this->config->getmetaimg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+
+        return view('web.blog.artigos', [
+            'head' => $head,
+            'posts' => $posts,
+            'type' => 'artigo'
+        ]);
+    }
+
+    public function tempo(PrevisaoTempoService $previsaoTempoService)
+    {
+        $head = $this->seo->render('Previsão do tempo para Ubatuba' ?? 'Informática Livre',
+            'Previsão do tempo para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+            route('web.tempo'),
+            $this->config->getmetaimg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+        
+        return view('web.previsao-do-tempo',[
+            'head' => $head,
+            'boletim' => $previsaoTempoService->getBoletim(),
         ]);
     }
 }

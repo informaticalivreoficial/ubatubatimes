@@ -26,6 +26,7 @@ use App\Livewire\Dashboard\Companies\CatCompanies;
 use App\Livewire\Dashboard\Companies\Companies;
 use App\Livewire\Dashboard\Companies\CompanyForm;
 use App\Livewire\Dashboard\Dashboard;
+use App\Livewire\Dashboard\Menu\Index;
 use App\Livewire\Dashboard\Posts\CatPostForm;
 use App\Livewire\Dashboard\Posts\CatPosts;
 use App\Livewire\Dashboard\Posts\PostForm;
@@ -49,9 +50,9 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     Route::get('/', [SiteController::class, 'home'])->name('home'); 
     
     //****************************** Páginas ******************************/
-    Route::get('/politica-de-privacidade', [WebController::class, 'politica'])->name('politica');
+    Route::get('/politica-de-privacidade', [SiteController::class, 'politica'])->name('politica');
     Route::get('/boletim-das-ondas', [SiteController::class, 'ondas'])->name('ondas');
-    Route::get('/previsao-do-tempo', [WebController::class, 'tempo'])->name('tempo');
+    Route::get('/previsao-do-tempo', [SiteController::class, 'tempo'])->name('tempo');
     Route::get('/anunciar', [SiteController::class, 'anunciar'])->name('anunciar');
 
     // //****************************** Guia ******************************/
@@ -69,16 +70,16 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     // Route::get('/sendFormCaptacao', [SendEmailController::class, 'sendFormCaptacao'])->name('sendFormCaptacao');
     
     // //****************************** Blog ***********************************************/
-    Route::get('/blog/artigo/{slug}', [WebController::class, 'artigo'])->name('blog.artigo');
-    Route::get('/blog/categoria/{slug}', [WebController::class, 'categoria'])->name('blog.categoria');
-    Route::get('/blog', [WebController::class, 'artigos'])->name('blog.artigos');
+    Route::get('/blog/artigo/{slug}', [SiteController::class, 'artigo'])->name('blog.artigo');
+    Route::get('/blog/categoria/{slug}', [SiteController::class, 'categoria'])->name('blog.categoria');
+    Route::get('/blog', [SiteController::class, 'artigos'])->name('blog.artigos');
     Route::match(['get', 'post'],'/blog/pesquisar', [WebController::class, 'searchBlog'])->name('blog.searchBlog');
 
     // //*************************************** Páginas *******************************************/
     Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
     Route::get('/noticia/{slug}', [SiteController::class, 'noticia'])->name('noticia');
-    Route::get('/noticias', [WebController::class, 'noticias'])->name('noticias');
-    Route::get('/noticias/categoria/{slug}', [WebController::class, 'categoria'])->name('noticia.categoria');
+    Route::get('/noticias', [SiteController::class, 'noticias'])->name('noticias');
+    Route::get('/noticias/categoria/{slug}', [SiteController::class, 'categoria'])->name('noticia.categoria');
     
     // //** Pesquisa */
     Route::match(['post', 'get'], '/pesquisa', [WebController::class, 'pesquisa'])->name('pesquisa');
@@ -124,6 +125,8 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     Route::get('contratos/{contract}/edit', AdContractForm::class)->name('vendas.contracts.edit');
 
     Route::get('faturas', InvoiceIndex::class)->name('vendas.invoices.index');
+
+    Route::get('menus', Index::class)->name('menus.index');
     
 });
 
