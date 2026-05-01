@@ -11,11 +11,13 @@ class Ad extends Component
 {
     public $slotName;
     public $ad;
+    public $plan;
 
     public function __construct($slot)
     {
         $this->slotName = $slot;
         $this->ad = ModelsAd::getBySlug($slot);
+        $this->plan     = \App\Models\Plan::where('slug', $slot)->first();
     }
 
     public function render(): View|Closure|string

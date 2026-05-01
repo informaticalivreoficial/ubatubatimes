@@ -282,9 +282,9 @@ class Company extends Model
 
     public function setSlug()
     {
-        if (!empty($this->title)) {
+        if (!empty($this->alias_name)) {
     
-            $baseSlug = Str::slug($this->title);
+            $baseSlug = Str::slug($this->alias_name);
             $slug = $baseSlug;
             $count = 1;
     

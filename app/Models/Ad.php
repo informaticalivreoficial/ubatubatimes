@@ -23,8 +23,8 @@ class Ad extends Model
 
     protected $casts = [
         'start_date' => 'date',
-        'end_date' => 'date',
-        'active' => 'boolean',
+        'end_date'   => 'date',
+        'active'     => 'boolean',
     ];
 
     public function plan()
@@ -42,27 +42,45 @@ class Ad extends Model
         return $this->belongsTo(AdContract::class, 'ad_contract_id');
     }
 
+    public function isActive(): bool
+    {
+        $validDate = $this->start_date->lte(now()) &&
+            (!$this->end_date || $this->end_date->gte(now()));
+
+        $validPayment = $this->contract->free
+            || $this->company->invoices()->where('status', 'paid')->exists();
+
+        return $this->active && $validDate && $validPayment;
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true)
+            ->whereDate('start_date', '<=', now())
+            ->where(function ($q) {
+                $q->whereNull('end_date')
+                ->orWhereDate('end_date', '>=', now());
+            });
+    }
+
     // 🔥 helper pronto pra usar no Blade
-    public static function getBySlug($slug)
+    public static function getBySlug(string $slug): ?self
     {
         return self::whereHas('plan', fn ($q) => $q->where('slug', $slug))
             ->where('active', true)
-            ->whereHas('company.invoices', function ($q) {
-                $q->where('status', 'paid');
-            })
             ->whereDate('start_date', '<=', now())
-            ->whereDate('end_date', '>=', now())
+            ->where(function ($q) {
+                $q->whereNull('end_date')
+                ->orWhereDate('end_date', '>=', now());
+            })
+            ->whereHas('contract', function ($q) {
+                $q->where(function ($q) {
+                    // free não precisa de fatura paga
+                    $q->where('free', true)
+                    ->orWhereHas('invoices', fn ($q) => $q->where('status', 'paid'));
+                });
+            })
             ->inRandomOrder()
             ->first();
-    }
-
-    public function isActive()
-    {
-        return $this->active &&
-            $this->start_date <= now() &&
-            $this->end_date >= now() &&
-            $this->company->invoices()
-                ->where('status', 'paid')
-                ->exists();
     }
 }

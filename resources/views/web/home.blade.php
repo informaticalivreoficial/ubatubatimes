@@ -98,61 +98,10 @@
 
               <div class="col-lg-4 col-md-12 pad-l">
                   <div class="row">
-                      <div class="col-md-12">
-
-                        @if (!empty($positionSidebarhome) && $positionSidebarhome->count() > 0)
-                            @foreach($positionSidebarhome as $p)
-                                <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
-                                    <a href="{{$p->link ?? '#'}}" target="_blank">
-                                        <img class="banner img-fluid" src="{{$p->get300x250()}}" alt="{{$p->title}}" />
-                                    </a>                                                                      
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
-                                <a href="{{route('web.anunciar')}}">
-                                    <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
-                                </a>                                                                      
-                            </div>
-                            <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
-                                <a href="{{route('web.anunciar')}}">
-                                    <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
-                                </a>                                                                      
-                            </div>
-                            <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
-                                <a href="{{route('web.anunciar')}}">
-                                    <img class="banner img-fluid" src="{{url(asset('backend/assets/images/banner300x250.jpg'))}}" alt="Anuncie Aqui!" />
-                                </a>                                                                      
-                            </div>
-                        @endif
-                        
-        
-                          {{--@if(!empty($boletim))
-                              <div class="widget color-blue pl-3 pt-0">
-                                  <h3 class="utf_block_title"><span>Boletim das Ondas - {{ Carbon\Carbon::parse($boletim->getContent()->atualizacao)->format('d/m/Y') }}</span></h3>                      
-                                  <div class="utf_list_post_block">                       
-                                      <h3 class="text-center mb-0">{{$boletim->getContent()->nome}}/{{$boletim->getContent()->uf}}</h3>
-                                      <h4 style="float: left" class="mr-2">Manhã:</h3>
-                                        <img  width="55" src="{{$boletim->ondasAlturaManha()['img']}}" alt="{{$boletim->ondasAlturaManha()['img']}}">    
-                                      <ul class="list-round mr_bottom-20">
-                                          <li>Situação do mar: {{$boletim->getContent()->manha->agitacao}}</li>
-                                          <li>Altura das ondas: {{$boletim->ondasAlturaManha()['altura']}}</li>
-                                          <li>Direção do mar: {{$boletim->getContent()->manha->direcao}}</li>
-                                          <li>Vento: {{$boletim->getContent()->manha->vento}}</li>
-                                          <li>Vento direção: {{$boletim->getContent()->manha->vento_dir}}</li>
-                                      </ul>                                              
-                                      <h4 style="float: left" class="mr-2">Tarde:</h3>
-                                        <img  width="55" src="{{$boletim->ondasAlturaTarde()['img']}}" alt="{{$boletim->ondasAlturaTarde()['img']}}">    
-                                      <ul class="list-round mr_bottom-20">
-                                          <li>Situação do mar: {{$boletim->getContent()->tarde->agitacao}}</li>
-                                          <li>Altura das ondas: {{$boletim->ondasAlturaTarde()['altura']}}</li>
-                                          <li>Direção do mar: {{$boletim->getContent()->tarde->direcao}}</li>
-                                          <li>Vento: {{$boletim->getContent()->tarde->vento}}</li>
-                                          <li>Vento direção: {{$boletim->getContent()->tarde->vento_dir}}</li>
-                                      </ul>                                       
-                                  </div>
-                              </div>
-                          @endif --}}
+                      <div class="col-md-12">                        
+                        <div class="widget text-center" style="background-color: #efefef; padding: 30px 0;">                                    
+                            <x-ad slot="home_sidebar" />                                                                      
+                        </div>
                       </div>
                   </div>
               </div>        
@@ -400,33 +349,19 @@
     @endif
       
   
-    @if (!empty($positionMainhome) && $positionMainhome->count() > 0)
-        @foreach($positionMainhome as $m)
-            <div class="utf_ad_content_area text-center utf_banner_area no-padding">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12"> 
-                            <a href="{{$m->link ?? '#'}}" target="_blank">
-                                <img class="img-fluid" src="{{$m->get728x90()}}" alt="{{$m->title}}" /> 
-                            </a> 
-                        </div>
-                    </div>
+    
+        
+    <div class="utf_ad_content_area text-center utf_banner_area no-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12"> 
+                    <x-ad slot="home_center" /> 
                 </div>
-            </div>            
-        @endforeach
-    @else
-        <div class="utf_ad_content_area text-center utf_banner_area no-padding">  
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12"> 
-                        <a href="{{route('web.anunciar')}}" target="_blank">
-                            <img class="img-fluid" src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" alt="Anuncie Aqui!" /> 
-                        </a> 
-                    </div>
-                </div>
-            </div>                                                               
-        </div>        
-    @endif
+            </div>
+        </div>
+    </div>            
+        
+    
   
 @if ($praiasDeUbatuba && $praiasDeUbatuba->isNotEmpty())
 <section class="utf_block_wrapper p-bottom-0">
@@ -533,33 +468,18 @@
 </section>
 @endif
 
-@if (!empty($positionFooterhome) && $positionFooterhome->count() > 0)
-    @foreach($positionFooterhome as $f)
-        <div class="utf_ad_content_area text-center utf_banner_area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12"> 
-                        <a href="{{$f->link ?? '#'}}" target="_blank">
-                            <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->title}}" /> 
-                        </a>
-                    </div>
-                </div>
+
+<div class="utf_ad_content_area text-center utf_banner_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12"> 
+                <x-ad slot="home_footer" />
             </div>
-        </div>                    
-    @endforeach
-@else
-    <div class="utf_ad_content_area text-center utf_banner_area">  
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12"> 
-                    <a href="{{route('web.anunciar')}}" target="_blank">
-                        <img class="img-fluid" src="{{url(asset('backend/assets/images/banner728x90.jpg'))}}" alt="Anuncie Aqui!" /> 
-                    </a> 
-                </div>
-            </div>
-        </div>                                                               
-    </div>        
-@endif  
+        </div>
+    </div>
+</div>                    
+    
+
 
 
 <ul id="rudr_instafeed"></ul>

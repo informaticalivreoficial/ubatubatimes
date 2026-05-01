@@ -49,7 +49,7 @@
                 </thead>
                 <tbody>
                     @foreach($contracts as $contract)                   
-                    <tr style="{{ ($contract->status == true ? '' : 'background: #fffed8 !important;')  }}">                            
+                    <tr style="{{ ($contract->isRunning() ? '' : 'background: #fffed8 !important;')  }}">                            
                         <td>{{$contract->company->alias_name}}</td>
                         <td class="text-center">{{ $contract->plan->name }}</td>
                         <td class="text-center">R$ {{ number_format($contract->price, 2, ',', '.') }}</td>

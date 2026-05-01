@@ -127,6 +127,8 @@
 
 </div>
 
-<script>    
+@push('scripts')
+    <script>    
     
-</script>
+    </script>
+@endpush

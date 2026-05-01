@@ -17,6 +17,7 @@ class AdContract extends Model
         'end_date',
         'auto_renew',
         'active',
+        'free',
     ];
 
     protected $casts = [
@@ -25,6 +26,7 @@ class AdContract extends Model
         'end_date' => 'date',
         'auto_renew' => 'boolean',
         'active' => 'boolean',
+        'free' => 'boolean',
     ];
 
     /*
@@ -59,18 +61,18 @@ class AdContract extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active &&
-            $this->start_date <= now() &&
-            (
-                !$this->end_date ||
-                $this->end_date >= now()
-            );
+            $this->start_date->lte(now()) &&
+            (!$this->end_date || $this->end_date->gte(now()));
     }
 
-    public function hasValidPayment()
+    public function hasValidPayment(): bool
     {
+        // Contrato free não precisa de pagamento
+        if ($this->free) return true;
+
         return $this->invoices()
             ->where('status', 'paid')
             ->exists();
@@ -102,21 +104,37 @@ class AdContract extends Model
             });
     }
 
+    public function scopeExpired($query)
+    {
+        return $query->whereDate('end_date', '<', now());
+    }
+
+    public function scopeFree($query)
+    {
+        return $query->where('free', true);
+    }
+
+    public function scopePaid($query)
+    {
+        return $query->where('free', false);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | ACTIONS
     |--------------------------------------------------------------------------
     */
 
-    public function generateInvoice()
+    public function generateInvoice(int $dueDays = 3): ?Invoice
     {
-        $invoice = Invoice::create([
-            'company_id' => $this->company_id,
-            'ad_contract_id' => $this->id,
-            'amount' => $this->price,
-            'due_date' => now()->addDays(3),
-        ]);
+        // Contrato free não gera fatura
+        if ($this->free) return null;
 
-        return $invoice;
+        return Invoice::create([
+            'company_id'     => $this->company_id,
+            'ad_contract_id' => $this->id,
+            'amount'         => $this->price,
+            'due_date'       => now()->addDays($dueDays),
+        ]);
     }
 }

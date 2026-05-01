@@ -16,6 +16,7 @@ use Livewire\Attributes\On;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Illuminate\Validation\ValidationException;
 
 class CompanyForm extends Component
 {
@@ -79,8 +80,9 @@ class CompanyForm extends Component
         $companyId = $this->company->id ?? null;
 
         return [
-            'social_name' => 'required|string',
-            'responsable_name' => 'required|string',
+            'alias_name' => 'required|string|max:255',
+            'responsable_name' => 'required|string|max:255',
+            'responsable_email' => 'required|string|email|max:255',
             'zipcode' => 'required|min:8|max:10',
             'email' => ['required', 'email', Rule::unique('companies', 'email')->ignore($companyId)],
             'cell_phone' => 'required|string|min:15',
@@ -140,7 +142,7 @@ class CompanyForm extends Component
 
     public function save(string $mode = 'draft')
     {
-        // 🔹 Regras dinâmicas (valida upload só se existir)
+        // 🔹 Regras dinâmicas
         $rules = $this->rules();
 
         if (! $this->logo instanceof TemporaryUploadedFile) {
@@ -151,46 +153,22 @@ class CompanyForm extends Component
             unset($rules['metaimg']);
         }
 
+        // 🔹 Validação
         $validated = $this->validate($rules);
 
-        // 🔹 Ajustes de dados
+        // 🔹 Ajustes
         $validated['metatags'] = implode(',', $this->metatags ?? []);
         $validated['status']   = $mode === 'published' ? 1 : 0;
 
-        // 🔹 Se empresa não existe ainda, cria antes (pra ter ID)
-        if (! $this->company->exists) {
-            $this->company = Company::create([
-                'email' => $validated['email'], // mínimo necessário
-            ]);
-        }
-
-        $folder = 'company/' . $this->company->id;
-
-        // 🔹 Upload logo
-        if ($this->logo instanceof TemporaryUploadedFile) {
-            if ($this->logoPath) {
-                Storage::disk('public')->delete($this->logoPath);
-            }
-
-            $this->logoPath = $this->logo->store($folder, 'public');
-        }
-
-        // 🔹 Upload metaimg
-        if ($this->metaimg instanceof TemporaryUploadedFile) {
-            if ($this->metaimgPath) {
-                Storage::disk('public')->delete($this->metaimgPath);
-            }
-
-            $this->metaimgPath = $this->metaimg->store($folder, 'public');
-        }
-
-        // 🔹 Monta payload final
+        // 🔹 Monta payload
         $data = [
-            'logo' => $this->logoPath,
-            'metaimg' => $this->metaimgPath,
-            'responsable_name' => $this->responsable_name,
+            'responsable_name' => $validated['responsable_name'],
             'responsable_email' => $this->responsable_email,
             'responsable_cpf' => $this->responsable_cpf,
+
+            'alias_name' => $validated['alias_name'],
+            'email' => $validated['email'],
+
             'metatags' => $validated['metatags'],
             'maps' => $this->maps,
 
@@ -198,6 +176,7 @@ class CompanyForm extends Component
             'guia' => $this->guia ?? 0,
             'client' => $this->client ?? 0,
             'highlight' => $this->highlight ?? 0,
+
             'url' => $this->url,
             'first_year' => $this->first_year,
             'content' => $this->content,
@@ -206,7 +185,6 @@ class CompanyForm extends Component
             'sub_category_id' => $this->sub_category_id,
 
             'social_name' => $this->social_name,
-            'alias_name' => $this->alias_name,
             'zipcode' => $this->zipcode,
             'street' => $this->street,
             'neighborhood' => $this->neighborhood,
@@ -215,7 +193,6 @@ class CompanyForm extends Component
             'complement' => $this->complement,
             'number' => $this->number,
 
-            'email' => $validated['email'],
             'additional_email' => $this->additional_email,
             'document_company' => $this->document_company,
             'document_company_secondary' => $this->document_company_secondary,
@@ -229,15 +206,48 @@ class CompanyForm extends Component
             'phone' => $this->phone,
             'whatsapp' => $this->whatsapp,
             'telegram' => $this->telegram,
-            'cell_phone' => $this->cell_phone,
+            'cell_phone' => $validated['cell_phone'],
         ];
 
-        // 🔹 Update
-        $this->company->update($data);
+        // 🔹 Create ou Update
+        if ($this->company->exists) {
+            $this->company->update($data);
+        } else {
+            $this->company = Company::create($data);
+        }
+
+        // 🔹 Agora já tem ID
+        $folder = 'company/' . $this->company->id;
+
+        // 🔹 Upload logo
+        if ($this->logo instanceof TemporaryUploadedFile) {
+            if ($this->logoPath) {
+                Storage::disk('public')->delete($this->logoPath);
+            }
+
+            $this->logoPath = $this->logo->store($folder, 'public');
+
+            $this->company->update([
+                'logo' => $this->logoPath
+            ]);
+        }
+
+        // 🔹 Upload metaimg
+        if ($this->metaimg instanceof TemporaryUploadedFile) {
+            if ($this->metaimgPath) {
+                Storage::disk('public')->delete($this->metaimgPath);
+            }
+
+            $this->metaimgPath = $this->metaimg->store($folder, 'public');
+
+            $this->company->update([
+                'metaimg' => $this->metaimgPath
+            ]);
+        }
 
         // 🔹 Validação imagens múltiplas
         $this->validate([
-            'images.*' => 'image|mimes:jpeg,jpg,png,webp,heic|max:2048',
+            'images.*' => 'image|mimes:jpeg,jpg,png,webp|max:2048',
         ]);
 
         $maxImages = config('app.max_images');
@@ -292,156 +302,10 @@ class CompanyForm extends Component
             'showConfirmButton' => false
         ]);
 
-        // 🔹 Redirect se for novo
+        // 🔹 Redirect
         if ($this->company->wasRecentlyCreated) {
             return redirect()->route('companies.edit', $this->company);
         }
-
-
-
-
-
-
-
-
-
-        // //dd('antes');
-        // $validated = $this->validate();
-        // //dd('depois');
-
-        // // Converte array de metatags em string para o banco
-        // $validated['metatags'] = implode(',', $this->metatags ?? []);
-        // // status depende do botão
-        // $validated['status'] = $mode === 'published' ? 1 : 0;
-
-        // if ($this->logo) {
-        //     // 🗑 Apaga logo antigo (se existir)
-        //     if ($this->company->exists && $this->logoPath) {
-        //         Storage::disk('public')->delete($this->logoPath);               
-        //     }
-        //     // 📦 Salva novo logo
-        //     $this->logoPath = $this->logo->store('company/' . $this->company->id, 'public');
-        // }
-
-        // if ($this->metaimg) {
-        //     // 🗑 Apaga metaimg antiga (se existir)
-        //     if ($this->company->exists && $this->metaimgPath) {
-        //         Storage::disk('public')->delete($this->metaimgPath);                
-        //     }
-        //     // 📦 Salva nova metaimg
-        //     $this->metaimgPath = $this->metaimg->store('company/' . $this->company->id, 'public');
-        // }
-
-        // $data = [
-        //     'logo' => $this->logoPath,
-        //     'metaimg' => $this->metaimgPath,
-        //     'responsable_name' => $this->responsable_name,
-        //     'responsable_email' => $this->responsable_email,
-        //     'responsable_cpf' => $this->responsable_cpf,
-        //     'metatags' => $validated['metatags'],
-
-        //     'status' => $this->status ?? 0,
-        //     'guia' => $this->guia ?? 0,
-        //     'client' => $this->client ?? 0,
-        //     'highlight' => $this->highlight ?? 0,
-
-        //     'category_id' => $this->category_id,
-        //     'sub_category_id' => $this->sub_category_id,
-
-        //     'social_name' => $this->social_name,
-        //     'alias_name' => $this->alias_name,
-        //     'zipcode' => $this->zipcode,
-        //     'street' => $this->street,
-        //     'neighborhood' => $this->neighborhood,
-        //     'city' => $this->city,
-        //     'state' => $this->state,
-        //     'complement' => $this->complement,
-        //     'number' => $this->number,
-        //     'email' => $validated['email'],
-        //     'additional_email' => $this->additional_email,
-        //     'document_company' => $this->document_company,
-        //     'document_company_secondary' => $this->document_company_secondary,
-        //     'information' => $this->information,
-            
-        //     'phone' => $this->phone,
-        //     'whatsapp' => $this->whatsapp,
-        //     'telegram' => $this->telegram,
-        //     'cell_phone' => $this->cell_phone,
-        // ];
-
-        // // Validação das imagens
-        // $this->validate([
-        //     'images.*' => 'image|mimes:jpeg,jpg,png,webp,heic|max:2048',
-        // ]);                
-
-        // $maxImages = config('app.max_images');
-        // $existingImages = $this->company->images()->count();
-        // $allowed = $maxImages - $existingImages;
-        // if (count($this->images ?? []) > $allowed) {
-        //     $this->dispatch('swal:warning', [
-        //         'title' => 'Atenção!',
-        //         'text' => "Esta empresa tem um limite de {$maxImages} imagens.",
-        //         //'timer' => 2000,
-        //         'icon' => 'warning',
-        //         'showConfirmButton' => false
-        //     ]);                    
-        //     return;
-        // }
-
-        // $manager = new ImageManager(new Driver());
-
-        // foreach ($this->images as $index => $image) {
-
-        //     if ($index >= $allowed) break;
-
-        //     $filename = uniqid() . '.webp';
-        //     $path = 'company/' . $this->company->id . '/' . $filename;
-
-        //     // abrir imagem
-        //     $img = $manager->read($image->getRealPath());
-
-        //     // redimensionar (opcional mas recomendado)
-        //     $img->scaleDown(width: 1920);
-
-        //     // converter para webp
-        //     $encoded = $img->toWebp(85);
-
-        //     // salvar no storage
-        //     Storage::disk('public')->put($path, $encoded);
-
-        //     $maxOrder = CompanyGb::where('company', $this->company->id)->max('order_img') ?? 0;
-
-        //     CompanyGb::create([
-        //         'company' => $this->company->id,
-        //         'path' => $path,
-        //         'cover' => $this->cover ?? null,
-        //         'order_img' => $maxOrder + $index + 1,
-        //         'watermark' => false
-        //     ]);
-        // }  
-
-        // // Limpar imagens temporárias
-        // $this->reset('images');
-
-        // if ($this->company->exists) {
-        //     $this->company->update($data);
-        //     $this->dispatch('swal:success', [
-        //         'title' => 'Sucesso!',
-        //         'text' => 'Empresa atualizada com sucesso!',
-        //         'timer' => 2000,
-        //         'showConfirmButton' => false
-        //     ]);
-        // } else {
-        //     $this->company = Company::create($data);
-        //     $this->dispatch('swal:success', [
-        //         'title' => 'Sucesso!',
-        //         'text' => 'Empresa cadastrada com sucesso!',
-        //         'timer' => 2000,
-        //         'showConfirmButton' => false
-        //     ]);
-
-        //     return redirect()->route('companies.edit', $this->company);
-        // }
     }
 
     //Remover imagem temporária

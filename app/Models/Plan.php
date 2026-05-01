@@ -25,5 +25,14 @@ class Plan extends Model
     public function contracts()
     {
         return $this->hasMany(AdContract::class);
+    }  
+    
+    public function getFallbackImageUrl(): string
+    {
+        return match($this->width) {
+            728  => asset('theme/images/banner728x90.jpg'),
+            300  => asset('theme/images/banner300x250.jpg'),
+            default => asset('theme/images/banner728x90.jpg'),
+        };
     }
 }

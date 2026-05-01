@@ -76,7 +76,10 @@
                         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
                             <div class="form-group">
                                 <label class="labelforms"><b>Email do Responsável:</b></label>
-                                <input class="form-control" id="responsable_email" wire:model="responsable_email" />
+                                <input class="form-control @error('responsable_email') is-invalid @enderror" id="responsable_email" wire:model="responsable_email" />
+                                @error('responsable_email')
+                                    <span class="error erro-feedback">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 col-md-4 col-lg-4">
@@ -654,7 +657,7 @@
         </div>
 
 
-    </div>
+</div>
 
 @push('scripts')
     <script>

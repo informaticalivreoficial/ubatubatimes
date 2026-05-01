@@ -11,14 +11,13 @@ class AdContractIndex extends Component
     public function delete($id)
     {
         $this->dispatch('swal:confirm', [
-            'title' => 'Excluir Contrato?',
-            'text' => 'Essa ação não pode ser desfeita.!',
-            'showConfirmButton' => false,
-            'icon' => 'warning',
+            'title'          => 'Excluir Contrato?',
+            'text'           => 'Essa ação não pode ser desfeita.',
+            'icon'           => 'warning',
             'confirmButtonText' => 'Sim, excluir',
-            'cancelButtonText' => 'Cancelar',
-            'confirmEvent' => 'deleteContract',
-            'confirmParams' => [$id],
+            'cancelButtonText'  => 'Cancelar',
+            'confirmEvent'   => 'deleteContract',
+            'confirmParams'  => [$id],
         ]);
     }
 
@@ -26,14 +25,13 @@ class AdContractIndex extends Component
     public function deleteContract($id): void
     {
         try {
-            $contract = AdContract::findOrFail($id);
-            $contract->delete();
+            AdContract::findOrFail($id)->delete();
 
             $this->dispatch('swal:success', [
-                'title' => 'Excluído!',
-                'text' => 'Contrato removido com sucesso!',
-                'timer' => 2000,
-                'showConfirmButton' => false
+                'title'             => 'Excluído!',
+                'text'              => 'Contrato removido com sucesso!',
+                'timer'             => 2000,
+                'showConfirmButton' => false,
             ]);
         } catch (\Exception $e) {
             $this->dispatch('swal:error', [
@@ -44,22 +42,46 @@ class AdContractIndex extends Component
         }
     }
 
-    public function generateInvoice($id)
+    public function generateInvoice($id): void
     {
-        $contract = AdContract::findOrFail($id);
+        try {
+            $contract = AdContract::findOrFail($id);
 
-        $invoice = $contract->generateInvoice();
+            // Bloqueia geração se for contrato free
+            if ($contract->free) {
+                $this->dispatch('swal:warning', [
+                    'title' => 'Atenção!',
+                    'icon'  => 'warning',
+                    'text'  => 'Contratos free não geram fatura.',
+                ]);
+                return;
+            }
 
-        // aqui você pode já integrar com PagHiper depois
+            $contract->generateInvoice();
 
-        session()->flash('success', 'Fatura gerada!');
+            $this->dispatch('swal:success', [
+                'title'             => 'Fatura gerada!',
+                'text'              => 'A fatura foi criada com sucesso.',
+                'timer'             => 2000,
+                'showConfirmButton' => false,
+            ]);
+
+        } catch (\Exception $e) {
+            $this->dispatch('swal:error', [
+                'title' => 'Erro!',
+                'icon'  => 'error',
+                'text'  => 'Não foi possível gerar a fatura.',
+            ]);
+        }
     }
 
     public function render()
     {
-        $title = 'Lista de Faturas';
-
         $contracts = AdContract::with(['company', 'plan'])->latest()->get();
-        return view('livewire.dashboard.vendas.ad-contract-index', compact('contracts'))->with('title', $title);
+
+        return view('livewire.dashboard.vendas.ad-contract-index', [
+            'contracts' => $contracts,
+            'title'     => 'Lista de Contratos', 
+        ]);
     }
 }

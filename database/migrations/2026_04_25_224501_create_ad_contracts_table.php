@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
 
             $table->decimal('price', 10, 2);
+            $table->boolean('free')->default(false);
 
             $table->date('start_date');
             $table->date('end_date')->nullable();
