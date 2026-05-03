@@ -1,66 +1,37 @@
-<?=
-'<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL
-?>
+<?= '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL ?>
 <rss version="2.0">
     <channel>
-        <title><![CDATA[ {{ $configuracoes->nomedosite }} ]]></title>
-        <link><![CDATA[ {{url('feed')}} ]]></link>
-        <description><![CDATA[ {{ $configuracoes->descricao }} ]]></description>
+        <title><![CDATA[{{ $config->app_name }}]]></title>
+        <link><![CDATA[{{ url('feed') }}]]></link>
+        <description><![CDATA[{{ $config->information }}]]></description>
         <language>pt-br</language>
         <pubDate>{{ now() }}</pubDate>
 
         @foreach($noticias as $noticia)
             <item>
-                <title><![CDATA[{{ $noticia->titulo }}]]></title>
-                <link>{{ url('noticia/'.$noticia->slug) }}</link>
+                <title><![CDATA[{{ $noticia->title }}]]></title>
+                <link>{{ route('web.noticia', ['slug' => $noticia->slug]) }}</link>
                 <image>{{ $noticia->cover() }}</image>
                 <description><![CDATA[{!! $noticia->getContentWebAttribute() !!}]]></description>
-                <category>{{ $noticia->categoriaObject->titulo }}</category>
+                <category>{{ $noticia->categoryObject->title }}</category>
                 <author><![CDATA[{{ $noticia->userObject->name }}]]></author>
                 <guid>{{ $noticia->id }}</guid>
                 <pubDate>{{ $noticia->created_at }}</pubDate>
             </item>
         @endforeach
 
-        {{-- @if (!empty($empresas) && $empresas->count() > 0)
-            @foreach($empresas as $empresa)
-                <item>
-                    <title><![CDATA[{{ $empresa->alias_name }}]]></title>
-                    <link>{{ url('guia-ubatuba/'.$empresa->slug) }}</link>
-                    <image>{{ $empresa->nologoCover() }}</image>
-                    <description><![CDATA[{!! $empresa->getContentWebAttribute() !!}]]></description>
-                    <category>{{ $empresa->categoriaObject->titulo }}</category>
-                    <author><![CDATA[{{ $empresa->alias_name }}]]></author>
-                    <guid>{{ $empresa->id }}</guid>
-                    <pubDate>{{ $empresa->created_at }}</pubDate>
-                </item>
-            @endforeach
-        @endif    --}}
-        
-        @foreach($posts as $post)
+        @foreach($artigos as $artigo)
             <item>
-                <title><![CDATA[{{ $post->titulo }}]]></title>
-                <link>{{ url('blog/artigo/'.$post->slug) }}</link>
-                <image>{{ $post->cover() }}</image>
-                <description><![CDATA[{!! $post->getContentWebAttribute() !!}]]></description>
-                <category>{{ $post->categoriaObject->titulo }}</category>
-                <author><![CDATA[{{ $post->userObject->name }}]]></author>
-                <guid>{{ $post->id }}</guid>
-                <pubDate>{{ $post->created_at }}</pubDate>
+                <title><![CDATA[{{ $artigo->title }}]]></title>
+                <link>{{ route('web.blog.artigo', ['slug' => $artigo->slug]) }}</link>
+                <image>{{ $artigo->cover() }}</image>
+                <description><![CDATA[{!! $artigo->getContentWebAttribute() !!}]]></description>
+                <category>{{ $artigo->categoryObject->title }}</category>
+                <author><![CDATA[{{ $artigo->userObject->name }}]]></author>
+                <guid>{{ $artigo->id }}</guid>
+                <pubDate>{{ $artigo->created_at }}</pubDate>
             </item>
         @endforeach
-        {{--    
-        @foreach($paginas as $pagina)
-            <item>
-                <title><![CDATA[{{ $pagina->titulo }}]]></title>
-                <link>{{ url('pagina/'.$pagina->slug) }}</link>
-                <image>{{ $pagina->cover() }}</image>
-                <description><![CDATA[{!! $pagina->getContentWebAttribute() !!}]]></description>
-                <category>{{ $pagina->categoriaObject->titulo }}</category>
-                <author><![CDATA[{{ $pagina->userObject->name }}]]></author>
-                <guid>{{ $pagina->id }}</guid>
-                <pubDate>{{ $pagina->created_at }}</pubDate>
-            </item>
-        @endforeach --}}
+
     </channel>
 </rss>

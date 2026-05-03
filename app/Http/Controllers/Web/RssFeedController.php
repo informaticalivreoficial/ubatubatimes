@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\{
-    Empresa,
+    Company,
     Post
 };
 use Carbon\Carbon;
@@ -13,32 +13,29 @@ class RssFeedController extends Controller
 {
     public function feed()
     {
-        $posts = Post::whereDate('created_at', Carbon::today())
-                ->where('tipo', 'artigo')
-                ->postson()
-                ->limit(10)
-                ->get();
+        $postsHoje = Post::whereDate('created_at', Carbon::today())
+            ->whereIn('type', ['artigo', 'noticia'])
+            ->postson()
+            ->limit(20)
+            ->get();
+
         $paginas = Post::orderBy('created_at', 'DESC')
-                ->where('tipo', 'pagina')
-                ->postson()
-                ->limit(10)
-                ->get();
-        $noticias = Post::whereDate('created_at', Carbon::today())
-                ->where('tipo', 'noticia')
-                ->postson()
-                ->limit(10)
-                ->get();
-        $empresas = Empresa::orderBy('views', 'DESC')
-                ->orderBy('cliente', 'DESC')
-                ->available()
-                ->limit(50)
-                ->get();
-        
+            ->where('type', 'pagina')
+            ->postson()
+            ->limit(10)
+            ->get();
+
+        $empresas = Company::orderBy('views', 'DESC')
+            ->orderBy('client', 'DESC')
+            ->available()
+            ->limit(50)
+            ->get();
+
         return response()->view('web.feed', [
-            'posts' => $posts,
-            'paginas' => $paginas,
-            'noticias' => $noticias,
+            'artigos'  => $postsHoje->where('type', 'artigo'),
+            'noticias' => $postsHoje->where('type', 'noticia'),
+            'paginas'  => $paginas,
             'empresas' => $empresas,
-        ])->header('Content-Type', 'application/xml');        
+        ])->header('Content-Type', 'application/xml');
     }
 }

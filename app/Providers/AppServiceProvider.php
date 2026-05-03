@@ -2,13 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Anuncio;
 use App\Models\CatPost;
 use App\Models\Config;
-use App\Models\Empresa;
-use App\Models\NewsletterCat;
 use App\Models\Post;
-use App\Observers\EmpresaObserver;
+use App\Services\CotacaoService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -16,6 +13,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\URL;
 use Livewire\Livewire;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -77,9 +75,7 @@ class AppServiceProvider extends ServiceProvider
         //                 ->first();
         // View()->share('newsletterForm', $newsletter);
 
-        // //Anúncio Topo Home 729x90
-        // $positionTopohome = Anuncio::where('plan_id', 3)->available()->limit(1)->get();
-        // View()->share('positionTopohome', $positionTopohome);
+        View::share('cotacao', app(CotacaoService::class)->getDolar());
 
         Paginator::useBootstrap();
     }

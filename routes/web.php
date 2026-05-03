@@ -1,24 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{
-    AdminController,
-    UserController,
-    EmailController,
-    PostController,
-    CatPostController,
-    ConfigController,
-    EmpresaController,
-    NewsletterController,
-    SitemapController,
-    SlideController
-};
 use App\Http\Controllers\Web\{
     GuiaController,
     RssFeedController,
-    SendEmailController,
     SiteController,
-    WebController
 };
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
@@ -27,7 +13,6 @@ use App\Livewire\Dashboard\Companies\Companies;
 use App\Livewire\Dashboard\Companies\CompanyForm;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Menu\Index;
-use App\Livewire\Dashboard\Posts\CatPostForm;
 use App\Livewire\Dashboard\Posts\CatPosts;
 use App\Livewire\Dashboard\Posts\PostForm;
 use App\Livewire\Dashboard\Posts\Posts;
@@ -42,7 +27,6 @@ use App\Livewire\Dashboard\Vendas\AdContractIndex;
 use App\Livewire\Dashboard\Vendas\AdForm;
 use App\Livewire\Dashboard\Vendas\AdIndex;
 use App\Livewire\Dashboard\Vendas\InvoiceIndex;
-use App\Models\CatPost;
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
@@ -62,32 +46,20 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     Route::get('/guia-ubatuba/categoria/subcategoria/{slug}', [GuiaController::class, 'guiaSubCategoria'])->name('guiaSubCategoria');
     Route::get('/sendEmailEmpresa', [GuiaController::class, 'sendEmailEmpresa'])->name('sendEmailEmpresa');
     
-    // //**************************** Emails ********************************************/
-    // Route::get('/atendimento', [WebController::class, 'atendimento'])->name('atendimento');
-    // Route::get('/sendOrcamento', [SendEmailController::class, 'sendOrcamento'])->name('sendOrcamento');
-    // Route::get('/sendEmail', [SendEmailController::class, 'sendEmail'])->name('sendEmail');
-    // Route::get('/sendNewsletter', [SendEmailController::class, 'sendNewsletter'])->name('sendNewsletter');
-    // Route::get('/sendFormCaptacao', [SendEmailController::class, 'sendFormCaptacao'])->name('sendFormCaptacao');
-    
-    // //****************************** Blog ***********************************************/
     Route::get('/blog/artigo/{slug}', [SiteController::class, 'artigo'])->name('blog.artigo');
     Route::get('/blog/categoria/{slug}', [SiteController::class, 'categoria'])->name('blog.categoria');
     Route::get('/blog', [SiteController::class, 'artigos'])->name('blog.artigos');
-    Route::match(['get', 'post'],'/blog/pesquisar', [WebController::class, 'searchBlog'])->name('blog.searchBlog');
-
+    
     // //*************************************** Páginas *******************************************/
-    Route::get('/pagina/{slug}', [WebController::class, 'pagina'])->name('pagina');
     Route::get('/noticia/{slug}', [SiteController::class, 'noticia'])->name('noticia');
     Route::get('/noticias', [SiteController::class, 'noticias'])->name('noticias');
     Route::get('/noticias/categoria/{slug}', [SiteController::class, 'categoria'])->name('noticia.categoria');
     
     // //** Pesquisa */
-    Route::match(['post', 'get'], '/pesquisa', [WebController::class, 'pesquisa'])->name('pesquisa');
+    Route::match(['post', 'get'], '/pesquisa', [SiteController::class, 'pesquisa'])->name('pesquisa');
 
-    // //** FEED */    
-    // Route::get('feed', [RssFeedController::class, 'feed'])->name('feed');
-    
-
+    //** FEED */    
+    Route::get('feed', [RssFeedController::class, 'feed'])->name('feed');
 });
 
 Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], function () {
@@ -106,7 +78,7 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     Route::get('usuarios/clientes', Users::class)->name('users.index');
     Route::get('usuarios/time', Time::class)->name('users.time');
     Route::get('usuarios/cadastrar', Form::class)->name('users.create');
-    Route::get('usuarios/{user}/editar', Form::class)->name('users.edit');
+    Route::get('usuarios/{userId}/editar', Form::class)->name('users.edit');
     Route::get('usuarios/{user}/visualizar', ViewUser::class)->name('users.view'); 
 
     //*********************** Posts *********************************************/

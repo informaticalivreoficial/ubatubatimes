@@ -8,8 +8,12 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin') }}">Painel de Controle</a></li>
-                        <li class="breadcrumb-item"><a wire:navigate href="{{ route('users.index') }}">Usuários</a>
-                        </li>
+                        @if (auth()->user()->isEmployee())
+                            <li class="breadcrumb-item">Colaboradores</li>
+                        @else
+                            <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Colaboradores</a></li>
+                        @endif
+                        
                         <li class="breadcrumb-item active">{{ $userId ? 'Editar' : 'Cadastrar' }}</li>
                     </ol>
                 </div>
@@ -18,7 +22,7 @@
     </div>
 
     <form wire:submit.prevent="save" autocomplete="off">
-        <div class="card card-teal card-outline">            
+        <div class="card card-primary card-outline">            
             <div class="card-body"> 
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3">
@@ -28,30 +32,27 @@
                                 <span class="error">{{ $message }}</span>
                             @enderror
                             @php
-                                if (
-                                    !empty($avatar) &&
-                                    env('AWS_PASTA') . \Illuminate\Support\Facades\Storage::exists($avatar)
-                                ) {
-                                    $cover = \Illuminate\Support\Facades\Storage::url($avatar);
+                                if (!empty($avatar) && Storage::exists($avatar)) {
+                                    $cover = Storage::url($avatar);
                                 } else {
-                                    $cover = url(asset('theme/images/image.jpg'));
+                                    $cover = asset('theme/images/image.jpg');
                                 }
                             @endphp
                             @if ($fotoUrl)
-                                <label for="foto">
-                                    <img class="file-input-container" src="{{ $fotoUrl }}"
-                                        alt="{{ $name }}" style="max-width: 262px;">
+                                <label for="foto" class="photo-wrapper">
+                                    <img class="photo-preview" src="{{ $fotoUrl }}"
+                                        alt="{{ $name }}">
                                 </label>
                             @else
-                                <label for="foto">
-                                    <img class="file-input-container" src="{{ $cover }}"
-                                        alt="{{ $name }}" style="max-width: 262px;">
+                                <label for="foto" class="photo-wrapper">
+                                    <img class="photo-preview" src="{{ $cover }}"
+                                        alt="{{ $name }}">
                                 </label>
                             @endif
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-9">
-                        <div class="row mb-2 text-muted">
+                        <div class="row mb-2 text-muted pl-2">
                             <div class="col-12 col-md-6 col-lg-8 mb-2">
                                 <div class="form-group">
                                     <label class="labelforms"><b>*Nome</b></label>
@@ -70,27 +71,34 @@
                                     @enderror                                                                                                                                      
                                 </div>
                             </div>
+                            
                             <div class="col-12 col-md-6 col-lg-4 mb-2">
                                 <div class="form-group">
                                     <label class="labelforms"><b>Genero</b></label>
-                                    <select class="form-control" wire:model="gender">
+                                    <select class="form-control @error('gender') is-invalid @enderror" wire:model="gender">
+                                        <option value="">Selecione</option>
                                         <option value="masculino">Masculino</option>
                                         <option value="feminino">Feminino</option>
                                     </select>
+                                    @error('gender')
+                                        <span class="error erro-feedback">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 mb-2">
                                 <div class="form-group">
                                     <label class="labelforms"><b>Estado Civil</b></label>
-                                    <select class="form-control" wire:model="civil_status">
-                                        <optgroup label="Cônjuge Obrigatório">
-                                            <option value="casado">Casado</option>
-                                            <option value="separado">Separado</option>
-                                            <option value="solteiro">Solteiro</option>
-                                            <option value="divorciado">Divorciado</option>
-                                            <option value="viuvo">Viúvo(a)</option>
-                                        </optgroup>
+                                    <select class="form-control @error('civil_status') is-invalid @enderror" wire:model="civil_status">                                        
+                                        <option value="">Selecione</option>
+                                        <option value="casado">Casado</option>
+                                        <option value="separado">Separado</option>
+                                        <option value="solteiro">Solteiro</option>
+                                        <option value="divorciado">Divorciado</option>
+                                        <option value="viuvo">Viúvo(a)</option>                                       
                                     </select>
+                                    @error('civil_status')
+                                        <span class="error erro-feedback">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 mb-2">
@@ -105,8 +113,8 @@
                             <div class="col-12 col-md-6 col-lg-4 mb-2">
                                 <div class="form-group">
                                     <label class="labelforms"><b>RG</b></label>
-                                    <input type="text" class="form-control" placeholder="RG do Cliente"
-                                        id="rg" wire:model="rg" />
+                                    <input type="text" class="form-control" placeholder="RG"
+                                        id="rg" wire:model="rg" x-mask="99.999.999-9" />
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 mb-2">
@@ -201,8 +209,8 @@
                             <div class="col-12 col-md-6 col-lg-2"> 
                                 <div class="form-group">
                                     <label class="labelforms"><b>*CEP:</b></label>
-                                    <input type="text" x-mask="99.999-999" class="form-control @error('postcode') is-invalid @enderror" id="postcode" wire:model.lazy="postcode">
-                                    @error('postcode')
+                                    <input type="text" x-mask="99.999-999" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" wire:model.lazy="zipcode">
+                                    @error('zipcode')
                                         <span class="error erro-feedback">{{ $message }}</span>
                                     @enderror                                                    
                                 </div>
@@ -279,74 +287,112 @@
                                         id="linkedin" wire:model="linkedin">
                                 </div>
                             </div>
+                            <div class="col-12 mt-3">
+                                <label class="labelforms text-muted">
+                                    <b>Informações adicionais</b>
+                                </label>
+
+                                <textarea
+                                    class="form-control"
+                                    rows="4"
+                                    wire:model.defer="information"
+                                    placeholder="Observações, informações internas, anotações do RH..."
+                                ></textarea>
+
+                                @error('information')
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card text-muted">
-                    <div class="card-header">
-                        <h4>
-                            <strong>Permissões de Acesso</strong>
-                        </h4>
-                    </div>                                
-                    <div class="card-body">
-                        <div class="row">                            
-                            <div class="col-sm-12 bg-gray-light mb-3">
-                                <!-- checkbox -->
-                                <div class="form-group p-3 mb-0">
-                                    <span class="mr-3"><b>Acesso ao Sistema:</b></span>
-                                    <div class="form-check d-inline mx-2">
-                                        <input id="client" class="form-check-input" type="checkbox"
-                                            wire:model="client" {{ $client == true ? 'checked' : null }}>
-                                        <label for="client" class="form-check-label">Cliente</label>
+                @if (!auth()->user()->isEmployee())
+                    <div class="card text-muted">
+                        <div class="card-header">
+                            <h4>
+                                <strong>Permissões & Acesso</strong>
+                            </h4>
+                        </div>                                
+                        <div class="card-body">
+                            <div class="row">   
+                                
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label class="labelforms"><b>Cargo</b></label>
+                                        <input type="text" class="form-control @error('cargo') is-invalid @enderror" id="cargo" placeholder="Cargo" wire:model="cargo">
+                                        @error('cargo')
+                                            <span class="error erro-feedback">{{ $message }}</span>
+                                        @enderror
                                     </div>
+                                </div>
+                                <div class="col-12 mt-3">
                                     <div class="form-check d-inline mx-2">
-                                        <input id="editor" class="form-check-input" type="checkbox"
-                                            wire:model="editor" {{ $editor == true ? 'checked' : null }}>
-                                        <label for="editor" class="form-check-label">Editor</label>
+                                        <input id="employee" class="form-check-input" type="radio"
+                                            wire:model.live="roleSelected" value="employee">
+                                        <label for="employee">Colaborador</label>
                                     </div>
-                                    @if (\Illuminate\Support\Facades\Auth::user()->superadmin == 1)
-                                        <div class="form-check d-inline mx-2">
-                                            <input id="admin" class="form-check-input" type="checkbox"
-                                                wire:model="admin" {{ $admin == true ? 'checked' : null }}>
-                                            <label for="admin" class="form-check-label">Administrador</label>
-                                        </div>
 
+                                    <div class="form-check d-inline mx-2">
+                                        <input id="manager" class="form-check-input" type="radio"
+                                            wire:model.live="roleSelected" value="manager">
+                                        <label for="manager">Gerente</label>
+                                    </div>
+                                    @if (auth()->user()->isSuperAdmin() || auth()->user()->isAdmin())
                                         <div class="form-check d-inline mx-2">
-                                            <input id="superadmin" class="form-check-input" type="checkbox"
-                                                wire:model="superadmin"
-                                                {{ $superadmin == true ? 'checked' : null }}>
-                                            <label for="superadmin" class="form-check-label">Super Administrador</label>
+                                            <input id="admin" class="form-check-input" type="radio"
+                                                wire:model.live="roleSelected" value="admin">
+                                            <label for="admin">Administrador</label>
                                         </div>
                                     @endif
-                                </div>
-                            </div>
-                            @if (!$userId)
-                                <div class="col-12 col-md-6 col-lg-4">
-                                    <label class="labelforms text-muted"><b>Senha:</b></label>
-                                    <div class="input-group input-group-md">                                    
-                                        <input type="password" id="password" class="form-control @error('password') is-invalid @enderror" wire:model="password">
-                                        <span class="input-group-append">
-                                            <button type="button" onclick="togglePassword('password')" class="btn btn-default btn-flat"><i class="fa fa-eye"></i></button>
-                                        </span>
+                                    @if (auth()->user()->isSuperAdmin()) 
+                                        <div class="form-check d-inline mx-2">
+                                            <input id="superadmin" class="form-check-input" type="radio"
+                                                wire:model.live="roleSelected" value="super-admin">
+                                            <label for="superadmin">Super Administrador</label>
+                                        </div>
+                                    @endif
+                                    @error('roleSelected')
+                                        <div class="text-danger text-sm mt-1">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror                                    
+                                </div>  
+                                @if (!$userId && $roleSelected !== 'employee')
+                                    <!-- Campo: Senha -->
+                                    <div class="col-12 col-md-6 col-lg-4 mt-3">
+                                        <label class="labelforms text-muted"><b>Senha:</b></label>
+                                        <div class="input-group input-group-md">                                    
+                                            <input type="password" id="code" class="form-control @error('code') is-invalid @enderror" wire:model.defer="code">
+                                            <span class="input-group-append">
+                                                <button type="button" onclick="togglePassword('code')" class="btn btn-default btn-flat">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        @error('code') <span class="text-danger text-sm">{{ $message }}</span> @enderror
                                     </div>
-                                    @error('password') <span class="text-danger text-sm">{{ $message }}</span> @enderror
-                                </div>
 
-                                <div class="col-12 col-md-6 col-lg-4">
-                                    <label class="labelforms text-muted"><b>Confirmar Senha:</b></label>
-                                    <div class="input-group input-group-md">                                    
-                                        <input type="password" id="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" wire:model.lazy="password_confirmation">
-                                        <span class="input-group-append">
-                                            <button type="button" onclick="togglePassword('password_confirmation')" class="btn btn-default btn-flat"><i class="fa fa-eye"></i></button>
-                                        </span>
+                                    <!-- Campo: Confirmar Senha -->
+                                    <div class="col-12 col-md-6 col-lg-4 mt-3">
+                                        <label class="labelforms text-muted"><b>Confirmar Senha:</b></label>
+                                        <div class="input-group input-group-md">                                    
+                                            <input type="password" id="code_confirmation" class="form-control @error('code_confirmation') is-invalid @enderror" wire:model.defer="code_confirmation">
+                                            <span class="input-group-append">
+                                                <button type="button" onclick="togglePassword('code_confirmation')" class="btn btn-default btn-flat">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        @error('code_confirmation') <span class="text-danger text-sm">{{ $message }}</span> @enderror
                                     </div>
-                                    @error('password_confirmation') <span class="text-danger text-sm">{{ $message }}</span> @enderror
-                                </div>
-                            @endif                            
+                                @endif     
+                                
+                                
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
                 <div class="row text-right">
                     <div class="col-12 pb-4 mt-3">
@@ -359,7 +405,7 @@
 </div>
 
 <script>
-    document.addEventListener('cliente-atualizado', function() {
+    document.addEventListener('user-atualizado', function() {
         Swal.fire({
             title: 'Sucesso!',
             text: "Usuário atualizado!",
@@ -369,7 +415,7 @@
         });
     });
 
-    document.addEventListener('cliente-cadastrado', function() {
+    document.addEventListener('user-cadastrado', function() {
         Swal.fire({
             title: 'Sucesso!',
             text: "Usuário Cadastrado!",
@@ -387,7 +433,7 @@
                 dateFormat: "d/m/Y",
                 allowInput: true,
                 maxDate: "today",
-                //defaultDate: input.value, // Carrega a data inicial corretamente
+                defaultDate: input.value || null,
                 onChange: function(selectedDates, dateStr) {
                     input.dispatchEvent(new Event('input')); // Força atualização no Alpine.js
                 },
@@ -422,27 +468,39 @@
 
 <script>
 
-    document.addEventListener("livewire:init", () => {
+    document.addEventListener('livewire:init', () => {
+        // Configurações do Toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "4000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+            "preventDuplicates": false,
+            "newestOnTop": true
+        };
 
-        Livewire.on("toast", (event) => {
-
-            toastr[event.notify](event.message);
-
+        Livewire.on('toast', (event) => {
+            toastr[event.type](event.message);
         });
+        
     });
 
 </script>
-<script>
-    // window.addEventListener('alert', event => {
-    //     toastr[event.detail.type](event.detail.message,
-    //         event.detail.title ?? ''), toastr.options = {
-    //         "closeButton": true,
-    //         "progressBar": true,
-    //     }
-    // });
+<script>  
 
     function togglePassword(id) {
         let input = document.getElementById(id);
         input.type = input.type === 'password' ? 'text' : 'password';
     }
+</script>
+
+<script>
+    // window.addEventListener('scroll-to-top', event => {
+    //     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // });
 </script>

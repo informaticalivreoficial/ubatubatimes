@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:noticiaubatuba')->everyMinute();            
         $schedule->command('app:noticiacaragua')->everyMinute();                
-        //$schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
+        $schedule->command('app:noticiasaosebastiao')->everyMinute();                
         $schedule->command('app:noticiailhabela')->everyMinute();      
         $schedule->command('app:fundartubatuba')->everyMinute();   
         $schedule->command('app:novatamoioscreate')->everyMinute();      

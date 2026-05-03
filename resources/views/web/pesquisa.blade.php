@@ -15,39 +15,60 @@
     </div>
 </div>
 
-<section class="section">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <form action="{{ route('web.pesquisa') }}" method="post">
-                    @csrf
-                    <div class="input-group input-group-lg mb-2">                        
-                        <input class="form-control" type="text" name="search" value="{{$search ?? ''}}">
-                    </div>
-                    <button class="btn btn-block btn-primary" type="submit">Pesquisar</button>
-                </form>
-            </div>            
+<section class="py-6">
+    <div class="container mx-auto px-4">
+        <div class="max-w-2xl mx-auto">
+            <form action="{{ route('web.pesquisa') }}" method="post">
+                @csrf
+                <div class="flex gap-2">
+                    <input type="text" name="search" value="{{ $search ?? '' }}"
+                           placeholder="Digite sua pesquisa..."
+                           class="flex-1 border-2 border-gray-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+                    <button type="submit"
+                            class="px-6 py-3 bg-red-600 text-white font-bold rounded hover:bg-red-700 transition">
+                        <i class="fa fa-search mr-1"></i> Pesquisar
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </section>
 
-<section class="section">
-    <div class="container">        
-        @if ($search && !empty($data) && count($data) > 0)
-            @foreach ($data as $item)
-                <div class="row">                    
-                    <div class="col-12">
-                        <h5>{{$item['tipo']}}: <a class="linksearch" href="{{$item['link']}}">{{$item['titulo']}}</a></h5>
-                        <p>
-                        {!! Words($item['desc'], 30) !!}
+<section class="py-6">
+    <div class="container mx-auto px-4">
+
+        @if ($search && $data && count($data) > 0)
+
+            <p class="text-sm text-gray-500 mb-4">
+                Resultados para: <strong>{{ $search }}</strong>
+            </p>
+
+            <div class="space-y-6">
+                @foreach ($data as $item)
+                    <div class="border-b pb-4">
+                        <span class="text-xs font-bold uppercase bg-red-600 text-white px-2 py-1 rounded mr-2">
+                            {{ $item['type'] }} {{-- ❌ era 'tipo' --}}
+                        </span>
+                        <a href="{{ $item['link'] }}" class="text-blue-700 font-semibold hover:underline">
+                            {{ $item['title'] }} {{-- ❌ era 'titulo' --}}
+                        </a>
+                        <p class="text-sm text-gray-600 mt-2">
+                            {!! \App\Helpers\Renato::Words($item['desc'], 30) !!}
                         </p>
                     </div>
-                </div>
-            @endforeach
-            <div class="paging">
-                {{$data->links()}}                            
+                @endforeach
             </div>
-        @endif        
+
+            <div class="mt-6">
+                {{ $data->links() }}
+            </div>
+
+        @elseif($search)
+            <p class="text-center text-gray-500 py-8">
+                Nenhum resultado encontrado para <strong>{{ $search }}</strong>.
+            </p>
+        @endif
+
     </div>
 </section>
 

@@ -93,7 +93,7 @@ class Post extends Model
     
     public function userObject()
     {
-        return $this->hasOne(User::class, 'id', 'category');
+        return $this->hasOne(User::class, 'id', 'autor');
     }
     
     public function images()

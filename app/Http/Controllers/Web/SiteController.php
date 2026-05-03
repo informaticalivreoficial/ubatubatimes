@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Analytics;
+use App\Models\Company;
 use Spatie\Analytics\Period;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class SiteController extends Controller
 {
@@ -319,7 +322,7 @@ class SiteController extends Controller
 
     public function tempo(PrevisaoTempoService $previsaoTempoService)
     {
-        $head = $this->seo->render('Previsão do tempo para Ubatuba' ?? 'Informática Livre',
+        $head = $this->seo->render('Previsão do tempo para Ubatuba' ?? 'Ubatuba Times',
             'Previsão do tempo para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.tempo'),
             $this->config->getmetaimg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
@@ -400,5 +403,84 @@ class SiteController extends Controller
             'visitasMensais' => $visitasMensais,
             'postsStats' => $postsStats,
         ]);
+    }
+
+    public function pesquisa(Request $request)
+    {
+        $search = $request->search;
+
+        // ❌ where('content', 'LIKE') AND where('title', 'LIKE') — nunca acha nada
+        // ✅ deve ser OR entre content e title
+        $resultado = collect();
+
+        $tipos = [
+            'pagina'  => ['type' => 'Página',   'route' => 'web.pagina'],
+            'artigo'  => ['type' => 'Artigo',   'route' => 'web.blog.artigo'],
+            'noticia' => ['type' => 'Notícia',  'route' => 'web.noticia'],
+        ];
+
+        foreach ($tipos as $tipo => $config) {
+            Post::where('type', $tipo)
+                ->where(function ($q) use ($search) {
+                    $q->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('content', 'LIKE', "%{$search}%");
+                })
+                ->postson()
+                ->limit(10)
+                ->get()
+                ->each(fn ($post) => $resultado->push([
+                    'title' => $post->title,
+                    'type'  => $config['type'],
+                    'link'  => route($config['route'], ['slug' => $post->slug]),
+                    'desc'  => $post->content,
+                ]));
+        }
+
+        // ❌ where('created_at', 'DESC') não faz sentido
+        // ✅ orderBy + orWhere correto
+        Company::orderBy('created_at', 'DESC')
+            ->where(function ($q) use ($search) {
+                $q->where('alias_name', 'LIKE', "%{$search}%")
+                ->orWhere('content', 'LIKE', "%{$search}%");
+            })
+            ->available()
+            ->limit(30)
+            ->get()
+            ->each(fn ($empresa) => $resultado->push([
+                'title' => $empresa->alias_name,
+                'type'  => 'Guia Comercial',
+                'link'  => route('web.guiaEmpresa', ['slug' => $empresa->slug]),
+                'desc'  => $empresa->content,
+            ]));
+
+        $head = $this->seo->render(
+            'Pesquisa por ' . $search,
+            'Pesquisa - ' . $this->config->app_name,
+            route('web.pesquisa'),
+            $this->config->getmetaimg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
+        );
+
+        $data = $this->paginate($resultado->all());
+        $data->withPath('');
+
+        return view('web.pesquisa', [
+            'head'   => $head,
+            'data'   => $data,
+            'search' => $search,
+        ]);
+    }
+
+    private function paginate(array $items, int $perPage = 10): LengthAwarePaginator
+    {
+        $page  = request()->get('page', 1);
+        $items = Collection::make($items);
+
+        return new LengthAwarePaginator(
+            $items->forPage($page, $perPage),
+            $items->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url()]
+        );
     }
 }

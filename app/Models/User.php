@@ -72,6 +72,11 @@ class User extends Authenticatable
         return $this->hasRole('super-admin');
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
     public function isManager(): bool
     {
         return $this->hasRole('manager');
@@ -106,12 +111,13 @@ class User extends Authenticatable
     /**
      * Accerssors and Mutators
     */
-    public function getUrlAvatarAttribute()
+    public function getUrlAvatarAttribute(): string
     {
-        if (!empty($this->avatar)) {
+        if (!empty($this->avatar) && Storage::disk('public')->exists($this->avatar)) {
             return Storage::url($this->avatar);
         }
-        return '';
+
+        return asset('theme/images/image.jpg');
     }
 
     public function setCellPhoneAttribute($value)
@@ -119,33 +125,21 @@ class User extends Authenticatable
         $this->attributes['cell_phone'] = (!empty($value) ? $this->clearField($value) : null);
     }
     
-    public function getCellPhoneAttribute($value)
+    public function getCellPhoneAttribute($value): ?string
     {
-        if (empty($value)) {
-            return null;
-        }
-        return  
-            substr($value, 0, 0) . '(' .
-            substr($value, 0, 2) . ') ' .
-            substr($value, 2, 5) . '-' .
-            substr($value, 7, 4) ;
+        return $this->formatPhone($value);
     }
+
+    
 
     public function setWhatsappAttribute($value)
     {
         $this->attributes['whatsapp'] = (!empty($value) ? $this->clearField($value) : null);
     }
     
-    public function getWhatsappAttribute($value)
+    public function getWhatsappAttribute($value): ?string
     {
-        if (empty($value)) {
-            return null;
-        }
-        return  
-            substr($value, 0, 0) . '(' .
-            substr($value, 0, 2) . ') ' .
-            substr($value, 2, 5) . '-' .
-            substr($value, 7, 4) ;
+        return $this->formatPhone($value);
     }
 
     public function setBirthdayAttribute($value)
@@ -159,26 +153,6 @@ class User extends Authenticatable
             return null;
         }
         return \Carbon\Carbon::parse($value)->format('d/m/Y');
-    }
-
-    public function setAdminAttribute($value)
-    {
-        $this->attributes['admin'] = ($value === true || $value === 'on' ? 1 : 0);
-    }
-
-    public function setEditorAttribute($value)
-    {
-        $this->attributes['editor'] = ($value === true || $value === 'on' ? 1 : 0);
-    }
-
-    public function setClientAttribute($value)
-    {
-        $this->attributes['client'] = ($value === true || $value === 'on' ? 1 : 0);
-    }
-    
-    public function setSuperAdminAttribute($value)
-    {
-        $this->attributes['superadmin'] = ($value === true || $value === 'on' ? 1 : 0);
     }
 
     public function setZipcodeAttribute($value)
@@ -204,13 +178,11 @@ class User extends Authenticatable
         return str_replace(',', '.', str_replace('.', '', $param));
     }
 
-    private function convertStringToDate(?string $param)
+    private function convertStringToDate(?string $param): ?string
     {
-        if (empty($param)) {
-            return null;
-        }
-        list($day, $month, $year) = explode('/', $param);
-        return (new \DateTime($year . '-' . $month . '-' . $day))->format('Y-m-d');
+        if (empty($param)) return null;
+
+        return \Carbon\Carbon::createFromFormat('d/m/Y', $param)->format('Y-m-d');
     }
     
     private function clearField(?string $param)
@@ -219,5 +191,22 @@ class User extends Authenticatable
             return null;
         }
         return str_replace(['.', '-', '/', '(', ')', ' '], '', $param);
+    }
+
+    private function formatPhone(?string $value): ?string
+    {
+        if (empty($value)) return null;
+
+        $v = $this->clearField($value);
+
+        if (strlen($v) === 11) {
+            return "({$v[0]}{$v[1]}) " . substr($v, 2, 5) . '-' . substr($v, 7, 4);
+        }
+
+        if (strlen($v) === 10) {
+            return "({$v[0]}{$v[1]}) " . substr($v, 2, 4) . '-' . substr($v, 6, 4);
+        }
+
+        return $value;
     }
 }
