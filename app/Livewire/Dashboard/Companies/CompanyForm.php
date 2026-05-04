@@ -85,9 +85,9 @@ class CompanyForm extends Component
             'responsable_email' => 'required|string|email|max:255',
             'zipcode' => 'required|min:8|max:10',
             'email' => ['required', 'email', Rule::unique('companies', 'email')->ignore($companyId)],
-            'cell_phone' => 'required|string|min:15',
-            'logo' => 'nullable|file|mimes:jpeg,jpg,png,webp|max:1024',
-            'metaimg' => 'nullable|file|mimes:jpeg,jpg,png,webp|max:1024',
+            'cell_phone' => 'required|string|min:14',
+            'logo' => 'nullable|file|mimes:jpeg,jpg,png,webp|max:2048',
+            'metaimg' => 'nullable|file|mimes:jpeg,jpg,png,webp|max:2048',
         ];
     }    
 

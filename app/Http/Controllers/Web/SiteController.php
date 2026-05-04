@@ -62,7 +62,7 @@ class SiteController extends Controller
                     ->get();
         $noticiasSaoSebastiao = Post::orderBy('created_at', 'DESC')
                     ->where('type', 'noticia')
-                    ->where('category', 17)
+                    ->where('category', 75)
                     ->postson()
                     ->limit(4)
                     ->get();

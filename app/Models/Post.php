@@ -52,11 +52,11 @@ class Post extends Model
         });
 
         static::deleting(function ($post) {
-            // Deleta a pasta inteira com todas as imagens
-            Storage::disk('public')->deleteDirectory("posts/{$post->type}/{$post->id}");
-
-            // Deleta os registros do banco
-            $post->images()->delete();
+            // Só deleta as imagens no forceDelete
+            if ($post->isForceDeleting()) {
+                Storage::disk('public')->deleteDirectory("posts/{$post->type}/{$post->id}");
+                $post->images()->delete();
+            }
         });
     }
 

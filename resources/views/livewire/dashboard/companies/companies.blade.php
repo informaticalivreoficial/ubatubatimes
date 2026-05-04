@@ -45,6 +45,7 @@
                                 <th wire:click="sortBy('alias_name')">Nome Fantasia <i class="expandable-table-caret fas fa-caret-down fa-fw"></i></th>
                                 <th class="text-center">Faturas</th>
                                 <th class="text-center">Responsável</th>
+                                <th class="text-center">Views</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -63,6 +64,7 @@
                                 <td>{{$company->alias_name}}</td>
                                 <td class="text-center">{{--  --}}</td>
                                 <td>{{$company->responsable_name}}</td>
+                                <td>{{$company->views ?? 0}}</td>
                                 <td>  
                                     <div class="flex items-center justify-center gap-1">                              
                                         <x-forms.switch-toggle

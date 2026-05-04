@@ -7,11 +7,6 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
     protected $commands = [
         //Commands\SitemapUpdate::class,
     ];
@@ -24,15 +19,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:noticiailhabela')->everyMinute();      
         $schedule->command('app:fundartubatuba')->everyMinute();   
         $schedule->command('app:novatamoioscreate')->everyMinute();      
-        //$schedule->command('app:deletepost')->everyMinute()->withoutOverlapping();      
-        //$schedule->command('app:clear-trash-cron')->everyMinute()->withoutOverlapping();      
+        $schedule->command('posts:clean-old')->everyMinute();      
+        $schedule->command('posts:purge-deleted')->everyMinute();      
     }
 
-    /**
-     * Register the commands for the application.
-     *
-     * @return void
-     */
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');

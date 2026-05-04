@@ -2,6 +2,7 @@
 
 
 @section('content')
+
 <section class="py-10 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4">
 
@@ -21,7 +22,7 @@
                         {{-- Lista --}}
                         <ul class="space-y-4">
 
-                            @foreach ($categoria->companies as $empresa)
+                            @foreach ($categoria->companies->take(6) as $empresa)
 
                                 <li class="flex gap-4 items-start">
 

@@ -14,6 +14,7 @@ use App\Livewire\Dashboard\Companies\CompanyForm;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Menu\Index;
 use App\Livewire\Dashboard\Posts\CatPosts;
+use App\Livewire\Dashboard\Posts\Lixeira;
 use App\Livewire\Dashboard\Posts\PostForm;
 use App\Livewire\Dashboard\Posts\Posts;
 use App\Livewire\Dashboard\Settings;
@@ -85,6 +86,7 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     Route::get('posts/{post}/editar', PostForm::class)->name('posts.edit');
     Route::get('posts/cadastrar', PostForm::class)->name('posts.create');
     Route::get('posts/categorias', CatPosts::class)->name('posts.categories.index');
+    Route::get('/posts/lixeira', Lixeira::class)->name('posts.lixeira');
     Route::get('posts', Posts::class)->name('posts.index');
 
     //*********************** Vendas *********************************************/

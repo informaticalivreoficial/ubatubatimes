@@ -2,33 +2,20 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Admin\PostController;
+use App\Models\Post;
 use Illuminate\Console\Command;
 
 class DeletePostCron extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:deletepost';
+    protected $signature   = 'posts:clean-old';
+    protected $description = 'Soft delete em posts com mais de 6 meses';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Delete Post after 12 months';
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle(): void
     {
-        $controller = new PostController();
-        $controller->deleteCron();
+        $total = Post::where('created_at', '<', now()->subMonths(6))
+            ->whereIn('type', ['noticia']) // ajuste os tipos conforme necessário
+            ->delete();
+
+        $this->info("CleanOldPosts: {$total} posts movidos para a lixeira.");
     }
 }

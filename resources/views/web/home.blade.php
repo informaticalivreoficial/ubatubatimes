@@ -172,89 +172,57 @@
                         </div>
                     </div>
                 @endif
-                @if (!empty($noticiasSaoSebastiao && $noticiasSaoSebastiao->count() > 0)) 
+                @if ($noticiasSaoSebastiao && $noticiasSaoSebastiao->isNotEmpty())
                     <div class="col-lg-4">
                         <div class="block color-aqua">
                             <h3 class="utf_block_title"><span>São Sebastião</span></h3>
+
+                            {{-- Primeira notícia em destaque --}}
                             <div class="utf_post_overaly_style clearfix">
                                 <div class="utf_post_thumb"> 
-                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[0]->slug ])}}"> 
-                                        <img class="img_person" src="{{$noticiasSaoSebastiao[0]->cover()}}" alt="{{$noticiasSaoSebastiao[0]->title}}" /> 
+                                    <a href="{{ route('web.noticia', ['slug' => $noticiasSaoSebastiao[0]->slug]) }}"> 
+                                        <img class="img_person" src="{{ $noticiasSaoSebastiao[0]->cover() }}" alt="{{ $noticiasSaoSebastiao[0]->title }}" /> 
                                     </a> 
                                 </div>
                                 <div class="utf_post_content">
                                     <h2 class="utf_post_title"> 
-                                      <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[0]->slug ])}}">{{$noticiasSaoSebastiao[0]->title}}</a> 
+                                        <a href="{{ route('web.noticia', ['slug' => $noticiasSaoSebastiao[0]->slug]) }}">{{ $noticiasSaoSebastiao[0]->title }}</a> 
                                     </h2>
                                     <div class="utf_post_meta"> 
-                                        <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasSaoSebastiao[0]->views}}</span> 
+                                        <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $noticiasSaoSebastiao[0]->views }}</span> 
                                         <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasSaoSebastiao[0]->created_at)->format('d/m/Y') }}</span> 
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="utf_list_post_block">
-                                <ul class="utf_list_post">
-                                    @if (!empty($noticiasSaoSebastiao[1]))
-                                        <li class="clearfix" style="min-height: 130px;">
-                                            <div class="utf_post_block_style post-float clearfix">
-                                                <div class="utf_post_thumb"> 
-                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[1]->slug ])}}"> 
-                                                        <img class="img_person_gastronomia" src="{{$noticiasSaoSebastiao[1]->cover()}}" alt="{{$noticiasSaoSebastiao[1]->title}}" /> 
-                                                    </a> 
-                                                </div>                    
-                                                <div class="utf_post_content">
-                                                  <h2 class="utf_post_title title-small"> 
-                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[1]->slug ])}}">{{$noticiasSaoSebastiao[1]->title}}</a> 
-                                                  </h2>
-                                                  <div class="utf_post_meta"> 
-                                                      <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasSaoSebastiao[1]->views}}</span> 
-                                                      <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasSaoSebastiao[1]->created_at)->format('d/m/Y') }}</span> 
-                                                  </div>
+
+                            {{-- Demais notícias em lista --}}
+                            @if ($noticiasSaoSebastiao->count() > 1)
+                                <div class="utf_list_post_block">
+                                    <ul class="utf_list_post">
+                                        @foreach ($noticiasSaoSebastiao->skip(1) as $noticia)
+                                            <li class="clearfix" style="min-height: 130px;">
+                                                <div class="utf_post_block_style post-float clearfix">
+                                                    <div class="utf_post_thumb"> 
+                                                        <a href="{{ route('web.noticia', ['slug' => $noticia->slug]) }}"> 
+                                                            <img class="img_person_gastronomia" src="{{ $noticia->cover() }}" alt="{{ $noticia->title }}" /> 
+                                                        </a> 
+                                                    </div>                    
+                                                    <div class="utf_post_content">
+                                                        <h2 class="utf_post_title title-small"> 
+                                                            <a href="{{ route('web.noticia', ['slug' => $noticia->slug]) }}">{{ $noticia->title }}</a> 
+                                                        </h2>
+                                                        <div class="utf_post_meta"> 
+                                                            <span class="utf_post_author"><i class="fa fa-eye"></i> {{ $noticia->views }}</span> 
+                                                            <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticia->created_at)->format('d/m/Y') }}</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    @endif
-                                    @if (!empty($noticiasSaoSebastiao[2]))
-                                        <li class="clearfix" style="min-height: 130px;">
-                                            <div class="utf_post_block_style post-float clearfix">
-                                                <div class="utf_post_thumb"> 
-                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[2]->slug ])}}"> 
-                                                        <img class="img_person_gastronomia" src="{{$noticiasSaoSebastiao[2]->cover()}}" alt="{{$noticiasSaoSebastiao[2]->title}}" /> 
-                                                    </a> 
-                                                </div>                    
-                                                <div class="utf_post_content">
-                                                <h2 class="utf_post_title title-small"> 
-                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[2]->slug ])}}">{{$noticiasSaoSebastiao[2]->title}}</a> 
-                                                </h2>
-                                                <div class="utf_post_meta"> 
-                                                    <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasSaoSebastiao[2]->views}}</span> 
-                                                    <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasSaoSebastiao[2]->created_at)->format('d/m/Y') }}</span> </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endif
-                                    @if (!empty($noticiasSaoSebastiao[3]))
-                                        <li class="clearfix" style="min-height: 130px;">
-                                            <div class="utf_post_block_style post-float clearfix">
-                                                <div class="utf_post_thumb"> 
-                                                    <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[3]->slug ])}}"> 
-                                                        <img class="img_person_gastronomia" src="{{$noticiasSaoSebastiao[3]->cover()}}" alt="{{$noticiasSaoSebastiao[3]->title}}" /> 
-                                                    </a> 
-                                                </div>                    
-                                                <div class="utf_post_content">
-                                                <h2 class="utf_post_title title-small"> 
-                                                  <a href="{{route('web.noticia', [ 'slug' => $noticiasSaoSebastiao[3]->slug ])}}">{{$noticiasSaoSebastiao[3]->title}}</a> 
-                                                </h2>
-                                                <div class="utf_post_meta"> 
-                                                    <span class="utf_post_author"><i class="fa fa-eye"></i> {{$noticiasSaoSebastiao[3]->views}}</span> 
-                                                    <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($noticiasSaoSebastiao[3]->created_at)->format('d/m/Y') }}</span> </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endif                                    
-                                </ul>
-                            </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 @endif

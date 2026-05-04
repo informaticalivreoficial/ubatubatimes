@@ -2,31 +2,20 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Admin\PostController;
+use App\Models\Post;
 use Illuminate\Console\Command;
 
 class ClearTrashCron extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:clear-trash-cron';
+    protected $signature   = 'posts:purge-deleted';
+    protected $description = 'Force delete em posts excluídos há mais de 8 meses';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Limpa Lixeira de Posts tipo notícias';
-
-    /**
-     * Execute the console command.
-     */
     public function handle(): void
     {
-        $controller = new PostController();
-        $controller->clearTrash();
+        $total = Post::onlyTrashed()
+            ->where('deleted_at', '<', now()->subMonths(8))
+            ->forceDelete();
+
+        $this->info("PurgeDeletedPosts: {$total} posts removidos permanentemente.");
     }
 }

@@ -23,21 +23,20 @@ class GuiaController extends Controller
     {
         $catEmpresas = CatCompany::query()
             ->with(['companies' => function ($q) {
-                $q->available()
-                ->select([
-                    'id',
-                    'alias_name',
-                    'slug',
-                    'logo',
-                    'content',
-                    'category_id'
-                ])
-                ->inRandomOrder()
-                ->limit(5); // 🔥 limita por categoria (na prática do eager load)
-            }])
+        $q->available()
+        ->select([
+            'id',
+            'alias_name',
+            'slug',
+            'logo',
+            'content',
+            'category_id'
+        ])
+        ->inRandomOrder(); // 🔥 só random
+    }])
             ->whereNull('id_pai')
             ->active()
-            ->orderBy('title')
+            ->orderByRaw('LOWER(title)') // 🔥 garante ordem consistente
             ->get();
 
         $head = $this->seo->render(

@@ -156,6 +156,12 @@
                                 <p>Categorias</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{route('posts.lixeira')}}" class="nav-link {{ Route::is('posts.lixeira') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Lixeira</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>  
                     

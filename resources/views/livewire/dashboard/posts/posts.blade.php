@@ -94,7 +94,7 @@
                                 <!-- Imagem -->
                                 <td class="px-4 py-2 text-center">
                                     <img 
-                                        src="{{ url($post->cover()) }}" 
+                                        src="{{ $post->cover() }}" 
                                         alt="{{ $post->title }}" 
                                         class="w-16 mx-auto cursor-pointer rounded-lg hover:scale-105 transition-transform"
                                         @click="showModal = true; imageUrl = '{{ addslashes(url($post->nocover())) }}'">
