@@ -20,7 +20,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:fundartubatuba')->everyMinute()->withoutOverlapping();   
         $schedule->command('app:novatamoioscreate')->everyMinute()->withoutOverlapping();      
         $schedule->command('posts:clean-old')->everyMinute()->withoutOverlapping();      
-        $schedule->command('posts:purge-deleted')->everyMinute()->withoutOverlapping();      
+        $schedule->command('posts:purge-deleted')->everyMinute()->withoutOverlapping();  
+        $schedule->command('app:clear-logs')->everyMinute()->withoutOverlapping();    
     }
 
     protected function commands()
