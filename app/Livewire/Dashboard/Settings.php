@@ -160,12 +160,6 @@ class Settings extends Component
         $this->tags = explode(',', $config->metatags ?? '');
     }
 
-    public function render()
-    {
-        $title = 'Configurações';
-        return view('livewire.dashboard.settings')->with('title', $title);
-    }
-
     public function update()
     {      
         try {
@@ -328,6 +322,12 @@ class Settings extends Component
                 $this->configData[$key] = $path;
             }
         }
+    }
+
+    public function render()
+    {
+        $title = 'Configurações';
+        return view('livewire.dashboard.settings')->with('title', $title);
     }
     
 }

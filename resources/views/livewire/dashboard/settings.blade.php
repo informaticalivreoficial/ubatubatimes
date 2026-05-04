@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-sm-6 col-lg-6 mb-2">
-                                    @if(\Illuminate\Support\Facades\Auth::user()->superadmin == 1)
+                                    @if(\Illuminate\Support\Facades\Auth::user()->isAdmin() || \Illuminate\Support\Facades\Auth::user()->isSuperAdmin())
                                         <div class="form-group">
                                             <label class="labelforms"><b>URL do site</b></label>
                                             <div class="input-group">
