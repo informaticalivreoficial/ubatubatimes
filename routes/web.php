@@ -17,6 +17,7 @@ use App\Livewire\Dashboard\Posts\CatPosts;
 use App\Livewire\Dashboard\Posts\Lixeira;
 use App\Livewire\Dashboard\Posts\PostForm;
 use App\Livewire\Dashboard\Posts\Posts;
+use App\Livewire\Dashboard\Reports\Posts as ReportsPosts;
 use App\Livewire\Dashboard\Settings;
 use App\Livewire\Dashboard\Sitemap\SitemapGenerator;
 use App\Livewire\Dashboard\Users\Form;
@@ -88,6 +89,8 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], functi
     Route::get('posts/categorias', CatPosts::class)->name('posts.categories.index');
     Route::get('/posts/lixeira', Lixeira::class)->name('posts.lixeira');
     Route::get('posts', Posts::class)->name('posts.index');
+
+    Route::get('posts/reports', ReportsPosts::class)->name('posts.reports');
 
     //*********************** Vendas *********************************************/
     Route::get('anuncios', AdIndex::class)->name('vendas.ads.index');
