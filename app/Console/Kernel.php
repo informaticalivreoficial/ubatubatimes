@@ -13,14 +13,14 @@ class Kernel extends ConsoleKernel
     
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:noticiaubatuba')->dailyAt('12:30');            
-        $schedule->command('app:noticiacaragua')->dailyAt('12:30');                
-        $schedule->command('app:noticiasaosebastiao')->dailyAt('12:30');                
-        $schedule->command('app:noticiailhabela')->dailyAt('12:30');      
-        $schedule->command('app:fundartubatuba')->dailyAt('12:30');   
-        $schedule->command('app:novatamoioscreate')->dailyAt('12:30');      
-        $schedule->command('posts:clean-old')->dailyAt('12:30');      
-        $schedule->command('posts:purge-deleted')->dailyAt('12:30');      
+        $schedule->command('app:noticiaubatuba')->everyMinute()->withoutOverlapping();            
+        $schedule->command('app:noticiacaragua')->everyMinute()->withoutOverlapping();                
+        $schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
+        $schedule->command('app:noticiailhabela')->everyMinute()->withoutOverlapping();      
+        $schedule->command('app:fundartubatuba')->everyMinute()->withoutOverlapping();   
+        $schedule->command('app:novatamoioscreate')->everyMinute()->withoutOverlapping();      
+        $schedule->command('posts:clean-old')->everyMinute()->withoutOverlapping();      
+        $schedule->command('posts:purge-deleted')->everyMinute()->withoutOverlapping();      
     }
 
     protected function commands()
