@@ -99,7 +99,7 @@
                                             title="Visualizar"
                                             class="btn btn-xs btn-info"><i class="fas fa-search"></i>
                                         </a> 
-                                        <a href="{{ route('users.edit', [ 'user' => $user->id ]) }}" 
+                                        <a href="{{ route('users.edit', [ 'userId' => $user->id ]) }}" 
                                             class="btn btn-xs btn-default" 
                                             title="Editar">
                                             <i class="fas fa-pen"></i>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard;
 
 use App\Models\Ad;
+use App\Models\AdContract;
 use App\Models\Company;
 use App\Models\Invoice;
 use App\Models\Post;
@@ -25,7 +26,11 @@ class Dashboard extends Component
         
         $invoices = Invoice::where('status', 'paid')->whereMonth('paid_at', now()->month)->sum('amount');
         $invoicePending = Invoice::where('status', 'pending')->count();
-        $activeAds = Ad::where('active', true)->count();       
+        $activeAds = Ad::where('active', true)->count();  
+        
+        $contracts = AdContract::where('active', true)->get();        
+
+        $anuncios = Ad::where('active', true)->get();
         
 
         $title = 'Painel de Controle';
@@ -41,6 +46,8 @@ class Dashboard extends Component
             'noticiasYearCount' => $noticiasYearCount,
             'articlesCount' => $articlesCount,
             'articlesYearCount' => $articlesYearCount,
+            'contracts' => $contracts,
+            'anuncios' => $anuncios,
         ]);
     }
 }

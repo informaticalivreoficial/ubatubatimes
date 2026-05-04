@@ -39,21 +39,6 @@
                         </div>            
                     </div>
                 </div>
-                {{--  
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-green">
-                            <a href="{{ route('companies.index') }}" title="Faturas">
-                                <i class="fa far fa-money-check"></i>
-                            </a>
-                        </span>            
-                        <div class="info-box-content">
-                            <span class="info-box-text"><b>Faturas</b></span>
-                            <span class="info-box-text">{{ now()->year }}: {{ $invoicesYearCount }}</span>
-                            <span class="info-box-text">Total: {{ $invoicesCount }}</span>
-                        </div>            
-                    </div>
-                </div>--}}
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="info-box">
                         <span class="info-box-icon bg-teal">
@@ -79,6 +64,20 @@
                             <span class="info-box-text"><b>Artigos</b></span>
                             <span class="info-box-text">{{ now()->year }}: {{ $articlesYearCount }}</span>
                             <span class="info-box-text">Total: {{ $articlesCount }}</span>
+                        </div>            
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-orange">
+                            <a href="{{ route('vendas.contracts.index') }}" title="Contratos & Anúncios">
+                                <i class="fa far fa-pencil-alt"></i>
+                            </a>
+                        </span>            
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Vendas</b></span>
+                            <span class="info-box-text">Contratos: {{ $contracts->count() }}</span>
+                            <span class="info-box-text">Anúncios: {{ $anuncios->count() }}</span>
                         </div>            
                     </div>
                 </div>
