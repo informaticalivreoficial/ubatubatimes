@@ -13,14 +13,14 @@ class Kernel extends ConsoleKernel
     
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:noticiaubatuba')->everyMinute();            
-        $schedule->command('app:noticiacaragua')->everyMinute();                
-        $schedule->command('app:noticiasaosebastiao')->everyMinute();                
-        $schedule->command('app:noticiailhabela')->everyMinute();      
-        $schedule->command('app:fundartubatuba')->everyMinute();   
-        $schedule->command('app:novatamoioscreate')->everyMinute();      
-        $schedule->command('posts:clean-old')->everyMinute();      
-        $schedule->command('posts:purge-deleted')->everyMinute();      
+        $schedule->command('app:noticiaubatuba')->dailyAt('12:30');            
+        $schedule->command('app:noticiacaragua')->dailyAt('12:30');                
+        $schedule->command('app:noticiasaosebastiao')->dailyAt('12:30');                
+        $schedule->command('app:noticiailhabela')->dailyAt('12:30');      
+        $schedule->command('app:fundartubatuba')->dailyAt('12:30');   
+        $schedule->command('app:novatamoioscreate')->dailyAt('12:30');      
+        $schedule->command('posts:clean-old')->dailyAt('12:30');      
+        $schedule->command('posts:purge-deleted')->dailyAt('12:30');      
     }
 
     protected function commands()
