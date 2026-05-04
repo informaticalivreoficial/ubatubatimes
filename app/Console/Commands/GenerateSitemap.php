@@ -32,12 +32,14 @@ class GenerateSitemap extends Command
 
         // Páginas estáticas
         $staticPages = [
-            ['url' => route('web.contact'), 'priority' => 0.8],
-            ['url' => route('web.portifolio'), 'priority' => 0.9],
-            ['url' => route('web.terms'), 'priority' => 0.9],
-            ['url' => route('web.privacy'), 'priority' => 0.9],
-            //['url' => route('web.privacy'), 'priority' => 0.9],
-            // Adicione outras páginas estáticas aqui
+            ['url' => route('web.ondas'), 'priority' => 0.8],
+            ['url' => route('web.tempo'), 'priority' => 0.9],
+            ['url' => route('web.anunciar'), 'priority' => 0.9],
+            ['url' => route('web.politica'), 'priority' => 0.9],
+            ['url' => route('web.guiaUbatuba'), 'priority' => 0.9],
+            ['url' => route('web.blog.artigos'), 'priority' => 0.9],
+            ['url' => route('web.noticias'), 'priority' => 0.9],
+            ['url' => route('web.pesquisa'), 'priority' => 0.9],
         ];
 
         foreach ($staticPages as $page) {
@@ -48,26 +50,13 @@ class GenerateSitemap extends Command
                     ->setPriority($page['priority'])
             );
         }
-
-        // Portifólio (Trabalhos)
-        Portifolio::active()
-            ->orderBy('updated_at', 'desc')
-            ->chunk(100, function ($trabalhos) use ($sitemap) {
-                foreach ($trabalhos as $trabalho) {
-                    $sitemap->add(
-                        Url::create(route('web.portifolio.single', $trabalho->slug))
-                            ->setLastModificationDate($trabalho->updated_at)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-                            ->setPriority(0.7)
-                    );
-                }
-            });
+        
 
         // Posts (se tiver blog)
         if (class_exists(Post::class)) {
         // Artigos
-        Post::where('status', 1)
-            ->where('type', 'artigo')
+        Post::where('type', 'artigo')
+            ->postson()
             ->orderBy('created_at', 'desc')
             ->chunk(100, function ($posts) use ($sitemap) {
                 foreach ($posts as $post) {
@@ -81,34 +70,34 @@ class GenerateSitemap extends Command
             });
 
         // Páginas
-        Post::where('status', 1)
-            ->where('type', 'pagina')
-            ->orderBy('created_at', 'desc')
-            ->chunk(100, function ($posts) use ($sitemap) {
-                foreach ($posts as $post) {
-                    $sitemap->add(
-                        Url::create(route('web.page', $post->slug))
-                            ->setLastModificationDate($post->updated_at)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-                            ->setPriority(0.8) // Páginas têm prioridade maior
-                    );
-                }
-            });
-
-        // Notícias
         // Post::where('status', 1)
-        //     ->where('type', 'noticia')
+        //     ->where('type', 'pagina')
         //     ->orderBy('created_at', 'desc')
         //     ->chunk(100, function ($posts) use ($sitemap) {
         //         foreach ($posts as $post) {
         //             $sitemap->add(
-        //                 Url::create(route('web.blog.noticia', $post->slug))
+        //                 Url::create(route('web.page', $post->slug))
         //                     ->setLastModificationDate($post->updated_at)
-        //                     ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY) // Notícias mudam mais
-        //                     ->setPriority(0.7)
+        //                     ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+        //                     ->setPriority(0.8) // Páginas têm prioridade maior
         //             );
         //         }
         //     });
+
+        // Notícias
+        Post::where('type', 'noticia')
+            ->postson()
+            ->orderBy('created_at', 'desc')
+            ->chunk(100, function ($posts) use ($sitemap) {
+                foreach ($posts as $post) {
+                    $sitemap->add(
+                        Url::create(route('web.noticia', $post->slug))
+                            ->setLastModificationDate($post->updated_at)
+                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY) // Notícias mudam mais
+                            ->setPriority(0.7)
+                    );
+                }
+            });
     }
 
         // Salva o sitemap
