@@ -21,7 +21,7 @@ class Companies extends Component
 
     public string $sortField = 'social_name';
 
-    public string $sortDirection = 'asc';
+    public string $sortDirection = 'desc';
 
     public ?int $delete_id = null;
 

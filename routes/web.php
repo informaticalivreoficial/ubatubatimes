@@ -30,6 +30,10 @@ use App\Livewire\Dashboard\Vendas\AdForm;
 use App\Livewire\Dashboard\Vendas\AdIndex;
 use App\Livewire\Dashboard\Vendas\InvoiceIndex;
 
+// use App\Services\OndasService;
+// use App\Services\PrevisaoTempoService;
+// use App\Services\GerarBoletimCardService;
+
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
     /** Página Inicial */   
@@ -62,6 +66,17 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
     //** FEED */    
     Route::get('feed', [RssFeedController::class, 'feed'])->name('feed');
+
+
+    // Route::get('/teste-card', function () {
+
+    //     $ondas = app(OndasService::class)->get();
+    //     $tempo = app(PrevisaoTempoService::class)->getBoletim();
+
+    //     $path = app(GerarBoletimCardService::class)->handle($ondas, $tempo);
+
+    //     return response()->file($path);
+    // });
 });
 
 Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'admin'], function () {

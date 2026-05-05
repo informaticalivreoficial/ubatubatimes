@@ -159,9 +159,9 @@ class OndasService
 
     private function getIcon($altura)
     {
-        if ($altura < 1) return asset('frontend/assets/images/onda-ruim.png');
-        if ($altura < 2) return asset('frontend/assets/images/onda-regular.png');
-        return asset('frontend/assets/images/onda-boa.png');
+        if ($altura < 1) return public_path('images/onda-ruim.png');
+        if ($altura < 2) return public_path('images/onda-regular.png');
+        return public_path('images/onda-boa.png');
     }
 
     private function grausParaDirecao($graus, $full = true)

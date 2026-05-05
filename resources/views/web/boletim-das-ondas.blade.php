@@ -14,6 +14,7 @@
                 @if(!empty($dados['resumo']['geral']))
                     <div class="bg-white rounded-xl shadow p-4 mb-5">
                         <p class="text-gray-600 text-sm">
+                            Atualização: <span class="text-red-600">{{ Carbon\Carbon::now()->format('d/m/Y') }}</span><br>
                             {{ $dados['resumo']['geral'] }}
                         </p>
                     </div>
