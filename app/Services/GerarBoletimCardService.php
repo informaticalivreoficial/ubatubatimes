@@ -57,7 +57,7 @@ class GerarBoletimCardService
 
         $img->text('Boletim do Dia', 420, 110, function ($font) {
             $font->filename($this->fontBold);
-            $font->size(52);
+            $font->size(68);
             $font->color('#222222');
             $font->align('left');
         });
@@ -69,11 +69,11 @@ class GerarBoletimCardService
 
     private function drawBoxes($img): void
     {
-        $boxOndas = $this->image->create(420, 520)->fill('#ffffff');
-        $img->place($boxOndas, 'top-left', 80, 220);
+        $boxOndas = $this->image->create(420, 620)->fill('#ffffff');
+        $img->place($boxOndas, 'top-left', 80, 200);
 
-        $boxClima = $this->image->create(420, 520)->fill('#ffffff');
-        $img->place($boxClima, 'top-left', 580, 220);
+        $boxClima = $this->image->create(420, 620)->fill('#ffffff');
+        $img->place($boxClima, 'top-left', 580, 200);
     }
 
     // =========================
@@ -86,7 +86,7 @@ class GerarBoletimCardService
 
         $img->text('ONDAS', $x, 260, function ($font) {
             $font->filename($this->fontBold);
-            $font->size(28);
+            $font->size(38);
             $font->color('#111111');
             $font->align('center');
         });
@@ -96,11 +96,35 @@ class GerarBoletimCardService
             $img->place($icon, 'top-left', $x - 50, 300);
         }
 
-        $this->drawText($img, 'Manhã', $x, 460, $this->fontBold, 22, '#333333', 'center');
-        $this->drawMultiline($img, $this->wrap($ondas['resumo']['manha'] ?? ''), $x, 490, 22, 28);
+        // --- MANHÃ ---
+        $this->drawText($img, 'Manhã', $x, 460, $this->fontBold, 30, '#333333', 'center');
+        $this->drawPeriodoOndas($img, $ondas['manha'] ?? null, $x, 500);
 
-        $this->drawText($img, 'Tarde', $x, 620, $this->fontBold, 22, '#333333', 'center');
-        $this->drawMultiline($img, $this->wrap($ondas['resumo']['tarde'] ?? ''), $x, 650, 22, 28);
+        // --- TARDE ---
+        $this->drawText($img, 'Tarde', $x, 650, $this->fontBold, 30, '#333333', 'center');
+        $this->drawPeriodoOndas($img, $ondas['tarde'] ?? null, $x, 690);
+    }
+
+    private function drawPeriodoOndas($img, ?array $periodo, int $x, int $y): void
+    {
+        if (!$periodo) {
+            $this->drawText($img, 'Sem dados', $x, $y, $this->fontRegular, 26, '#999999', 'center');
+            return;
+        }
+
+        $altura     = $periodo['altura'] ?? '-';
+        $ondaDir    = $periodo['direcao_onda_short'] ?? '-';
+        $ventoDir   = $periodo['vento_dir_short'] ?? '-';
+        $vento      = isset($periodo['vento']) ? round($periodo['vento']) . ' km/h' : '-';
+
+        // Tamanho em destaque
+        $this->drawText($img, $altura, $x, $y, $this->fontBold, 42, '#0077b6', 'center');
+
+        // Direção da onda
+        $this->drawText($img, "Ondas: {$ondaDir}", $x, $y + 55, $this->fontRegular, 28, '#333333', 'center');
+
+        // Vento
+        $this->drawText($img, "Vento: {$ventoDir} - {$vento}", $x, $y + 95, $this->fontRegular, 28, '#555555', 'center');
     }
 
     // =========================
@@ -116,7 +140,7 @@ class GerarBoletimCardService
 
         $img->text('CLIMA', $x, 260, function ($font) {
             $font->filename($this->fontBold);
-            $font->size(28);
+            $font->size(38);
             $font->color('#111111');
             $font->align('center');
         });
@@ -126,10 +150,10 @@ class GerarBoletimCardService
             $img->place($icon, 'top-left', $x - 50, 300);
         }
 
-        $this->drawMultiline($img, $this->wrap($hoje['previsao'] ?? ''), $x, 460, 22, 28);
+        $this->drawMultiline($img, $this->wrap($hoje['previsao'] ?? ''), $x, 460, 28, 36);
 
-        $this->drawText($img, "{$hoje['maxima']}°", $x, 580, $this->fontBold, 42, '#111111', 'center');
-        $this->drawText($img, "Min {$hoje['minima']}°", $x, 635, $this->fontRegular, 20, '#666666', 'center');
+        $this->drawText($img, "{$hoje['maxima']}°", $x, 600, $this->fontBold, 56, '#111111', 'center');
+        $this->drawText($img, "Min {$hoje['minima']}°", $x, 660, $this->fontRegular, 30, '#666666', 'center');
     }
 
     // =========================
@@ -138,10 +162,10 @@ class GerarBoletimCardService
 
     private function drawFooter($img): void
     {
-        $img->text('Boletim Gerado por ' . config('app.name')  . ' em ' . now()->format('d/m/Y'), 540, 980, function ($font) {
+        $img->text(now()->format('d/m/Y'), 540, 1020, function ($font) {
             $font->filename($this->fontLight);
-            $font->size(28);
-            $font->color('#666666');
+            $font->size(30);
+            $font->color('#888888');
             $font->align('center');
         });
     }
