@@ -19,3 +19,4 @@ error_log
 /public/error_log
 /public/sitemap.xml
 /public/boletins
+/public/defaults

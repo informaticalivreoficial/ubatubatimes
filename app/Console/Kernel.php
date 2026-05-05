@@ -18,10 +18,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
         $schedule->command('app:noticiailhabela')->everyMinute()->withoutOverlapping();      
         $schedule->command('app:fundartubatuba')->everyMinute()->withoutOverlapping();   
-        $schedule->command('app:novatamoioscreate')->everyMinute()->withoutOverlapping();      
+        $schedule->command('app:novatamoioscreate')->everyMinute()->withoutOverlapping();         
+        $schedule->command('app:noticia-pm-s-p-create')->everyMinute()->withoutOverlapping(); 
         $schedule->command('posts:clean-old')->everyMinute()->withoutOverlapping();      
-        $schedule->command('posts:purge-deleted')->everyMinute()->withoutOverlapping();  
-        $schedule->command('app:clear-logs')->everyMinute()->withoutOverlapping();
+        $schedule->command('posts:purge-deleted')->everyMinute()->withoutOverlapping();
+        $schedule->command('app:clear-logs')->everyMinute()->withoutOverlapping();        
         $schedule->command('boletim:postar')->everyMinute()->withoutOverlapping();    
     }
 
