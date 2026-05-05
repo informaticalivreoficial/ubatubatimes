@@ -24,7 +24,7 @@ class PostBoletimDiario extends Command
             $relativePath = 'boletins/' . basename($path);
             $url = url($relativePath) . '?v=' . time();
 
-            $caption  = "🌊 Boletim de Surf - Ubatuba\n\n";
+            $caption  = "🌊 Boletim das Ondas - Ubatuba\n\n";
             $caption .= "📊 " . $ondas['resumo']['geral'] . "\n\n";
             $caption .= "🌅 Manhã: " . $ondas['resumo']['manha'] . "\n";
             $caption .= "🌇 Tarde: " . $ondas['resumo']['tarde'] . "\n\n";
