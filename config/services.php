@@ -40,4 +40,8 @@ return [
         'sandbox' => env('PAGHIPER_SANDBOX', true),
     ],
 
+    'make' => [
+        'webhook' => env('MAKE_WEBHOOK_URL'),
+    ],
+
 ];
