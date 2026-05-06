@@ -20,7 +20,7 @@ class PostBoletimDiario extends Command
             $tempo  = app(PrevisaoTempoService::class)->getBoletim();
             $result = app(GerarBoletimCardService::class)->handle($ondas, $tempo);
 
-            $url = $result['url'] . '?v=' . time();
+            $url = $result['url'];
 
             $caption  = "🌊 Boletim das Ondas - Ubatuba\n\n";
             $caption .= "📊 " . $ondas['resumo']['geral'] . "\n\n";

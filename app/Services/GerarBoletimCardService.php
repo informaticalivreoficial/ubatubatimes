@@ -36,10 +36,10 @@ class GerarBoletimCardService
             mkdir($dir, 0755, true);
         }
 
-        $filename = 'boletim-' . now()->format('Y-m-d-H-i-s') . '.png';
+        $filename = 'boletim-' . now()->format('Y-m-d-H-i-s') . '.jpg';
         $path     = $dir . '/' . $filename;
 
-        $img->save($path);
+        $img->save($path, quality: 90);
 
         return [
             'path' => $path,
