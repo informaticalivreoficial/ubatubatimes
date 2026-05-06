@@ -21,7 +21,7 @@ class GerarBoletimCardService
         $this->fontLight   = public_path('fonts/Roboto-Light.ttf');
     }
 
-    public function handle(array $ondas, ?array $tempo): string
+    public function handle(array $ondas, ?array $tempo): array
     {
         $img = $this->image->create(1080, 1080)->fill('#f8fafc');
 
@@ -37,13 +37,15 @@ class GerarBoletimCardService
         }
 
         $filename = 'boletim-' . now()->format('Y-m-d-H-i-s') . '.png';
-        $path = $dir . '/' . $filename;
+        $path     = $dir . '/' . $filename;
 
         $img->save($path);
 
-        return $path;
+        return [
+            'path' => $path,
+            'url'  => url('boletins/' . $filename),
+        ];
     }
-
     // =========================
     // HEADER
     // =========================
@@ -69,10 +71,10 @@ class GerarBoletimCardService
 
     private function drawBoxes($img): void
     {
-        $boxOndas = $this->image->create(420, 620)->fill('#ffffff');
+        $boxOndas = $this->image->create(420, 720)->fill('#ffffff');
         $img->place($boxOndas, 'top-left', 80, 200);
 
-        $boxClima = $this->image->create(420, 620)->fill('#ffffff');
+        $boxClima = $this->image->create(420, 720)->fill('#ffffff');
         $img->place($boxClima, 'top-left', 580, 200);
     }
 
@@ -91,6 +93,7 @@ class GerarBoletimCardService
             $font->align('center');
         });
 
+        // Ícone manhã
         if (!empty($ondas['manha']['img']) && file_exists($ondas['manha']['img'])) {
             $icon = $this->image->read($ondas['manha']['img'])->resize(100, 100);
             $img->place($icon, 'top-left', $x - 50, 300);
@@ -100,9 +103,15 @@ class GerarBoletimCardService
         $this->drawText($img, 'Manhã', $x, 460, $this->fontBold, 30, '#333333', 'center');
         $this->drawPeriodoOndas($img, $ondas['manha'] ?? null, $x, 500);
 
+        // Ícone tarde
+        if (!empty($ondas['tarde']['img']) && file_exists($ondas['tarde']['img'])) {
+            $icon = $this->image->read($ondas['tarde']['img'])->resize(100, 100);
+            $img->place($icon, 'top-left', $x - 50, 610);
+        }
+
         // --- TARDE ---
-        $this->drawText($img, 'Tarde', $x, 650, $this->fontBold, 30, '#333333', 'center');
-        $this->drawPeriodoOndas($img, $ondas['tarde'] ?? null, $x, 690);
+        $this->drawText($img, 'Tarde', $x, 750, $this->fontBold, 30, '#333333', 'center');
+        $this->drawPeriodoOndas($img, $ondas['tarde'] ?? null, $x, 790);
     }
 
     private function drawPeriodoOndas($img, ?array $periodo, int $x, int $y): void
@@ -162,7 +171,7 @@ class GerarBoletimCardService
 
     private function drawFooter($img): void
     {
-        $img->text(now()->format('d/m/Y'), 540, 1020, function ($font) {
+        $img->text('Boletim gerado por: ' . config('app.name'). ' - ' . now()->format('d/m/Y'), 540, 1000, function ($font) {
             $font->filename($this->fontLight);
             $font->size(30);
             $font->color('#888888');

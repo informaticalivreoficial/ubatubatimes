@@ -16,13 +16,11 @@ class PostBoletimDiario extends Command
     public function handle()
     {
         try {
-            $ondas = app(OndasService::class)->get();
-            $tempo = app(PrevisaoTempoService::class)->getBoletim();
+            $ondas  = app(OndasService::class)->get();
+            $tempo  = app(PrevisaoTempoService::class)->getBoletim();
+            $result = app(GerarBoletimCardService::class)->handle($ondas, $tempo);
 
-            $path = app(GerarBoletimCardService::class)->handle($ondas, $tempo);
-
-            $relativePath = 'boletins/' . basename($path);
-            $url = url($relativePath) . '?v=' . time();
+            $url = $result['url'] . '?v=' . time();
 
             $caption  = "🌊 Boletim das Ondas - Ubatuba\n\n";
             $caption .= "📊 " . $ondas['resumo']['geral'] . "\n\n";
@@ -40,7 +38,7 @@ class PostBoletimDiario extends Command
                 return Command::FAILURE;
             }
 
-            $this->info('Boletim enviado com sucesso!');
+            $this->info('Boletim enviado! URL: ' . $url);
             return Command::SUCCESS;
 
         } catch (\Exception $e) {
