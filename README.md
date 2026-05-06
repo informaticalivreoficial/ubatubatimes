@@ -1,30 +1,62 @@
+# 🌊 Ubatuba Times CMS
 
-# Sistema Ubatuba Times
+[![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
+[![Laravel](https://img.shields.io/badge/Laravel-10-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
+[![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](https://choosealicense.com/licenses/mit/)
 
-CMS Completo com módulo de Anúncios, Empresas, Planos, Faturas, Newsletter e integração com meios de pagamento.
+Sistema completo de gerenciamento de conteúdo (CMS) para portais de notícias, classificados e empresas locais.
 
+Inclui módulos de **notícias, anúncios, empresas, planos, faturas e integração com pagamentos**.
 
-## Autores
+---
 
-- [@infolivre](https://github.com/informaticalivreoficial)
+## 🚀 Funcionalidades
 
+- 📰 Gestão completa de notícias e categorias
+- 🏢 Cadastro de empresas e anúncios
+- 💳 Planos de assinatura e cobrança
+- 🧾 Controle de faturas e pagamentos
+- 🔐 Sistema de autenticação e permissões
+- 📊 Dashboard administrativo
+- 🔌 Integração com gateways de pagamento
+- ⚡ Arquitetura modular e escalável
 
-## Referência
+---
 
- - [PHP Language](https://www.php.net/)
- - [Laravel Framework](https://laravel.com/)
- - [AdminLTE](https://adminlte.io/)
- - [Jquery](https://jquery.com/)
- - [Vuejs](https://vuejs.org/)
+## 🛠️ Stack
 
+- PHP 8.1+
+- Laravel 10+
+- AdminLTE
+- Js
+- Livewire
+- MySQL / MariaDB
 
-## Licença
+---
 
-[MIT](https://choosealicense.com/licenses/mit/)
+## 📦 Requisitos
 
+- PHP >= 8.1
+- Composer
+- Node.js + NPM
+- MySQL / MariaDB
 
-## Suporte
+---
 
-Para suporte, mande um email para suporte@informaticalivre.com.br ou entre em nosso canal do Discord.
+## ⚙️ Instalação
 
+```bash
+git clone https://github.com/informaticalivreoficial/ubatuba-times.git
 
+cd ubatuba-times
+
+composer install
+
+npm install
+npm run dev
+
+cp .env.example .env
+
+php artisan key:generate
+
+php artisan migrate --seed
