@@ -4,137 +4,168 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class PrevisaoTempoService
 {
-    private const URL = 'http://servicos.cptec.inpe.br/XML/cidade/5515/previsao.xml';
+    /**
+     * Ubatuba/SP
+     */
+    private const LATITUDE  = -23.433;
+    private const LONGITUDE = -45.083;
 
+    /**
+     * Weather codes Open-Meteo
+     * https://open-meteo.com/en/docs
+     */
     private const PREVISOES = [
-        'ec'  => 'Encoberto com Chuvas Isoladas',
-        'ci'  => 'Chuvas Isoladas',
-        'c'   => 'Chuva',
-        'in'  => 'Instável',
-        'pp'  => 'Poss. de Pancadas de Chuva',
-        'cm'  => 'Chuva pela Manhã',
-        'cn'  => 'Chuva a Noite',
-        'pt'  => 'Pancadas de Chuva a Tarde',
-        'pm'  => 'Pancadas de Chuva pela Manhã',
-        'np'  => 'Nublado e Pancadas de Chuva',
-        'pc'  => 'Pancadas de Chuva',
-        'pn'  => 'Parcialmente Nublado',
-        'cv'  => 'Chuvisco',
-        'ch'  => 'Chuvoso',
-        't'   => 'Tempestade',
-        'ps'  => 'Predomínio de Sol',
-        'e'   => 'Encoberto',
-        'n'   => 'Nublado',
-        'cl'  => 'Céu Claro',
-        'nv'  => 'Nevoeiro',
-        'g'   => 'Geada',
-        'pnt' => 'Pancadas de Chuva a Noite',
-        'psc' => 'Possibilidade de Chuva',
-        'pcm' => 'Possibilidade de Chuva pela Manhã',
-        'pct' => 'Possibilidade de Chuva a Tarde',
-        'pcn' => 'Possibilidade de Chuva a Noite',
-        'npt' => 'Nublado com Pancadas a Tarde',
-        'npn' => 'Nublado com Pancadas a Noite',
-        'ncn' => 'Nublado com Poss. de Chuva a Noite',
-        'nct' => 'Nublado com Poss. de Chuva a Tarde',
-        'ncm' => 'Nubl. c/ Poss. de Chuva pela Manhã',
-        'npm' => 'Nublado com Pancadas pela Manhã',
-        'npp' => 'Nublado com Possibilidade de Chuva',
-        'vn'  => 'Variação de Nebulosidade',
-        'ct'  => 'Chuva a Tarde',
-        'ppn' => 'Poss. de Panc. de Chuva a Noite',
-        'ppt' => 'Poss. de Panc. de Chuva a Tarde',
-        'ppm' => 'Poss. de Panc. de Chuva pela Manhã',
+        0  => 'Céu Limpo',
+        1  => 'Principalmente Limpo',
+        2  => 'Parcialmente Nublado',
+        3  => 'Nublado',
+
+        45 => 'Nevoeiro',
+        48 => 'Nevoeiro com Gelo',
+
+        51 => 'Garoa Leve',
+        53 => 'Garoa Moderada',
+        55 => 'Garoa Intensa',
+
+        61 => 'Chuva Leve',
+        63 => 'Chuva Moderada',
+        65 => 'Chuva Forte',
+
+        71 => 'Neve Leve',
+        73 => 'Neve Moderada',
+        75 => 'Neve Forte',
+
+        80 => 'Pancadas de Chuva Leves',
+        81 => 'Pancadas de Chuva',
+        82 => 'Pancadas Fortes',
+
+        95 => 'Tempestade',
+        96 => 'Tempestade com Granizo',
+        99 => 'Tempestade Forte com Granizo',
     ];
 
     private const IMAGENS = [
-        'ec'  => 'sol-com-pancadas.png',
-        'ci'  => 'sol-com-pancadas.png',
-        'c'   => 'chuva.png',
-        'in'  => 'sol-com-pancadas.png',
-        'pp'  => 'sol-com-pancadas.png',
-        'cm'  => 'chuva.png',
-        'cn'  => 'chuva.png',
-        'pt'  => 'sol-com-pancadas.png',
-        'pm'  => 'sol-com-pancadas.png',
-        'np'  => 'sol-com-pancadas.png',
-        'pc'  => 'sol-com-pancadas.png',
-        'pn'  => 'encoberto.png',
-        'cv'  => 'chuva.png',
-        'ch'  => 'chuva.png',
-        't'   => 'tempestade.png',
-        'ps'  => 'sol.png',
-        'e'   => 'encoberto.png',
-        'n'   => 'nublado.png',
-        'cl'  => 'sol.png',
-        'nv'  => 'encoberto.png',
-        'pnt' => 'pancadas-noite.png',
-        'psc' => 'sol-com-pancadas.png',
-        'pcm' => 'sol-com-pancadas.png',
-        'pct' => 'sol-com-pancadas.png',
-        'pcn' => 'sol-com-pancadas.png',
-        'npt' => 'sol-com-pancadas.png',
-        'npn' => 'sol-com-pancadas.png',
-        'ncn' => 'sol-com-pancadas.png',
-        'nct' => 'sol-com-pancadas.png',
-        'ncm' => 'sol-com-pancadas.png',
-        'npm' => 'sol-com-pancadas.png',
-        'npp' => 'sol-com-pancadas.png',
-        'vn'  => 'encoberto.png',
-        'ct'  => 'sol-com-pancadas.png',
-        'ppn' => 'sol-com-pancadas.png',
-        'ppt' => 'sol-com-pancadas.png',
-        'ppm' => 'sol-com-pancadas.png',
+        0  => 'sol.png',
+        1  => 'sol.png',
+        2  => 'encoberto.png',
+        3  => 'nublado.png',
+
+        45 => 'encoberto.png',
+        48 => 'encoberto.png',
+
+        51 => 'chuva.png',
+        53 => 'chuva.png',
+        55 => 'chuva.png',
+
+        61 => 'chuva.png',
+        63 => 'chuva.png',
+        65 => 'chuva.png',
+
+        71 => 'encoberto.png',
+        73 => 'encoberto.png',
+        75 => 'encoberto.png',
+
+        80 => 'sol-com-pancadas.png',
+        81 => 'sol-com-pancadas.png',
+        82 => 'tempestade.png',
+
+        95 => 'tempestade.png',
+        96 => 'tempestade.png',
+        99 => 'tempestade.png',
     ];
 
     public function getBoletim(): ?array
     {
         try {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_URL, self::URL);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            $data = curl_exec($ch);
-            curl_close($ch);
 
-            $result = simplexml_load_string($data);
+            $url = 'https://api.open-meteo.com/v1/forecast';
 
-            if (!$result) return null;
+            $response = Http::timeout(10)
+                ->get($url, [
+                    'latitude'  => self::LATITUDE,
+                    'longitude' => self::LONGITUDE,
 
-            $response = [];
-            foreach ($result->previsao as $item) {
-                $sigla = (string) $item->tempo;
-                $response[] = [
-                    'data'      => Carbon::parse($item->dia)->translatedFormat('l d/m/Y'),
-                    'img'       => self::IMAGENS[$sigla]   ?? 'sol.png',
-                    'previsao'  => self::PREVISOES[$sigla] ?? 'Sem previsão',
-                    'minima'    => (string) $item->minima,
-                    'maxima'    => (string) $item->maxima,
-                    'iuv'       => (string) $item->iuv,
-                    'iuvcolor'  => $this->getUvColor((int) $item->iuv),
+                    'daily' => implode(',', [
+                        'weathercode',
+                        'temperature_2m_max',
+                        'temperature_2m_min',
+                        'uv_index_max',
+                    ]),
+
+                    'timezone' => 'America/Sao_Paulo',
+                ]);
+
+            if (!$response->successful()) {
+                return null;
+            }
+
+            $data = $response->json();
+
+            if (!isset($data['daily'])) {
+                return null;
+            }
+
+            $responseFinal = [];
+
+            foreach ($data['daily']['time'] as $index => $date) {
+
+                $codigo = $data['daily']['weathercode'][$index];
+
+                $responseFinal[] = [
+                    'data' => Carbon::parse($date)
+                        ->translatedFormat('l d/m/Y'),
+
+                    'img' => self::IMAGENS[$codigo]
+                        ?? 'sol.png',
+
+                    'previsao' => self::PREVISOES[$codigo]
+                        ?? 'Sem previsão',
+
+                    'minima' => round(
+                        $data['daily']['temperature_2m_min'][$index]
+                    ),
+
+                    'maxima' => round(
+                        $data['daily']['temperature_2m_max'][$index]
+                    ),
+
+                    'iuv' => round(
+                        $data['daily']['uv_index_max'][$index]
+                    ),
+
+                    'iuvcolor' => $this->getUvColor(
+                        (int) round(
+                            $data['daily']['uv_index_max'][$index]
+                        )
+                    ),
                 ];
             }
 
-            return $response;
+            return $responseFinal;
 
         } catch (\Exception $e) {
-            Log::error('Erro ao buscar previsão do tempo', ['error' => $e->getMessage()]);
+
+            Log::error('Erro ao buscar previsão do tempo', [
+                'error' => $e->getMessage()
+            ]);
+
             return null;
         }
     }
 
     private function getUvColor(int $valor): string
     {
-        return match(true) {
-            $valor <= 2              => 'color:#000;',
-            $valor >= 3 && $valor <= 5  => 'color:#000;background:#fff336;',
-            $valor >= 6 && $valor <= 7  => 'color:#000;background:#EDAC43;',
+        return match (true) {
+            $valor <= 2 => 'color:#000;',
+            $valor >= 3 && $valor <= 5 => 'color:#000;background:#fff336;',
+            $valor >= 6 && $valor <= 7 => 'color:#000;background:#EDAC43;',
             $valor >= 8 && $valor <= 10 => 'color:#fff;background:#D92927;',
-            $valor >= 11             => 'color:#fff;background:#C72BB2;',
-            default                  => 'color:#000;',
+            $valor >= 11 => 'color:#fff;background:#C72BB2;',
+            default => 'color:#000;',
         };
     }
 }

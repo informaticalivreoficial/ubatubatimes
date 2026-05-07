@@ -95,9 +95,7 @@ class SiteController extends Controller
         // $positionMainhome = Anuncio::where('plan_id', 9)->available()->limit(1)->get();
         // $positionFooterhome = Anuncio::where('plan_id', 5)->available()->limit(1)->get();
 
-        //Boletim das Ondas
-        //$boletim = new BoletimOndas('http://servicos.cptec.inpe.br/XML/cidade/5515/dia/0/ondas.xml');
-
+        
         $head = $this->seo->render($this->config->app_name ?? env('APP_NAME'),
             $this->config->information ?? env('APP_NAME'),
             route('web.home'),
@@ -138,20 +136,17 @@ class SiteController extends Controller
                 : null,
         ];
         //dd($dados);
-        //Anúncio
-        //$positionSidebarhome = Anuncio::where('plan_id', 8)->available()->limit(1)->get();
-
+        
         $head = $this->seo->render('Boletim das Ondas para Ubatuba' ?? 'Ubatuba Times',
             'Boletim das Ondas para Ubatuba' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
             route('web.ondas'),
-            url(asset('frontend/assets/images/ondas.png'))
+            url('frontend/assets/images/ondas.png')
         );
 
         return view('web.boletim-das-ondas',[
             'head' => $head,
             'dados' => $dados,
             'resumo' => $resumo,
-            //'positionSidebarhome' => $positionSidebarhome,
         ]);
     }
 
@@ -190,7 +185,7 @@ class SiteController extends Controller
         $head = $this->seo->render($post->title ?? 'Ubatuba Times',
              Str::words($post->content, 20, '...') ?? 'Informações e notícias sobre Ubatuba',
              route('web.noticia', ['slug' => $post->slug]),
-             $post->cover() ?? url(asset('theme/images/image.jpg'))
+             $post->cover() ?? url('theme/images/image.jpg')
         );           
 
         return view('web.blog.artigo', [

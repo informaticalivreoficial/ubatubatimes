@@ -94,8 +94,14 @@ class GerarBoletimCardService
         });
 
         // Ícone manhã
-        if (!empty($ondas['manha']['img']) && file_exists($ondas['manha']['img'])) {
-            $icon = $this->image->read($ondas['manha']['img'])->resize(100, 100);
+        if (
+            !empty($ondas['manha']['img_path']) &&
+            file_exists($ondas['manha']['img_path'])
+        ) {
+            $icon = $this->image
+                ->read($ondas['manha']['img_path'])
+                ->resize(100, 100);
+
             $img->place($icon, 'top-left', $x - 50, 300);
         }
 
@@ -104,8 +110,14 @@ class GerarBoletimCardService
         $this->drawPeriodoOndas($img, $ondas['manha'] ?? null, $x, 500);
 
         // Ícone tarde
-        if (!empty($ondas['tarde']['img']) && file_exists($ondas['tarde']['img'])) {
-            $icon = $this->image->read($ondas['tarde']['img'])->resize(100, 100);
+        if (
+            !empty($ondas['tarde']['img_path']) &&
+            file_exists($ondas['tarde']['img_path'])
+        ) {
+            $icon = $this->image
+                ->read($ondas['tarde']['img_path'])
+                ->resize(100, 100);
+
             $img->place($icon, 'top-left', $x - 50, 610);
         }
 

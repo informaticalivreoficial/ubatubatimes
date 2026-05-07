@@ -50,10 +50,14 @@ class OndasService
 
         $ventoGraus = $weather['hourly']['wind_direction_10m'][$index] ?? null;
         $ondaGraus  = $marine['hourly']['wave_direction'][$index] ?? null;
+        
+        $icon = $this->getIcon($altura);
 
         return [
             'altura' => $this->formatAltura($altura),
-            'img' => $this->getIcon($altura),
+            //'img' => $this->getIcon($altura),
+             'img' => $icon['url'],
+             'img_path' => $icon['path'],
 
             'vento' => $weather['hourly']['wind_speed_10m'][$index] ?? null,
             'vento_dir' => $this->grausParaDirecao($ventoGraus),
@@ -152,9 +156,18 @@ class OndasService
 
     private function getIcon($altura)
     {
-        if ($altura < 1) return public_path('images/onda-ruim.png');
-        if ($altura < 2) return public_path('images/onda-regular.png');
-        return public_path('images/onda-boa.png');
+        if ($altura < 1) {
+            $file = 'onda-ruim.png';
+        } elseif ($altura < 2) {
+            $file = 'onda-regular.png';
+        } else {
+            $file = 'onda-boa.png';
+        }
+
+        return [
+            'url' => asset("images/{$file}"),
+            'path' => public_path("images/{$file}"),
+        ];
     }
 
     private function grausParaDirecao($graus, $full = true)
