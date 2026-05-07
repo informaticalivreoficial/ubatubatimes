@@ -10,40 +10,33 @@ class OndasService
 {
     public function get()
     {
-        $ondas = Cache::remember('ondas_ubatuba', now()->addMinutes(30), function () {
+        $marine = Http::get('https://marine-api.open-meteo.com/v1/marine', [
+            'latitude'  => -23.433,
+            'longitude' => -45.083,
+            'hourly'    => 'wave_height,wave_direction',
+            'timezone'  => 'America/Sao_Paulo'
+        ])->json();
 
-            $marine = Http::get('https://marine-api.open-meteo.com/v1/marine', [
-                'latitude' => -23.433,
-                'longitude' => -45.083,
-                'hourly' => 'wave_height,wave_direction',
-                'timezone' => 'America/Sao_Paulo'
-            ])->json();
+        $weather = Http::get('https://api.open-meteo.com/v1/forecast', [
+            'latitude'  => -23.433,
+            'longitude' => -45.083,
+            'hourly'    => 'wind_speed_10m,wind_direction_10m',
+            'timezone'  => 'America/Sao_Paulo'
+        ])->json();
 
-            $weather = Http::get('https://api.open-meteo.com/v1/forecast', [
-                'latitude' => -23.433,
-                'longitude' => -45.083,
-                'hourly' => 'wind_speed_10m,wind_direction_10m',
-                'timezone' => 'America/Sao_Paulo'
-            ])->json();
+        $manha = $this->formatPeriodo($marine, $weather, 9);
+        $tarde = $this->formatPeriodo($marine, $weather, 15);
 
-            $manha = $this->formatPeriodo($marine, $weather, 9);
-            $tarde  = $this->formatPeriodo($marine, $weather, 15);
-
-            return [
-                'manha'  => $manha,
-                'tarde'  => $tarde,
-                'resumo' => [
-                    'geral' => $this->gerarResumo($marine, $weather),
-                    'manha' => $this->resumo($manha),
-                    'tarde' => $this->resumo($tarde),
-                ],
-            ];
-        });
-
-        // Fora do cache — tem cache próprio de 6h
-        $ondas['mares'] = $this->getMares();
-
-        return $ondas;
+        return [
+            'manha'  => $manha,
+            'tarde'  => $tarde,
+            'resumo' => [
+                'geral' => $this->gerarResumo($marine, $weather),
+                'manha' => $this->resumo($manha),
+                'tarde' => $this->resumo($tarde),
+            ],
+            'mares' => $this->getMares(),
+        ];
     }
 
     private function formatPeriodo($marine, $weather, $hour)
