@@ -46,7 +46,8 @@ class OndasService
 
         if ($index === false) return null;
 
-        $altura = $marine['hourly']['wave_height'][$index];
+        $alturaRaw = $marine['hourly']['wave_height'][$index];
+        $altura    = $alturaRaw * 1.5;
 
         $ventoGraus = $weather['hourly']['wind_direction_10m'][$index] ?? null;
         $ondaGraus  = $marine['hourly']['wave_direction'][$index] ?? null;
@@ -147,11 +148,11 @@ class OndasService
 
     private function formatAltura($altura)
     {
-        if ($altura < 0.5) return 'Flat';
+        if ($altura < 0.3) return 'Flat';
         if ($altura < 1.0) return '0.5m';
         if ($altura < 1.5) return '1.0m';
         if ($altura < 2.0) return '1.5m';
-        return '2.0m+';
+        return number_format($altura, 1, ',', '') . ' m';
     }
 
     private function getIcon($altura)

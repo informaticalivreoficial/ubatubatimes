@@ -13,9 +13,6 @@ class GenerateSitemap extends Command
     protected $signature = 'sitemap:generate';
     protected $description = 'Gera o sitemap.xml do site';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $this->info('Gerando sitemap...');

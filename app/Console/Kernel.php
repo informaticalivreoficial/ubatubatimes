@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     
     protected function schedule(Schedule $schedule): void
     {
+	    $schedule->command('sitemap:generate')->everyMinute()->withoutOverlapping();
         $schedule->command('app:noticiaubatuba')->everyMinute()->withoutOverlapping();            
         $schedule->command('app:noticiacaragua')->everyMinute()->withoutOverlapping();                
         $schedule->command('app:noticiasaosebastiao')->everyMinute()->withoutOverlapping();                
