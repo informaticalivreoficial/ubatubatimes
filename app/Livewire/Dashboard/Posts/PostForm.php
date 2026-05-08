@@ -11,6 +11,7 @@ use Livewire\Attributes\On;
 use App\Enums\PostType;
 use App\Models\CatPost;
 use App\Models\PostGb;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -68,16 +69,44 @@ class PostForm extends Component
             'thumb_caption' => 'nullable|string|max:255',
             'comments' => 'required|boolean',
             'tags' => 'nullable|array',
-            'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:4096',
         ];
     }
 
     protected $messages = [
-        'autor.required' => 'Selecione um autor',
-        'type.required' => 'Selecione o tipo',
-        'category.required' => 'Selecione uma categoria',
-        'title.required' => 'O título é obrigatório',
-        'content.required' => 'O conteúdo é obrigatório',
+        'autor.required' => 'Selecione um autor.',
+        'autor.exists' => 'O autor selecionado é inválido.',
+
+        'type.required' => 'Selecione o tipo.',
+        'type.string' => 'O tipo informado é inválido.',
+
+        'category.required' => 'Selecione uma categoria.',
+        'category.exists' => 'A categoria selecionada é inválida.',
+
+        'title.required' => 'O título é obrigatório.',
+        'title.min' => 'O título deve ter no mínimo :min caracteres.',
+        'title.max' => 'O título deve ter no máximo :max caracteres.',
+        'title.string' => 'O título informado é inválido.',
+
+        'content.required' => 'O conteúdo é obrigatório.',
+        'content.string' => 'O conteúdo informado é inválido.',
+
+        'status.required' => 'Selecione o status.',
+        'status.boolean' => 'O status informado é inválido.',
+
+        'publish_at.date_format' => 'A data de publicação deve estar no formato dd/mm/aaaa.',
+
+        'thumb_caption.string' => 'A legenda da imagem é inválida.',
+        'thumb_caption.max' => 'A legenda da imagem deve ter no máximo :max caracteres.',
+
+        'comments.required' => 'Informe se os comentários estão habilitados.',
+        'comments.boolean' => 'O campo comentários é inválido.',
+
+        'tags.array' => 'As tags devem ser enviadas em formato de lista.',
+
+        'images.*.image' => 'O arquivo deve ser uma imagem válida.',
+        'images.*.mimes' => 'A imagem deve ser do tipo: jpeg, jpg, png ou webp.',
+        'images.*.max' => 'A imagem não pode ultrapassar 2MB.',
     ];    
 
     public function mount(Post $post)
@@ -141,7 +170,7 @@ class PostForm extends Component
     }
 
     public function save(string $mode = 'draft')
-    {
+    {        
         $validated = $this->validate();
         $validated['status'] = $mode === 'published' ? 1 : 0;
         
