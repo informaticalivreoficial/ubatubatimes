@@ -14,29 +14,60 @@ class CrawlerSaoSebastiaoService
 {
     protected string $baseUrl = 'https://www.saosebastiao.sp.gov.br';
 
+    private function httpClient(): \Illuminate\Http\Client\PendingRequest
+    {
+        return Http::timeout(15)
+            ->withHeaders([
+                'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language' => 'pt-BR,pt;q=0.9,en;q=0.8',
+                'Referer'         => $this->baseUrl,
+            ]);
+    }
+
     public function run(): void
     {
         try {
-            $html    = Http::timeout(10)->get($this->baseUrl . '/noticia-lista.asp')->body();
+            $response = $this->httpClient()->get($this->baseUrl . '/noticia-lista.asp');
+
+            Log::info('CrawlerSaoSebastiao: resposta lista', [
+                'status' => $response->status(),
+                'body'   => substr($response->body(), 0, 1000),
+            ]);
+
+            if (!$response->successful()) {
+                Log::warning('CrawlerSaoSebastiao: resposta não OK', [
+                    'status' => $response->status(),
+                ]);
+                return;
+            }
+
+            $html    = $response->body();
             $crawler = new Crawler($html);
             $article = $crawler->filter('article.notice')->first();
 
             if (!$article->count()) {
-                Log::warning('CrawlerSaoSebastiao: nenhuma notícia encontrada');
+                Log::warning('CrawlerSaoSebastiao: nenhuma notícia encontrada no HTML');
                 return;
             }
 
             $this->processArticle($article);
 
         } catch (\Exception $e) {
-            Log::error('CrawlerSaoSebastiao: erro geral', ['error' => $e->getMessage()]);
+            Log::error('CrawlerSaoSebastiao: erro geral', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 
     private function processArticle(Crawler $article): void
     {
         $linkNode = $article->filter('.notice-title a');
-        if (!$linkNode->count()) return;
+        if (!$linkNode->count()) {
+            Log::warning('CrawlerSaoSebastiao: link da notícia não encontrado');
+            return;
+        }
 
         $title = trim($linkNode->text());
         $slug  = Str::slug($title);
@@ -49,8 +80,19 @@ class CrawlerSaoSebastiaoService
 
         $link = $this->baseUrl . '/' . ltrim($href, '/');
 
-        $contentHtml    = Http::timeout(10)->get($link)->body();
-        $contentCrawler = new Crawler($contentHtml);
+        Log::info('CrawlerSaoSebastiao: buscando conteúdo', ['link' => $link]);
+
+        $contentResponse = $this->httpClient()->get($link);
+
+        if (!$contentResponse->successful()) {
+            Log::warning('CrawlerSaoSebastiao: erro ao buscar conteúdo da notícia', [
+                'status' => $contentResponse->status(),
+                'link'   => $link,
+            ]);
+            return;
+        }
+
+        $contentCrawler = new Crawler($contentResponse->body());
 
         $post = Post::create([
             'type'       => 'noticia',
@@ -64,9 +106,9 @@ class CrawlerSaoSebastiaoService
             'publish_at' => now(),
         ]);
 
-        $this->handleImage($contentCrawler, $post);
+        Log::info('CrawlerSaoSebastiao: post criado', ['title' => $title, 'id' => $post->id]);
 
-        //Log::info('CrawlerSaoSebastiao: post criado', ['title' => $title]);
+        $this->handleImage($contentCrawler, $post);
     }
 
     private function getContent(Crawler $crawler): string
@@ -74,6 +116,7 @@ class CrawlerSaoSebastiaoService
         try {
             $content = $crawler->filter('.post-content-inner')->html();
         } catch (\Exception $e) {
+            Log::warning('CrawlerSaoSebastiao: conteúdo não encontrado', ['error' => $e->getMessage()]);
             $content = '';
         }
 
@@ -85,25 +128,40 @@ class CrawlerSaoSebastiaoService
         try {
             $slideNode = $crawler->filter('.slide-list .slide')->first();
 
-            if (!$slideNode->count()) return;
+            if (!$slideNode->count()) {
+                Log::info('CrawlerSaoSebastiao: nenhum slide encontrado', ['post_id' => $post->id]);
+                return;
+            }
 
             $style = $slideNode->attr('style');
 
             preg_match("/background-image:\s*url\('([^']+)'\)/", $style, $matches);
 
-            if (empty($matches[1])) return;
+            if (empty($matches[1])) {
+                Log::warning('CrawlerSaoSebastiao: imagem não encontrada no style', ['style' => $style]);
+                return;
+            }
 
             $imgPath = $matches[1];
-
-            $img = str_starts_with($imgPath, 'http')
+            $imgUrl  = str_starts_with($imgPath, 'http')
                 ? $imgPath
                 : $this->baseUrl . '/' . ltrim($imgPath, '/');
 
-            $imageContent = @file_get_contents($img);
-            if (!$imageContent) return;
+            Log::info('CrawlerSaoSebastiao: baixando imagem', ['url' => $imgUrl]);
 
-            $image = imagecreatefromstring($imageContent);
-            if ($image === false) return;
+            $imageContent = $this->httpClient()->get($imgUrl)->body();
+
+            if (empty($imageContent)) {
+                Log::warning('CrawlerSaoSebastiao: imagem vazia', ['url' => $imgUrl]);
+                return;
+            }
+
+            $image = @imagecreatefromstring($imageContent);
+
+            if ($image === false) {
+                Log::warning('CrawlerSaoSebastiao: falha ao criar imagem GD', ['url' => $imgUrl]);
+                return;
+            }
 
             ob_start();
             imagewebp($image, null, 85);
@@ -119,9 +177,12 @@ class CrawlerSaoSebastiaoService
                 'path'  => $path,
             ]);
 
+            Log::info('CrawlerSaoSebastiao: imagem salva', ['path' => $path]);
+
         } catch (\Exception $e) {
             Log::error('CrawlerSaoSebastiao: erro ao salvar imagem', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
