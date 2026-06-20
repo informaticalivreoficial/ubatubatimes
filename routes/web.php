@@ -36,7 +36,7 @@ use App\Livewire\Dashboard\Vendas\InvoiceIndex;
 
 Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
-    /** Página Inicial */   
+    /** Página Inicial */     
     Route::get('/', [SiteController::class, 'home'])->name('home'); 
     
     //****************************** Páginas ******************************/
