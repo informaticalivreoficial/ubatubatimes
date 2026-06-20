@@ -76,7 +76,7 @@ class SiteController extends Controller
                     ->where('type', 'artigo')
                     ->whereNotIn('category', [79, 81])
                     ->postson()
-                    ->limit(4)
+                    ->limit(8)
                     ->get();
         $praiasDeUbatuba = Post::orderBy('created_at', 'DESC')
                     ->where('type', 'artigo')
@@ -199,10 +199,10 @@ class SiteController extends Controller
         ]);
     }
 
-    public function categoria($slug)
-    {        
+    public function categoria(Request $request, $slug)
+    {
         $categoria = CatPost::where('slug', '=', $slug)->first();
-        
+
         $type = ($categoria->type == 'noticia' ? 'Notícias' : 'Artigos');
 
         $posts = Post::orderBy('created_at', 'DESC')
@@ -210,19 +210,28 @@ class SiteController extends Controller
                     ->postson()
                     ->paginate(21);
 
+        // 🔄 requisição do scroll infinito: retorna só o HTML dos novos cards + próxima URL
+        if ($request->ajax()) {
+            return response()->json([
+                'html'          => view('web.partials.posts-grid', ['posts' => $posts])->render(),
+                'next_page_url' => $posts->nextPageUrl(),
+            ]);
+        }
+
         $categoria->increment('views');
 
-        $head = $this->seo->render($categoria->title . ' - '.$type.' - ' . $this->config->app_name ?? 'Ubatuba Times',
-            $categoria->title . ' - '.$type.' - ' . $this->config->app_name,
-            route('web.blog.categoria', ['slug' => $slug ]),
+        $head = $this->seo->render(
+            $categoria->title . ' - ' . $type . ' - ' . $this->config->app_name ?? 'Ubatuba Times',
+            $categoria->title . ' - ' . $type . ' - ' . $this->config->app_name,
+            route('web.blog.categoria', ['slug' => $slug]),
             $this->config->getmetaimg() ?? 'https://informaticalivre.com/media/metaimg.jpg'
         );
-        
+
         return view('web.blog.categoria', [
-            'head' => $head,
-            'posts' => $posts,
+            'head'      => $head,
+            'posts'     => $posts,
             'categoria' => $categoria,
-            'type' => $type,
+            'type'      => $type,
         ]);
     }
 
@@ -274,12 +283,20 @@ class SiteController extends Controller
         ]);
     }
 
-    public function noticias()
+    public function noticias(Request $request)
     {
         $posts = Post::orderBy('created_at', 'DESC')
                 ->where('type', '=', 'noticia')
                 ->postson()
                 ->paginate(21);
+
+        // 🔄 requisição do scroll infinito: retorna só o HTML dos novos cards + próxima URL
+        if ($request->ajax()) {
+            return response()->json([
+                'html'          => view('web.partials.posts-grid', ['posts' => $posts])->render(),
+                'next_page_url' => $posts->nextPageUrl(),
+            ]);
+        }
 
         $categorias = CatPost::orderBy('title', 'ASC')
                 ->where('type', 'noticia')
@@ -295,6 +312,7 @@ class SiteController extends Controller
             'head' => $head,
             'posts' => $posts,
             'categorias' => $categorias,
+            'type' => 'noticia'
         ]);
     }
 
@@ -326,6 +344,19 @@ class SiteController extends Controller
         return view('web.previsao-do-tempo',[
             'head' => $head,
             'boletim' => $previsaoTempoService->getBoletim(),
+        ]);
+    }
+
+    public function balneabilidade()
+    {
+        $head = $this->seo->render('Balneabilidade das Praias' ?? 'Ubatuba Times',
+            'Confira a balneabilidade das Praias de Ubatuba e Região' ?? 'Informática Livre desenvolvimento de sistemas web desde 2005',
+            route('web.balneabilidade'),
+            asset('frontend/assets/images/balneabilidade_ubatuba_com_logo.png')
+        );
+
+        return view('web.condicao-das-praias',[
+            'head' => $head,
         ]);
     }
 

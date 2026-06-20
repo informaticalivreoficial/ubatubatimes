@@ -28,7 +28,7 @@
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/bootstrap.min.css'))}}" >
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/style.css'))}}">
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/responsive.css'))}}">
-	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/font-awesome.min.css'))}}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/owl.carousel.min.css'))}}">
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/owl.theme.default.min.css'))}}">
 	<link rel="stylesheet" type="text/css" href="{{url(asset('frontend/assets/css/colorbox.css'))}}">
@@ -57,6 +57,8 @@
 	<style>
         [x-cloak] { display: none !important; }
     </style>
+
+    @stack('styles')
 
 	@vite(['resources/css/app.css', 'resources/js/front.js'])
 	
@@ -150,14 +152,33 @@
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/jquery.min.js'))}}"></script>
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/popper.min.js'))}}"></script>
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/bootstrap.min.js'))}}"></script>
-	<script type="text/javascript" src="{{url(asset('frontend/assets/js/owl.carousel.min.js'))}}"></script>	
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/jquery.colorbox.js'))}}"></script>	
-	<script type="text/javascript" src="{{url(asset('frontend/assets/js/smoothscroll.js'))}}"></script>
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/custom_script.js'))}}"></script>
 
 	@hasSection('js')
         @yield('js')
     @endif
+
+    <script>
+        (function () {
+            var backToTop = document.getElementById('back-to-top');
+            if (!backToTop) return;
+
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 400) {
+                    backToTop.classList.remove('hidden');
+                    backToTop.classList.add('flex');
+                } else {
+                    backToTop.classList.add('hidden');
+                    backToTop.classList.remove('flex');
+                }
+            });
+
+            backToTop.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+    </script>
 
     <!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-HQ3MRW6582"></script>

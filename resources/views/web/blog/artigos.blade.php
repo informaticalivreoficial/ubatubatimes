@@ -2,116 +2,130 @@
 
 @section('content')
 
-<div class="page-title">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <ul class="breadcrumb">
-                    <li><a href="{{route('web.home')}}">Início</a></li>
-                    <li>{{($type == 'noticia' ? 'Notícias' : 'Blog')}}</li>
-                </ul>
-            </div>
-        </div>
+{{-- Breadcrumb --}}
+<div class="border-b border-slate-200 bg-slate-50 py-4">
+    <div class="mx-auto max-w-7xl px-4">
+        <ul class="flex flex-wrap items-center gap-2 text-sm text-slate-600">
+            <li>
+                <a href="{{ route('web.home') }}" class="hover:text-red-600 transition">Início</a>
+            </li>
+            <li class="flex items-center gap-2">
+                <i class="fa-solid fa-chevron-right text-xs text-slate-400" aria-hidden="true"></i>
+                <span class="text-slate-800 font-medium">{{ $type == 'noticia' ? 'Notícias' : 'Blog' }}</span>
+            </li>
+        </ul>
     </div>
 </div>
 
-@if($posts->count() > 0)
-    <section class="utf_block_wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    <div class="block category-listing scrolling-pagination">
-                        <div class="row">
-                            @foreach($posts as $post)
-                                <div class="col-lg-4">
-                                    <div class="utf_post_block_style post-grid clearfix">
-                                        <div class="utf_post_thumb"> 
-                                            <a href="{{route(($post->type == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}"> 
-                                                <img class="img_person" src="{{$post->cover()}}" alt="{{$post->title}}" /> 
-                                            </a> 
-                                        </div>
-                                        <a class="utf_post_cat" href="{{route('web.blog.categoria', [ 'slug' => $post->categoryObject->slug ])}}">{{$post->categoryObject->title}}</a>
-                                        <div class="utf_post_content">
-                                            <h2 class="utf_post_title title-large"> <a href="{{route(($post->type == 'noticia' ? 'web.noticia' : 'web.blog.artigo'), [ 'slug' => $post->slug ])}}">{{$post->title}}</a> </h2>
-                                            <div class="utf_post_meta"> 
-                                                <span class="utf_post_author"><i class="fa fa-eye"></i> {{$post->views}}</span> 
-                                                <span class="utf_post_date"><i class="fa fa-clock-o"></i> {{ Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</span> 
-                                                {{--<span class="post-comment pull-right"><i class="fa fa-comments-o"></i> <a href="#" class="comments-link"><span>03</span></a></span> --}}
-                                            </div>					
-                                            <p>{!! Words($post->content, 21) !!}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @if (isset($filters))
-                                {{ $posts->appends($filters)->links() }}
-                            @else
-                                {{ $posts->links() }}
-                            @endif
-                        </div>                        
-                    </div>                              
-                </div>  
+@if ($posts->count() > 0)
+    <section class="py-8">
+        <div class="mx-auto max-w-7xl px-4">
+
+            <div id="scrolling-pagination"
+                 class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                 data-next-url="{{ $posts->nextPageUrl() }}">
+                @include('web.partials.posts-grid', ['posts' => $posts])
             </div>
+
+            {{-- Sentinela invisível: quando aparecer na tela, carrega a próxima página --}}
+            <div id="infinite-sentinel" class="h-1"></div>
+
+            {{-- Indicador de carregamento --}}
+            <div id="infinite-loading" class="mt-8 hidden items-center justify-center gap-2 text-sm text-slate-500">
+                <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                Carregando mais conteúdo...
+            </div>
+
+            {{-- Aviso de fim de lista --}}
+            <div id="infinite-end" class="mt-8 hidden items-center justify-center text-sm text-slate-400">
+                Não há mais conteúdo para carregar.
+            </div>
+
         </div>
 
+        {{-- Banner de rodapé --}}
         @if (!empty($positionFooterBlog) && $positionFooterBlog->count() > 0)
-            @foreach($positionFooterBlog as $f)
-                <div class="utf_ad_content_area text-center utf_banner_area">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12"> 
-                                <a href="{{$f->link ?? '#'}}" target="_blank">
-                                    <img class="img-fluid" src="{{$f->get728x90()}}" alt="{{$f->title}}" /> 
-                                </a>
-                            </div>
-                        </div>
+            @foreach ($positionFooterBlog as $f)
+                <div class="mt-10 border-t border-slate-200 py-8 text-center">
+                    <div class="mx-auto max-w-7xl px-4">
+                        <a href="{{ $f->link ?? '#' }}" target="_blank" rel="noopener" class="inline-block">
+                            <img src="{{ $f->get728x90() }}" alt="{{ $f->title }}" class="mx-auto max-w-full">
+                        </a>
                     </div>
-                </div>                    
+                </div>
             @endforeach
         @else
-            <div class="utf_ad_content_area text-center utf_banner_area">  
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12"> 
-                            @if ($type == 'noticia')
-                                <x-ad slot="noticias_sidebar" />
-                            @else   
-                                <x-ad slot="articles_footer" /> 
-                            @endif                             
-                        </div>
-                    </div>
-                </div>                                                               
-            </div>        
-        @endif        
+            <div class="mt-10 border-t border-slate-200 py-8 text-center">
+                <div class="mx-auto max-w-7xl px-4">
+                    @if ($type == 'noticia')
+                        <x-ad slot="noticias_sidebar" />
+                    @else
+                        <x-ad slot="articles_footer" />
+                    @endif
+                </div>
+            </div>
+        @endif
     </section>
 @endif
 
 @endsection
 
-@section('css')
-    <style>
-        .img_person{
-            min-height: 250px !important;
-            max-height: 250px !important;
-        }
-    </style>
-@endsection
-
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 <script>
-    // Paginação infinita
-    $('ul.pagination').hide();
-    $(function() {
-        $('.scrolling-pagination').jscroll({
-            autoTrigger: true,
-            padding: 0,
-            nextSelector: '.pagination li.active + li a',
-            contentSelector: 'div.scrolling-pagination',
-            callback: function() {
-                $('ul.pagination').remove();
-            }
-        });
-    });       
+    document.addEventListener('DOMContentLoaded', function () {
+        var grid      = document.getElementById('scrolling-pagination');
+        var sentinel  = document.getElementById('infinite-sentinel');
+        var loading   = document.getElementById('infinite-loading');
+        var endNotice = document.getElementById('infinite-end');
+
+        var nextUrl    = grid.dataset.nextUrl || null;
+        var isFetching = false;
+
+        if (!nextUrl) {
+            endNotice.classList.remove('hidden');
+            endNotice.classList.add('flex');
+            return;
+        }
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting && nextUrl && !isFetching) {
+                    loadNextPage();
+                }
+            });
+        }, { rootMargin: '400px' });
+
+        observer.observe(sentinel);
+
+        function loadNextPage() {
+            isFetching = true;
+            loading.classList.remove('hidden');
+            loading.classList.add('flex');
+
+            fetch(nextUrl, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    grid.insertAdjacentHTML('beforeend', data.html);
+                    nextUrl = data.next_page_url;
+
+                    loading.classList.add('hidden');
+                    loading.classList.remove('flex');
+                    isFetching = false;
+
+                    if (!nextUrl) {
+                        observer.disconnect();
+                        endNotice.classList.remove('hidden');
+                        endNotice.classList.add('flex');
+                    }
+                })
+                .catch(function () {
+                    loading.classList.add('hidden');
+                    loading.classList.remove('flex');
+                    isFetching = false;
+                });
+        }
+    });
 </script>
 @endsection

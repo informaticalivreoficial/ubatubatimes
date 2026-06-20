@@ -43,6 +43,7 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     Route::get('/politica-de-privacidade', [SiteController::class, 'politica'])->name('politica');
     Route::get('/boletim-das-ondas', [SiteController::class, 'ondas'])->name('ondas');
     Route::get('/previsao-do-tempo', [SiteController::class, 'tempo'])->name('tempo');
+    Route::get('/condicao-das-praias', [SiteController::class, 'balneabilidade'])->name('balneabilidade');
     Route::get('/anunciar', [SiteController::class, 'anunciar'])->name('anunciar');
 
     // //****************************** Guia ******************************/

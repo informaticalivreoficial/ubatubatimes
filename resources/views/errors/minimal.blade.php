@@ -21,11 +21,11 @@
         <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
 
         <!-- Favicon and touch icons  -->
-        <link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="144x144">
-        <link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="114x114">
-        <link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="72x72">
-        <link href="{{$configuracoes->getfaveicon()}}" rel="apple-touch-icon-precomposed">
-        <link href="{{$configuracoes->getfaveicon()}}" rel="shortcut icon">
+        <link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="144x144">
+        <link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="114x114">
+        <link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="72x72">
+        <link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed">
+        <link href="{{$config->getfaveicon()}}" rel="shortcut icon">
 
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -40,8 +40,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div id="logo" class="logo">
-                                <a href="{{route('web.home')}}" title="{{$configuracoes->nomedosite}}">
-                                    <img src="{{$configuracoes->getLogomarca()}}" alt="{{$configuracoes->nomedosite}}" />
+                                <a href="{{route('web.home')}}" title="{{$config->app_name}}">
+                                    <img src="{{$config->getlogo()}}" alt="{{$config->app_name}}" />
                                 </a>
                             </div>
                         </div>

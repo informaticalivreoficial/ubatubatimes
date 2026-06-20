@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'api_token' => env('API_TOKEN', 'your-default-api-token-here'), 
+
     'logomarca_width'  => env('LOGOMARCA_GERENCIADOR_WIDTH', 447),
     'logomarca_height' => env('LOGOMARCA_GERENCIADOR_HEIGHT', 155),
     'metaimg_width' => env('METAIMG_WIDTH', 800),

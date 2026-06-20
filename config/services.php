@@ -44,4 +44,8 @@ return [
         'webhook' => env('MAKE_WEBHOOK_URL'),
     ],
 
+    'cetesb' => [
+        'query_url' => env('CETESB_QUERY'),
+    ],
+
 ];
