@@ -153,7 +153,6 @@
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/popper.min.js'))}}"></script>
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/bootstrap.min.js'))}}"></script>
 	<script type="text/javascript" src="{{url(asset('frontend/assets/js/jquery.colorbox.js'))}}"></script>	
-	<script type="text/javascript" src="{{url(asset('frontend/assets/js/custom_script.js'))}}"></script>
 
 	@hasSection('js')
         @yield('js')
@@ -190,6 +189,6 @@
 		gtag('config', 'G-HQ3MRW6582');
 	</script>
 
-	@livewireScripts
+    @stack('scripts')
 </body>
 </html>

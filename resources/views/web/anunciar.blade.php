@@ -7,37 +7,39 @@
 	<meta name="theme-color" content="#ec0000">
 	<meta name="msvalidate.01" content="AB238289F13C246C5E386B6770D9F10E" />
 
-    <meta name="copyright" content="{{$config->init_date}} - {{$config->app_name}}">
-    <meta name="language" content="pt-br" /> 
-    <meta name="author" content="{{env('DESENVOLVEDOR')}}"/>
+    <meta name="copyright" content="{{ $config->init_date }} - {{ $config->app_name }}">
+    <meta name="language" content="pt-br" />
+    <meta name="author" content="{{ env('DESENVOLVEDOR') }}"/>
     <meta name="designer" content="Renato Montanari">
     <meta name="publisher" content="Renato Montanari">
-    <meta name="url" content="{{$config->domain}}" />
-    <meta name="keywords" content="{{$config->metatags}}">
+    <meta name="url" content="{{ $config->domain }}" />
+    <meta name="keywords" content="{{ $config->metatags }}">
     <meta name="distribution" content="web">
     <meta name="rating" content="general">
-    <meta name="date" content="Dec 26">
+    <meta name="date" content="{{ \Carbon\Carbon::now()->format('M Y') }}">
 
     {!! $head ?? '' !!}
 
 	<!-- STYLE  -->
-	<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/bootstrap.min.css')}}" >
-	<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/style.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/responsive.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/font-awesome.min.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/owl.theme.default.min.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/renato.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/style.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/responsive.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/owl.theme.default.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/renato.css') }}">
 
-	<!-- Google Fonts --> 
-	<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,500,600,700,800&display=swap" rel="stylesheet"> 
+	{{-- Font Awesome 6 via CDN (o font-awesome.min.css local antigo era v4, removido) --}}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Nunito:300,400,500,600,700,800&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700,800&display=swap" rel="stylesheet">
 
 	<!-- Favicon and touch icons  -->
-	<link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="144x144">
-	<link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="114x114">
-	<link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed" sizes="72x72">
-	<link href="{{$config->getfaveicon()}}" rel="apple-touch-icon-precomposed">
-	<link href="{{$config->getfaveicon()}}" rel="shortcut icon">
+	<link href="{{ $config->getfaveicon() }}" rel="apple-touch-icon-precomposed" sizes="144x144">
+	<link href="{{ $config->getfaveicon() }}" rel="apple-touch-icon-precomposed" sizes="114x114">
+	<link href="{{ $config->getfaveicon() }}" rel="apple-touch-icon-precomposed" sizes="72x72">
+	<link href="{{ $config->getfaveicon() }}" rel="apple-touch-icon-precomposed">
+	<link href="{{ $config->getfaveicon() }}" rel="shortcut icon">
 
 	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -45,8 +47,8 @@
 	<![endif]-->
 
     <style>
-        p{
-            font-family: "Nunito", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;            
+        p {
+            font-family: "Nunito", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
             text-rendering: optimizeLegibility;
             font-size: 15px;
             line-height: 26px;
@@ -59,21 +61,21 @@
 </head>
 
 <body>
-	<div class="body-inner">	
-		
-		<div class="max-w-6xl mx-auto px-4 py-10 space-y-10">
+	<div class="body-inner">
+
+		<div class="mx-auto max-w-6xl space-y-10 px-4 py-10">
 
 			<!-- LOGO -->
 			<div class="flex justify-center">
-				<img src="{{$config->getlogo()}}"
-					alt="{{$config->app_name}}"
+				<img src="{{ $config->getlogo() }}"
+					alt="{{ $config->app_name }}"
 					class="max-h-20 object-contain">
 			</div>
 
 			<!-- TÍTULO -->
-			<div class="text-center space-y-2">
+			<div class="space-y-2 text-center">
 				<h1 class="text-3xl font-bold text-gray-800">
-					Anuncie no {{$config->app_name}}
+					Anuncie no {{ $config->app_name }}
 				</h1>
 				<p class="text-gray-500">
 					Alcance milhares de pessoas todos os dias
@@ -81,26 +83,24 @@
 			</div>
 
 			<!-- GRÁFICOS -->
-			<div class="grid md:grid-cols-2 gap-6">
+			<div class="grid gap-6 md:grid-cols-2">
 
 				<!-- VISITAS -->
-				<div class="bg-white rounded-2xl shadow p-6 flex flex-col" wire:ignore>
-					<h2 class="text-lg font-semibold mb-4 text-gray-700">
+				<div class="flex flex-col rounded-2xl bg-white p-6 shadow" wire:ignore>
+					<h2 class="mb-4 text-lg font-semibold text-gray-700">
 						Crescimento de Visitas
 					</h2>
-
-					<div class="flex-1 min-h-[300px]">
+					<div class="min-h-[300px] flex-1">
 						<canvas id="visitasChart"></canvas>
 					</div>
 				</div>
 
 				<!-- POSTS -->
-				<div class="bg-white rounded-2xl shadow p-6 flex flex-col" wire:ignore>
-					<h2 class="text-lg font-semibold mb-4 text-gray-700">
+				<div class="flex flex-col rounded-2xl bg-white p-6 shadow" wire:ignore>
+					<h2 class="mb-4 text-lg font-semibold text-gray-700">
 						Conteúdo do Portal
 					</h2>
-
-					<div class="flex-1 min-h-[300px]">
+					<div class="min-h-[300px] flex-1">
 						<canvas id="postsChart"></canvas>
 					</div>
 				</div>
@@ -108,33 +108,29 @@
 			</div>
 
 			<!-- DESTAQUE VISITAS -->
-			<div class="bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
-				<p class="text-gray-600 text-lg">
+			<div class="rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center">
+				<p class="text-lg text-gray-600">
 					Nos últimos 12 meses foram mais de
 				</p>
-
-				<h2 class="text-3xl font-bold text-blue-600 my-2">
-					{{number_format($visitas,0,'','.')}}
+				<h2 class="my-2 text-3xl font-bold text-blue-600">
+					{{ number_format($visitas, 0, '', '.') }}
 				</h2>
-
 				<p class="text-gray-600">
 					visitas no portal
 				</p>
-
-				<p class="text-sm text-gray-500 mt-2">
-					Média de {{number_format(($visitas / 365),0)}} acessos por dia
+				<p class="mt-2 text-sm text-gray-500">
+					Média de {{ number_format($visitas / 365, 0) }} acessos por dia
 				</p>
 			</div>
 
 			<!-- TEXTO -->
-			<div class="grid md:grid-cols-2 gap-8">
+			<div class="grid gap-8 md:grid-cols-2">
 
 				<div class="space-y-3">
 					<h2 class="text-xl font-semibold text-gray-800">
 						Maior Visibilidade
 					</h2>
-
-					<p class="text-gray-600 leading-relaxed">
+					<p class="leading-relaxed text-gray-600">
 						O Ubatuba Times é o maior portal de notícias de Ubatuba e Litoral Norte de SP.
 						Sua marca será vista diariamente por milhares de visitantes,
 						aumentando reconhecimento e credibilidade.
@@ -145,8 +141,7 @@
 					<h2 class="text-xl font-semibold text-gray-800">
 						Redes Sociais
 					</h2>
-
-					<p class="text-gray-600 leading-relaxed">
+					<p class="leading-relaxed text-gray-600">
 						Estamos presentes nas principais redes sociais com audiência crescente.
 						Sua marca também pode aparecer nesses canais, ampliando ainda mais o alcance.
 					</p>
@@ -155,45 +150,46 @@
 			</div>
 
 			<!-- FORM -->
-			<div class="bg-white rounded-2xl shadow p-6">
-				<h2 class="text-xl font-semibold mb-2 text-gray-800">
+			<div class="rounded-2xl bg-white p-6 shadow">
+				<h2 class="mb-2 text-xl font-semibold text-gray-800">
 					Solicite um orçamento
 				</h2>
-
-				<p class="text-gray-500 mb-4">
-					Prometemos não enviar spam 😉
+				<p class="mb-4 text-gray-500">
+					Prometemos não enviar spam <i class="fa-regular fa-face-smile-wink text-amber-500" aria-hidden="true"></i>
 				</p>
 
 				<livewire:web.contact-form />
 			</div>
 
-		</div>		
-		
-		<div class="copyright">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-12 col-md-12 text-center">
-						<div class="utf_copyright_info"> 
-							<span>© {{$config->init_date}} Copyright {{$config->app_name}}.Todos os direitos reservados.</span> 
-						</div>
-					</div>        
-					<div class="col-sm-12 col-md-12 text-center">
-						<div class="utf_copyright_info"> 
-							<p class="font-accent">
-								<span class="small text-silver-dark">Feito com <i style="color:red;" class="fa fa-heart"></i> por <a style="color:#fff;" target="_blank" href="{{config('app.desenvolvedor_url')}}">{{config('app.desenvolvedor')}}</a></span>
-							</p>
-						</div>
-					</div>        
-				</div>      
-				<div id="back-to-top" class="back-to-top">
-					<button class="btn btn-primary" title="Back to Top"> <i class="fa fa-angle-up"></i> </button>
+		</div>
+
+		{{-- Copyright --}}
+		<div class="bg-slate-950 py-6">
+			<div class="mx-auto max-w-7xl px-4">
+				<div class="flex flex-col items-center gap-2 text-center">
+					<span class="text-sm text-slate-400">
+						© {{ $config->init_date }} Copyright {{ $config->app_name }}. Todos os direitos reservados.
+					</span>
+					<p class="text-sm text-slate-400">
+						Feito com <i class="fa-solid fa-heart text-red-500" aria-hidden="true"></i> por
+						<a target="_blank" rel="noopener" href="{{ config('app.desenvolvedor_url') }}" class="text-white transition hover:text-slate-200">
+							{{ config('app.desenvolvedor') }}
+						</a>
+					</p>
 				</div>
+
+				<button id="back-to-top"
+						type="button"
+						title="Voltar ao topo"
+						aria-label="Voltar ao topo"
+						class="fixed bottom-6 right-6 z-50 hidden h-11 w-11 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition hover:bg-red-700">
+					<i class="fa-solid fa-angle-up" aria-hidden="true"></i>
+				</button>
 			</div>
 		</div>
 	</div>
 
-
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>	
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
@@ -223,24 +219,18 @@
 				options: {
 					responsive: true,
 					plugins: {
-						legend: {
-							display: true
-						}
+						legend: { display: true }
 					},
 					scales: {
-						y: {
-							beginAtZero: true
-						}
+						y: { beginAtZero: true }
 					}
 				}
 			});
-
 		});
 
 		document.addEventListener('DOMContentLoaded', function () {
 
 			const dataPosts = @json($postsStats);
-
 			const ctxPosts = document.getElementById('postsChart');
 
 			if (!ctxPosts) return;
@@ -250,24 +240,38 @@
 				data: {
 					labels: ['Artigos', 'Notícias'],
 					datasets: [{
-						data: [
-							dataPosts.artigos,
-							dataPosts.noticias
-						],
+						data: [dataPosts.artigos, dataPosts.noticias],
 						borderWidth: 1
 					}]
 				},
 				options: {
 					responsive: true,
 					plugins: {
-						legend: {
-							position: 'bottom'
-						}
+						legend: { position: 'bottom' }
 					}
 				}
 			});
-
 		});
+
+		// Back to top
+		(function () {
+			var backToTop = document.getElementById('back-to-top');
+			if (!backToTop) return;
+
+			window.addEventListener('scroll', function () {
+				if (window.scrollY > 400) {
+					backToTop.classList.remove('hidden');
+					backToTop.classList.add('flex');
+				} else {
+					backToTop.classList.add('hidden');
+					backToTop.classList.remove('flex');
+				}
+			});
+
+			backToTop.addEventListener('click', function () {
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+		})();
 	</script>
 
 	@livewireScripts

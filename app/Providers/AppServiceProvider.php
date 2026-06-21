@@ -77,6 +77,8 @@ class AppServiceProvider extends ServiceProvider
 
         View::share('cotacao', app(CotacaoService::class)->getDolar());
 
-        Paginator::useBootstrap();
+        //Paginator::useBootstrap();
+
+        Paginator::defaultView('vendor.pagination.tailwind');
     }
 }

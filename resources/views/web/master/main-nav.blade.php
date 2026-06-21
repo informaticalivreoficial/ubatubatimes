@@ -1,4 +1,4 @@
-<div x-data="{ mobileOpen: false, colunasOpen: false, regiaoOpen: false, searchOpen: false }"
+<div x-data="{ mobileOpen: false, searchOpen: false }"
     class="bg-white sticky top-0 z-50 shadow-sm">
     <div class="container mx-auto px-4">
 
@@ -10,7 +10,7 @@
                 <li>
                     <a href="{{ route('web.guiaUbatuba') }}"
                     class="flex items-center px-3 lg:px-5 py-4 bg-yellow-400 font-black text-xs lg:text-sm tracking-wide hover:bg-yellow-500 transition whitespace-nowrap">
-                        GUIA
+                        Guia de Ubatuba
                     </a>
                 </li>
 
@@ -18,7 +18,7 @@
                 <li>
                     <a href="{{ route('web.blog.categoria', ['slug' => 'praias-de-ubatuba']) }}"
                     class="flex items-center px-3 lg:px-5 py-4 font-bold text-xs lg:text-sm tracking-wide text-gray-800 hover:text-red-600 border-b-4 border-transparent hover:border-red-600 transition whitespace-nowrap">
-                        PRAIAS DE UBATUBA
+                        Praias de Ubatuba
                     </a>
                 </li>
 
@@ -26,25 +26,27 @@
                 <li>
                     <a href="{{ route('web.blog.artigos') }}"
                     class="flex items-center px-3 lg:px-5 py-4 font-bold text-xs lg:text-sm tracking-wide text-gray-800 hover:text-red-600 border-b-4 border-transparent hover:border-red-600 transition whitespace-nowrap">
-                        BLOG
+                        Blog
                     </a>
                 </li>
 
-                {{-- COLUNAS --}}
+                {{-- COLUNAS (hover no desktop) --}}
                 @if ($catcolunas && $catcolunas->count() > 0)
-                    <li class="relative" @click.outside="colunasOpen = false">
-                        <button @click="colunasOpen = !colunasOpen"
-                                type="button"
+                    <li class="relative"
+                        x-data="{ open: false, timeout: null }"
+                        @mouseenter="clearTimeout(timeout); open = true"
+                        @mouseleave="timeout = setTimeout(() => open = false, 150)">
+                        <button type="button"
                                 aria-haspopup="true"
-                                :aria-expanded="colunasOpen.toString()"
+                                :aria-expanded="open.toString()"
                                 class="flex items-center gap-1 px-3 lg:px-5 py-4 font-bold text-xs lg:text-sm tracking-wide text-gray-800 hover:text-red-600 border-b-4 border-transparent hover:border-red-600 transition h-full whitespace-nowrap"
-                                :class="colunasOpen ? 'text-red-600 border-red-600' : ''">
-                            COLUNAS <i class="fa fa-angle-down text-xs transition-transform" :class="colunasOpen ? 'rotate-180' : ''"></i>
+                                :class="open ? 'text-red-600 border-red-600' : ''">
+                            Colunas <i class="fa fa-angle-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <ul x-show="colunasOpen"
+                        <ul x-show="open"
                             x-transition
                             x-cloak
-                            class="absolute top-full left-0 mt-1 w-[280px] max-h-[70vh] overflow-y-auto rounded-xl bg-white shadow-2xl border border-slate-100 z-50">
+                            class="absolute top-full left-0 w-[280px] max-h-[70vh] overflow-y-auto rounded-xl bg-white shadow-2xl border border-slate-100 z-50">
                             @foreach ($catcolunas as $catc)
                                 @if ($catc->posts->count() >= 1)
                                     <li class="border-b border-gray-100 last:border-b-0">
@@ -59,21 +61,23 @@
                     </li>
                 @endif
 
-                {{-- REGIÃO --}}
+                {{-- REGIÃO (hover no desktop) --}}
                 @if ($catnoticias && $catnoticias->count() > 0)
-                    <li class="relative" @click.outside="regiaoOpen = false">
-                        <button @click="regiaoOpen = !regiaoOpen"
-                                type="button"
+                    <li class="relative"
+                        x-data="{ open: false, timeout: null }"
+                        @mouseenter="clearTimeout(timeout); open = true"
+                        @mouseleave="timeout = setTimeout(() => open = false, 150)">
+                        <button type="button"
                                 aria-haspopup="true"
-                                :aria-expanded="regiaoOpen.toString()"
+                                :aria-expanded="open.toString()"
                                 class="flex items-center gap-1 px-3 lg:px-5 py-4 font-bold text-xs lg:text-sm tracking-wide text-gray-800 hover:text-red-600 border-b-4 border-transparent hover:border-red-600 transition h-full whitespace-nowrap"
-                                :class="regiaoOpen ? 'text-red-600 border-red-600' : ''">
-                            REGIÃO <i class="fa fa-angle-down text-xs transition-transform" :class="regiaoOpen ? 'rotate-180' : ''"></i>
+                                :class="open ? 'text-red-600 border-red-600' : ''">
+                            Região <i class="fa fa-angle-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <ul x-show="regiaoOpen"
+                        <ul x-show="open"
                             x-transition
                             x-cloak
-                            class="absolute top-full left-0 mt-1 w-[280px] max-h-[70vh] overflow-y-auto rounded-xl bg-white shadow-2xl border border-slate-100 z-50">
+                            class="absolute top-full left-0 w-[280px] max-h-[70vh] overflow-y-auto rounded-xl bg-white shadow-2xl border border-slate-100 z-50">
                             @foreach ($catnoticias as $catn)
                                 @if ($catn->posts->count() >= 1)
                                     <li class="border-b border-gray-100 last:border-b-0">
@@ -92,7 +96,7 @@
                 <li>
                     <a href="{{ route('web.blog.categoria', ['slug' => 'wiki-ubatuba']) }}"
                     class="flex items-center px-3 lg:px-5 py-4 font-bold text-xs lg:text-sm tracking-wide text-gray-800 hover:text-red-600 border-b-4 border-transparent hover:border-red-600 transition whitespace-nowrap">
-                        WIKI UBATUBA
+                        Wiki Ubatuba
                     </a>
                 </li>
 
@@ -164,22 +168,22 @@
             </form>
         </div>
 
-        {{-- Mobile menu --}}
+        {{-- Mobile menu (clique, sem hover) --}}
         <div x-show="mobileOpen" x-transition x-cloak class="md:hidden border-t max-h-[80vh] overflow-y-auto">
             <ul>
                 <li>
                     <a href="{{ route('web.guiaUbatuba') }}"
                     class="flex items-center px-4 py-3 bg-yellow-400 font-black text-sm tracking-wide">
-                        GUIA
+                        Guia de Ubatuba
                     </a>
                 </li>
                 <li class="border-b">
                     <a href="{{ route('web.blog.categoria', ['slug' => 'praias-de-ubatuba']) }}"
-                    class="block px-4 py-3 font-bold text-sm text-gray-800">PRAIAS DE UBATUBA</a>
+                    class="block px-4 py-3 font-bold text-sm text-gray-800">Praias de Ubatuba</a>
                 </li>
                 <li class="border-b">
                     <a href="{{ route('web.blog.artigos') }}"
-                    class="block px-4 py-3 font-bold text-sm text-gray-800">BLOG</a>
+                    class="block px-4 py-3 font-bold text-sm text-gray-800">Blog</a>
                 </li>
 
                 @if ($catcolunas && $catcolunas->count() > 0)
@@ -189,7 +193,7 @@
                                 aria-haspopup="true"
                                 :aria-expanded="open.toString()"
                                 class="flex items-center justify-between w-full px-4 py-3 font-bold text-sm text-gray-800">
-                            COLUNAS <i class="fa fa-angle-down transition-transform" :class="open ? 'rotate-180' : ''"></i>
+                            Colunas <i class="fa fa-angle-down transition-transform" :class="open ? 'rotate-180' : ''"></i>
                         </button>
                         <ul x-show="open" x-collapse x-cloak class="bg-gray-50">
                             @foreach ($catcolunas as $catc)
@@ -213,7 +217,7 @@
                                 aria-haspopup="true"
                                 :aria-expanded="open.toString()"
                                 class="flex items-center justify-between w-full px-4 py-3 font-bold text-sm text-gray-800">
-                            REGIÃO <i class="fa fa-angle-down transition-transform" :class="open ? 'rotate-180' : ''"></i>
+                            Região <i class="fa fa-angle-down transition-transform" :class="open ? 'rotate-180' : ''"></i>
                         </button>
                         <ul x-show="open" x-collapse x-cloak class="bg-gray-50">
                             @foreach ($catnoticias as $catn)
@@ -231,8 +235,20 @@
                 @endif
 
                 <li class="border-b">
-                    <a href="{{ route('web.blog.categoria', ['slug' => 'wiki-ubatuba']) }}"
+                    <a href="{{ route('web.blog.categoria', ['slug' => 'wiki-ubatuba']) }}" title="Wiki Ubatuba"
                     class="block px-4 py-3 font-bold text-sm text-gray-800">WIKI UBATUBA</a>
+                </li>
+                <li class="border-b">
+                    <a href="{{ route('web.ondas') }}" title="Boletim das Ondas"
+                    class="block px-4 py-3 font-bold text-sm text-gray-800">Boletim das Ondas</a>
+                </li>
+                <li class="border-b">
+                    <a href="{{ route('web.tempo') }}" title="Previsão do Tempo"
+                    class="block px-4 py-3 font-bold text-sm text-gray-800">Previsão do Tempo</a>
+                </li>
+                <li class="border-b">
+                    <a href="{{ route('web.balneabilidade') }}" title="Condição das Praias"
+                    class="block px-4 py-3 font-bold text-sm text-gray-800">Balneabilidade das Praias</a>
                 </li>
             </ul>
         </div>

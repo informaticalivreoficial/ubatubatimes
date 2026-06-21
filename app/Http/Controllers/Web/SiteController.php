@@ -386,11 +386,15 @@ class SiteController extends Controller
                 );
             }
 
-            foreach ($analytics as $item) {
+            // 📅 ordena cronologicamente pelo yearMonth (formato "202506")
+            // A API do GA4 não garante a ordem de retorno, então ordenamos
+            // explicitamente antes de montar os arrays do gráfico.
+            $analytics = $analytics
+                ->filter(fn ($item) => isset($item['yearMonth']))
+                ->sortBy(fn ($item) => $item['yearMonth'])
+                ->values();
 
-                if (!isset($item['yearMonth'])) {
-                    continue;
-                }
+            foreach ($analytics as $item) {
 
                 $mes = \Carbon\Carbon::createFromFormat('Ym', $item['yearMonth'])
                     ->translatedFormat('M');
