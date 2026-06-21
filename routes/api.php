@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BalneabilidadeController;
+use App\Http\Controllers\Api\CardBalneabilidadeController;
 use App\Http\Controllers\Webhook\PagHiperWebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -12,3 +13,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/webhook/paghiper', [PagHiperWebhookController::class, 'handle'])->name('webhook.paghiper');
 Route::middleware('api.token')->get('/balneabilidade/{cidade}', BalneabilidadeController::class);
+Route::middleware('api.token')->post('/card/generate', [CardBalneabilidadeController::class, 'generate']);
