@@ -116,7 +116,7 @@ class BalneabilidadeService
             return "Nenhuma praia de {$cidade} está imprópria para banho hoje.";
         }
 
-         return "Hoje as praias " .
+         return "As praias " .
             collect($improprias)
                 ->map(fn ($praia) => Str::title(strtolower($praia)))
                 ->implode(', ') .

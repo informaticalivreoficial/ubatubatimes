@@ -4,6 +4,9 @@ namespace App\Services;
 
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Interfaces\ImageInterface;
+use Intervention\Image\Typography\FontFactory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class GerarBoletimCardService
@@ -12,6 +15,12 @@ class GerarBoletimCardService
     private string $fontBold;
     private string $fontRegular;
     private string $fontLight;
+
+    /**
+     * Diretório relativo dentro de storage/app/public onde os boletins
+     * são salvos. Acessível publicamente via storage:link.
+     */
+    private const STORAGE_DIR = 'boletins';
 
     public function __construct()
     {
@@ -31,33 +40,35 @@ class GerarBoletimCardService
         $this->drawClima($img, $tempo);
         $this->drawFooter($img);
 
-        $dir = public_path('boletins');
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
+        $filename     = 'boletim-' . now()->format('Y-m-d-H-i-s') . '-' . Str::random(6) . '.jpg';
+        $relativePath = self::STORAGE_DIR . '/' . $filename;
 
-        $filename = 'boletim-' . now()->format('Y-m-d-H-i-s') . '.jpg';
-        $path     = $dir . '/' . $filename;
-
-        $img->save($path, quality: 90);
+        // 🔧 salva em storage/app/public (não mais em public/ direto),
+        // acessível publicamente via o link simbólico storage:link
+        Storage::disk('public')->makeDirectory(self::STORAGE_DIR);
+        Storage::disk('public')->put(
+            $relativePath,
+            (string) $img->toJpeg(90)
+        );
 
         return [
-            'path' => $path,
-            'url'  => url('boletins/' . $filename),
+            'path' => Storage::disk('public')->path($relativePath),
+            'url'  => Storage::disk('public')->url($relativePath),
         ];
     }
+
     // =========================
     // HEADER
     // =========================
 
-    private function drawHeader($img): void
+    private function drawHeader(ImageInterface $img): void
     {
         if (file_exists(public_path('icons/clima.png'))) {
             $icon = $this->image->read(public_path('icons/clima.png'))->resize(80, 80);
             $img->place($icon, 'top-left', 320, 60);
         }
 
-        $img->text('Boletim do Dia', 420, 110, function ($font) {
+        $img->text('Boletim do Dia', 420, 110, function (FontFactory $font) {
             $font->filename($this->fontBold);
             $font->size(68);
             $font->color('#222222');
@@ -69,7 +80,7 @@ class GerarBoletimCardService
     // BOXES (cards internos)
     // =========================
 
-    private function drawBoxes($img): void
+    private function drawBoxes(ImageInterface $img): void
     {
         $boxOndas = $this->image->create(420, 720)->fill('#ffffff');
         $img->place($boxOndas, 'top-left', 80, 200);
@@ -82,11 +93,11 @@ class GerarBoletimCardService
     // ONDAS
     // =========================
 
-    private function drawOndas($img, array $ondas): void
+    private function drawOndas(ImageInterface $img, array $ondas): void
     {
         $x = 290;
 
-        $img->text('ONDAS', $x, 260, function ($font) {
+        $img->text('ONDAS', $x, 260, function (FontFactory $font) {
             $font->filename($this->fontBold);
             $font->size(38);
             $font->color('#111111');
@@ -126,17 +137,17 @@ class GerarBoletimCardService
         $this->drawPeriodoOndas($img, $ondas['tarde'] ?? null, $x, 790);
     }
 
-    private function drawPeriodoOndas($img, ?array $periodo, int $x, int $y): void
+    private function drawPeriodoOndas(ImageInterface $img, ?array $periodo, int $x, int $y): void
     {
         if (!$periodo) {
             $this->drawText($img, 'Sem dados', $x, $y, $this->fontRegular, 26, '#999999', 'center');
             return;
         }
 
-        $altura     = $periodo['altura'] ?? '-';
-        $ondaDir    = $periodo['direcao_onda_short'] ?? '-';
-        $ventoDir   = $periodo['vento_dir_short'] ?? '-';
-        $vento      = isset($periodo['vento']) ? round($periodo['vento']) . ' km/h' : '-';
+        $altura   = $periodo['altura'] ?? '-';
+        $ondaDir  = $periodo['direcao_onda_short'] ?? '-';
+        $ventoDir = $periodo['vento_dir_short'] ?? '-';
+        $vento    = isset($periodo['vento']) ? round($periodo['vento']) . ' km/h' : '-';
 
         // Tamanho em destaque
         $this->drawText($img, $altura, $x, $y, $this->fontBold, 42, '#0077b6', 'center');
@@ -152,14 +163,16 @@ class GerarBoletimCardService
     // CLIMA
     // =========================
 
-    private function drawClima($img, ?array $tempo): void
+    private function drawClima(ImageInterface $img, ?array $tempo): void
     {
         $x = 790;
         $hoje = $tempo[0] ?? null;
 
-        if (!$hoje) return;
+        if (!$hoje) {
+            return;
+        }
 
-        $img->text('CLIMA', $x, 260, function ($font) {
+        $img->text('CLIMA', $x, 260, function (FontFactory $font) {
             $font->filename($this->fontBold);
             $font->size(38);
             $font->color('#111111');
@@ -181,9 +194,9 @@ class GerarBoletimCardService
     // FOOTER
     // =========================
 
-    private function drawFooter($img): void
+    private function drawFooter(ImageInterface $img): void
     {
-        $img->text('Boletim gerado por: ' . config('app.name'). ' - ' . now()->format('d/m/Y'), 540, 1000, function ($font) {
+        $img->text('Boletim gerado por: ' . config('app.name') . ' - ' . now()->format('d/m/Y'), 540, 1000, function (FontFactory $font) {
             $font->filename($this->fontLight);
             $font->size(30);
             $font->color('#888888');
@@ -195,9 +208,9 @@ class GerarBoletimCardService
     // HELPERS
     // =========================
 
-    private function drawText($img, string $text, int $x, int $y, string $font, int $size, string $color, string $align): void
+    private function drawText(ImageInterface $img, string $text, int $x, int $y, string $font, int $size, string $color, string $align): void
     {
-        $img->text($text, $x, $y, function ($f) use ($font, $size, $color, $align) {
+        $img->text($text, $x, $y, function (FontFactory $f) use ($font, $size, $color, $align) {
             $f->filename($font);
             $f->size($size);
             $f->color($color);
@@ -205,7 +218,7 @@ class GerarBoletimCardService
         });
     }
 
-    private function drawMultiline($img, string $text, int $x, int $y, int $size = 22, int $lineHeight = 28, string $color = '#333333', string $align = 'center'): void
+    private function drawMultiline(ImageInterface $img, string $text, int $x, int $y, int $size = 22, int $lineHeight = 28, string $color = '#333333', string $align = 'center'): void
     {
         $lines = explode("\n", $text);
         foreach ($lines as $line) {
