@@ -1,19 +1,19 @@
 <div>
-    @section('title', $title) 
+    @section('title', $title)
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1><i class="fas fa-search mr-2"></i> Faturas</h1>
+                    <h1><i class="fas fa-file-invoice-dollar mr-2"></i> Faturas</h1>
                 </div>
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">                    
-                        <li class="breadcrumb-item"><a href="{{route('admin')}}">Painel de Controle</a></li>
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('admin') }}">Painel de Controle</a></li>
                         <li class="breadcrumb-item active">Faturas</li>
                     </ol>
                 </div>
             </div>
-        </div>    
+        </div>
     </div>
 
     <div class="card">
@@ -22,78 +22,87 @@
                 <div class="col-12 col-sm-6 my-2">
                     <div class="card-tools">
                         <div style="width: 250px;">
-                            <form class="input-group input-group-sm" action="" method="post">
-                                <input type="text" wire:model.live="search" class="form-control float-right" placeholder="Pesquisar">               
-                                
-                            </form>
+                            <div class="input-group input-group-sm">
+                                <input type="text" wire:model.live="search" class="form-control float-right" placeholder="Pesquisar">
+                            </div>
                         </div>
-                      </div>
-                </div>
-                <div class="col-12 col-sm-6 my-2 text-right">
-                    <a href="{{route('companies.create')}}" class="btn btn-sm btn-default"><i class="fas fa-plus mr-2"></i> Cadastrar Novo</a>
+                    </div>
                 </div>
             </div>
-        </div>  
+        </div>
 
-        <div class="card-body">
+        <div class="card-body table-responsive p-0">
             <table class="table table-bordered table-striped projects">
                 <thead>
                     <tr>
-                        <th wire:click="sortBy('alias_name')">Empresa <i class="expandable-table-caret fas fa-caret-down fa-fw"></i></th>
-                        <th>Valor</th>
+                        <th>Empresa</th>
+                        <th class="text-center">Valor</th>
                         <th class="text-center">Vencimento</th>
                         <th class="text-center">Status</th>
-                        <th>Ações</th>
+                        <th class="text-center" style="width: 320px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($invoices as $invoice)                    
-                    <tr style="{{ ($invoice->status == true ? '' : 'background: #fffed8 !important;')  }}">                            
-                        <td>{{$invoice->company->alias_name}}</td>
+                    @forelse($invoices as $invoice)
+                    <tr>
+                        <td>
+                            {{ $invoice->company->alias_name }}
+                            @if($invoice->contract?->plan)
+                                <br><small class="text-muted">{{ $invoice->contract->plan->name }}</small>
+                            @endif
+                        </td>
                         <td class="text-center">R$ {{ number_format($invoice->amount, 2, ',', '.') }}</td>
                         <td class="text-center">{{ $invoice->due_date->format('d/m/Y') }}</td>
                         <td class="text-center">
                             @if($invoice->status === 'paid')
-                                <span class="text-green-600">Pago</span>
+                                <span class="badge badge-success">Pago</span>
+                            @elseif($invoice->status === 'canceled')
+                                <span class="badge badge-secondary">Cancelado</span>
                             @elseif($invoice->isOverdue())
-                                <span class="text-red-600">Vencido</span>
+                                <span class="badge badge-danger">Vencido</span>
                             @else
-                                <span class="text-yellow-600">Pendente</span>
+                                <span class="badge badge-warning">Pendente</span>
                             @endif
                         </td>
-                        <td>  
-                            <div class="flex items-center justify-center gap-1">                              
+                        <td class="text-center">
+                            <div class="btn-group">
                                 @if($invoice->boleto_url)
                                     <a href="{{ $invoice->boleto_url }}" target="_blank"
-                                    class="text-blue-500">
-                                        Ver Boleto
+                                       class="btn btn-xs btn-primary" title="Ver Boleto">
+                                        <i class="fas fa-barcode mr-1"></i> Boleto
                                     </a>
-                                @else
+                                @elseif($invoice->status === 'pending')
                                     <button wire:click="generateBoleto({{ $invoice->id }})"
-                                            class="text-blue-500">
-                                        Gerar Boleto
+                                            wire:loading.attr="disabled"
+                                            class="btn btn-xs btn-info" title="Gerar Boleto">
+                                        <i class="fas fa-file-invoice mr-1"></i> Gerar Boleto
                                     </button>
                                 @endif
 
-                                @if($invoice->status !== 'paid')
+                                @if($invoice->status !== 'paid' && $invoice->status !== 'canceled')
                                     <button wire:click="markAsPaid({{ $invoice->id }})"
-                                            class="text-green-600">
-                                        Marcar Pago
+                                            class="btn btn-xs btn-success" title="Marcar como Pago">
+                                        <i class="fas fa-check mr-1"></i> Pago
+                                    </button>
+
+                                    <button wire:click="cancel({{ $invoice->id }})"
+                                            wire:confirm="Deseja realmente cancelar esta fatura?"
+                                            class="btn btn-xs btn-danger" title="Cancelar">
+                                        <i class="fas fa-times mr-1"></i> Cancelar
                                     </button>
                                 @endif
-
-                                <button wire:click="cancel({{ $invoice->id }})"
-                                        class="text-red-500">
-                                    Cancelar
-                                </button>                                
                             </div>
                         </td>
                     </tr>
-                    @endforeach
-                </tbody>                
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            Nenhuma fatura encontrada.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
             </table>
-        </div> 
-
+        </div>
     </div>
-    
 </div>

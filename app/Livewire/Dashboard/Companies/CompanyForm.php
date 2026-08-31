@@ -225,7 +225,15 @@ class CompanyForm extends Component
                 Storage::disk()->delete($this->logoPath);
             }
 
-            $this->logoPath = $this->logo->store($folder);
+            $manager = new ImageManager(new Driver());
+            $filename = uniqid() . '.webp';
+            $this->logoPath = "{$folder}/{$filename}";
+
+            $img = $manager->read($this->logo->getRealPath())
+                ->scaleDown(width: 800)
+                ->toWebp(85);
+
+            Storage::disk()->put($this->logoPath, (string) $img);
 
             $this->company->update([
                 'logo' => $this->logoPath
@@ -238,7 +246,15 @@ class CompanyForm extends Component
                 Storage::disk()->delete($this->metaimgPath);
             }
 
-            $this->metaimgPath = $this->metaimg->store($folder);
+            $manager = new ImageManager(new Driver());
+            $filename = uniqid() . '.webp';
+            $this->metaimgPath = "{$folder}/{$filename}";
+
+            $img = $manager->read($this->metaimg->getRealPath())
+                ->scaleDown(width: 1200)
+                ->toWebp(85);
+
+            Storage::disk()->put($this->metaimgPath, (string) $img);
 
             $this->company->update([
                 'metaimg' => $this->metaimgPath

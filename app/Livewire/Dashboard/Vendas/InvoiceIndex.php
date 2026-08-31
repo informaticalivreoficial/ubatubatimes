@@ -13,6 +13,8 @@ class InvoiceIndex extends Component
 {
     use WithToastr;
 
+    public string $search = '';
+
     public function generateBoleto($id)
     {
         $invoice = Invoice::findOrFail($id);
@@ -28,27 +30,25 @@ class InvoiceIndex extends Component
 
             $result = $service->createBoleto($invoice, $invoice->company);
 
-            $invoice->update([
-                'external_id' => $result['transaction_id'],
-                'boleto_url' => $result['boleto_url'],
-                'boleto_pdf' => $result['boleto_pdf'],
-                'linha_digitavel' => $result['linha_digitavel'],
-            ]);
-
-            if (!$result || empty($result['transaction_id'])) {
+            if (empty($result['transaction_id'])) {
                 throw new \Exception('Resposta inválida do PagHiper');
             }
 
             $invoice->update([
-                'external_id' => $result['transaction_id'],
-                'boleto_url' => $result['boleto_url'] ?? null,
+                'external_id'    => $result['transaction_id'],
+                'boleto_url'     => $result['boleto_url'] ?? null,
                 'payment_method' => 'boleto',
             ]);
 
             $this->toastSuccess('Boleto gerado com sucesso!');
 
         } catch (\Throwable $e) {
-            $this->toastError('Erro ao gerar boleto. Tente novamente.');
+            Log::error('InvoiceIndex: erro ao gerar boleto', [
+                'invoice_id' => $id,
+                'erro'       => $e->getMessage(),
+            ]);
+
+            $this->toastError('Erro ao gerar boleto: ' . $e->getMessage());
         }
     }
 

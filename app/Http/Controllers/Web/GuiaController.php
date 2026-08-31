@@ -115,17 +115,6 @@ class GuiaController extends Controller
         // 🛡️ categoria não encontrada ou inativa: 404 em vez de erro 500
         abort_if(!$categoria, 404);
 
-        $empresas = Company::query()
-            ->with([
-                'categoriaObject:id,slug,title',
-                'images:id,company,path,cover'
-            ])
-            ->where('category_id', $categoria->id)
-            ->available()
-            ->orderByDesc('client')
-            ->latest()
-            ->paginate(30);
-
         $head = $this->seo->render(
             'Anúncios - ' . ($categoria->title ?? $this->config->app_name),
             strip_tags($categoria->content) ?: 'Informática Livre desenvolvimento de sistemas web desde 2005',
@@ -136,7 +125,6 @@ class GuiaController extends Controller
         return view('web.guia.categoria', [
             'head'      => $head,
             'categoria' => $categoria,
-            'empresas'  => $empresas,
         ]);
     }
 
