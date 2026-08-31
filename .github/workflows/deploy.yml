@@ -40,6 +40,9 @@ jobs:
           npm install
           npm run build
 
+          echo "📦 Publicando assets do Livewire (necessário para o front funcionar após o deploy)"
+          php artisan livewire:publish --assets
+
           echo "🔧 Permissões"
           chmod -R 775 storage bootstrap/cache
           chown -R www:www storage bootstrap/cache
