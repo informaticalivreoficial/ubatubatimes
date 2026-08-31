@@ -13,6 +13,10 @@ class ImportPmSPNoticias implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $timeout = 120;
+
+    public int $tries = 1;
+
     public function handle(CrawlerPmspService $service): void
     {
         $service->run();

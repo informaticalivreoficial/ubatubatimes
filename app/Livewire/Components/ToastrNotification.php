@@ -6,15 +6,13 @@ use Livewire\Component;
 
 class ToastrNotification extends Component
 {
-    protected $listeners = ['showToastr'];
+    public ?array $flashToast = null;
 
-    public function showToastr($type, $message, $title = null)
+    public function mount(): void
     {
-        $this->dispatch('toastr', [
-            'type' => $type,
-            'message' => $message,
-            'title' => $title,
-        ]);
+        if (session()->has('toast')) {
+            $this->flashToast = session()->pull('toast');
+        }
     }
 
     public function render()

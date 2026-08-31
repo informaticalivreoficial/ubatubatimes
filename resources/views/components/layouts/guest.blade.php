@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="{{ asset('theme/dist/css/styles.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -21,7 +25,9 @@
     {{ $slot }}
 
     {{-- Componente Toastr Global --}}
-    <livewire:components.toastr-notification /> 
+    <livewire:components.toastr-notification />
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </body>
 
 </html>

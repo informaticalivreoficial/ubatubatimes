@@ -20,3 +20,7 @@ error_log
 /public/sitemap.xml
 /public/boletins
 /public/defaults
+opencode.json
+/.opencode
+AGENTS.md
+/postman

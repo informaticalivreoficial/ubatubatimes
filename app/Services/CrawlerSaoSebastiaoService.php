@@ -4,125 +4,209 @@ namespace App\Services;
 
 use App\Models\Post;
 use App\Models\PostGb;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Symfony\Component\DomCrawler\Crawler;
+use Throwable;
 
 class CrawlerSaoSebastiaoService
 {
-    protected string $baseUrl = 'https://www.saosebastiao.sp.gov.br';
+    private const BASE_URL = 'https://www.saosebastiao.sp.gov.br';
+
+    private const LISTING_URL = self::BASE_URL . '/noticia-lista.asp';
+
+    private const AUTHOR_ID = 1;
+
+    private const CAT_PAI = 56;
+
+    private const CATEGORY = 75;
 
     public function run(): void
     {
         try {
-            $html    = Http::timeout(10)->get($this->baseUrl . '/noticia-lista.asp')->body();
-            $crawler = new Crawler($html);
-            $article = $crawler->filter('article.notice')->first();
+            $html = Http::timeout(15)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (compatible; UbatubaTimes/1.0)',
+                ])
+                ->get(self::LISTING_URL)
+                ->body();
 
-            if (!$article->count()) {
+            $crawler = new Crawler($html);
+            $articles = $crawler->filter('article.featured-post');
+
+            if ($articles->count() === 0) {
                 Log::warning('CrawlerSaoSebastiao: nenhuma notícia encontrada');
+
                 return;
             }
 
-            $this->processArticle($article);
-
-        } catch (\Exception $e) {
-            Log::error('CrawlerSaoSebastiao: erro geral', ['error' => $e->getMessage()]);
+            foreach ($articles as $article) {
+                $this->processArticle(new Crawler($article));
+            }
+        } catch (Throwable $exception) {
+            Log::error('CrawlerSaoSebastiao: erro geral', [
+                'erro' => $exception->getMessage(),
+            ]);
         }
     }
 
     private function processArticle(Crawler $article): void
     {
-        $linkNode = $article->filter('.notice-title a');
-        if (!$linkNode->count()) return;
+        $linkNode = $article->filter('.post-title a');
 
-        $title = trim($linkNode->text());
-        $slug  = Str::slug($title);
-        $href  = $linkNode->attr('href');
-
-        if (Post::where('title', $title)->exists()) {
-            Log::info('CrawlerSaoSebastiao: notícia já existe, pulando', ['title' => $title]);
+        if (! $linkNode->count()) {
             return;
         }
 
-        $link = $this->baseUrl . '/' . ltrim($href, '/');
+        $title = trim($linkNode->text());
+        $slug = Str::slug($title);
+        $href = $linkNode->attr('href');
 
-        $contentHtml    = Http::timeout(10)->get($link)->body();
+        if ($title === '') {
+            return;
+        }
+
+        if (Post::where('slug', $slug)->orWhere('title', $title)->exists()) {
+            Log::info('CrawlerSaoSebastiao: notícia já existe, pulando', ['title' => $title]);
+
+            return;
+        }
+
+        $link = str_starts_with($href, 'http')
+            ? $href
+            : self::BASE_URL . '/' . ltrim($href, '/');
+
+        $contentHtml = Http::timeout(15)
+            ->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (compatible; UbatubaTimes/1.0)',
+            ])
+            ->get($link)
+            ->body();
+
         $contentCrawler = new Crawler($contentHtml);
 
         $post = Post::create([
-            'type'       => 'noticia',
-            'autor'      => 1,
-            'title'      => $title,
-            'slug'       => $slug,
-            'content'    => $this->getContent($contentCrawler),
-            'cat_pai'    => 56,
-            'category'   => 75,
-            'status'     => 1,
-            'publish_at' => now(),
+            'type' => 'noticia',
+            'autor' => self::AUTHOR_ID,
+            'title' => $title,
+            'slug' => $slug,
+            'content' => $this->getContent($contentCrawler),
+            'cat_pai' => self::CAT_PAI,
+            'category' => self::CATEGORY,
+            'status' => 1,
+            'publish_at' => $this->parsePublishDate($article),
         ]);
 
-        $this->handleImage($contentCrawler, $post);
-
-        //Log::info('CrawlerSaoSebastiao: post criado', ['title' => $title]);
+        $this->handleImage($article, $post);
     }
 
     private function getContent(Crawler $crawler): string
     {
         try {
-            $content = $crawler->filter('.post-content-inner')->html();
-        } catch (\Exception $e) {
+            $node = $crawler->filter('.post-content-inner');
+
+            if ($node->count() === 0) {
+                $content = '';
+            } else {
+                $html = $node->html();
+                $html = preg_replace('#<script\b[^>]*>.*?</script>#is', '', $html) ?? $html;
+                $html = preg_replace('#<style\b[^>]*>.*?</style>#is', '', $html) ?? $html;
+                $content = $html;
+            }
+        } catch (Throwable) {
             $content = '';
         }
 
-        return $content . '<br><br><small>Fonte: <a target="_blank" href="https://www.saosebastiao.sp.gov.br/">Prefeitura de São Sebastião</a></small>';
+        return $content
+            . '<br><br><small>Fonte: <a target="_blank" href="' . self::BASE_URL . '/">Prefeitura de São Sebastião</a></small>';
     }
 
-    private function handleImage(Crawler $crawler, Post $post): void
+    private function handleImage(Crawler $article, Post $post): void
     {
         try {
-            $slideNode = $crawler->filter('.slide-list .slide')->first();
+            $imgNode = $article->filter('.post-image img')->first();
 
-            if (!$slideNode->count()) return;
+            if (! $imgNode->count()) {
+                return;
+            }
 
-            $style = $slideNode->attr('style');
+            $imgPath = $imgNode->attr('src');
 
-            preg_match("/background-image:\s*url\('([^']+)'\)/", $style, $matches);
-
-            if (empty($matches[1])) return;
-
-            $imgPath = $matches[1];
+            if (empty($imgPath)) {
+                return;
+            }
 
             $img = str_starts_with($imgPath, 'http')
                 ? $imgPath
-                : $this->baseUrl . '/' . ltrim($imgPath, '/');
+                : self::BASE_URL . '/' . ltrim($imgPath, '/');
 
-            $imageContent = @file_get_contents($img);
-            if (!$imageContent) return;
+            $manager = new ImageManager(new Driver());
 
-            $image = imagecreatefromstring($imageContent);
-            if ($image === false) return;
+            $imageContent = Http::timeout(15)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (compatible; UbatubaTimes/1.0)',
+                ])
+                ->get($img)
+                ->body();
 
-            ob_start();
-            imagewebp($image, null, 85);
-            $webp = ob_get_clean();
-            imagedestroy($image);
+            if (empty($imageContent)) {
+                return;
+            }
 
-            $path = 'posts/noticia/' . $post->id . '/' . uniqid() . '.webp';
-            Storage::disk('public')->put($path, $webp);
+            $image = $manager->read($imageContent);
+            $image->scaleDown(width: 1920);
+
+            $path = 'posts/noticia/' . $post->id . '/' . Str::slug($post->title) . '.webp';
+
+            Storage::disk('public')->put($path, (string) $image->toWebp(85));
 
             PostGb::create([
-                'post'  => $post->id,
+                'post' => $post->id,
                 'cover' => true,
-                'path'  => $path,
+                'path' => $path,
             ]);
-
-        } catch (\Exception $e) {
+        } catch (Throwable $exception) {
             Log::error('CrawlerSaoSebastiao: erro ao salvar imagem', [
-                'error' => $e->getMessage()
+                'erro' => $exception->getMessage(),
             ]);
         }
+    }
+
+    private function parsePublishDate(Crawler $article): Carbon
+    {
+        try {
+            $dateNode = $article->filter('.post-date');
+
+            if ($dateNode->count() > 0) {
+                $dateText = trim($dateNode->text());
+
+                if (preg_match('/(\d{2})\s+de\s+(\w+)\s+de\s+(\d{4})/', $dateText, $matches) === 1) {
+                    $meses = [
+                        'janeiro' => 1, 'fevereiro' => 2, 'março' => 3, 'abril' => 4,
+                        'maio' => 5, 'junho' => 6, 'julho' => 7, 'agosto' => 8,
+                        'setembro' => 9, 'outubro' => 10, 'novembro' => 11, 'dezembro' => 12,
+                    ];
+
+                    $dia = (int) $matches[1];
+                    $mes = $meses[strtolower($matches[2])] ?? 1;
+                    $ano = (int) $matches[3];
+
+                    return Carbon::create($ano, $mes, $dia)->startOfDay();
+                }
+
+                if (preg_match('/(\d{2})\/(\d{2})\/(\d{4})/', $dateText, $matches) === 1) {
+                    return Carbon::createFromFormat('d/m/Y', "{$matches[1]}/{$matches[2]}/{$matches[3]}")->startOfDay();
+                }
+            }
+        } catch (Throwable) {
+            // usa a data atual
+        }
+
+        return now();
     }
 }

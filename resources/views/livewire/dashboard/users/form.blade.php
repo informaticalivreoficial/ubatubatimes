@@ -485,7 +485,11 @@
         };
 
         Livewire.on('toast', (event) => {
-            toastr[event.type](event.message);
+            const data = Array.isArray(event) ? event[0] : event;
+
+            if (data?.type && data?.message && typeof toastr !== 'undefined') {
+                toastr[data.type](data.message);
+            }
         });
         
     });

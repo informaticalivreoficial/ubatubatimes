@@ -13,6 +13,10 @@ class ImportCaraguatatubaNoticias implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $timeout = 120;
+
+    public int $tries = 1;
+
     public function handle(CrawlerCaraguatatubaService $service): void
     {
         $service->run();

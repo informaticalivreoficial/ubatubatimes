@@ -1,39 +1,57 @@
 <div></div>
 
+@script
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Toast via Livewire
-        window.addEventListener('toast', event => {
-            const { type, message } = event.detail[0];
-            showToast(type, message);
-        });
+    const toastColors = {
+        success: '#16a34a',
+        error: '#dc2626',
+        warning: '#f59e0b',
+        info: '#2563eb',
+    };
 
-        // Toast via session (redirect)
-        @if (session()->has('toast'))
-            showToast(
-                "{{ session('toast.type') }}",
-                "{{ session('toast.message') }}"
-            );
-        @endif
-
-        function showToast(type, message) {
-            const colors = {
-                success: '#16a34a',
-                error: '#dc2626',
-                warning: '#f59e0b',
-                info: '#2563eb',
-            };
-
-            Toastify({
-                text: message,
-                duration: 4000,
-                gravity: "top",
-                position: "right",
-                close: true,
-                style: {
-                    background: colors[type] ?? '#2563eb',
-                },
-            }).showToast();
+    const parseToastPayload = (payload) => {
+        if (!payload) {
+            return {};
         }
+
+        if (Array.isArray(payload)) {
+            return payload[0] ?? {};
+        }
+
+        if (payload.type || payload.message) {
+            return payload;
+        }
+
+        return payload[0] ?? payload;
+    };
+
+    const showToast = (type, message) => {
+        if (!message || typeof Toastify === 'undefined') {
+            return;
+        }
+
+        Toastify({
+            text: message,
+            duration: 4000,
+            gravity: 'top',
+            position: 'right',
+            close: true,
+            style: {
+                background: toastColors[type] ?? toastColors.info,
+            },
+        }).showToast();
+    };
+
+    Livewire.on('toast', (payload) => {
+        const { type, message } = parseToastPayload(payload);
+
+        showToast(type, message);
     });
+
+    const flashToast = $wire.flashToast;
+
+    if (flashToast?.message) {
+        showToast(flashToast.type, flashToast.message);
+    }
 </script>
+@endscript

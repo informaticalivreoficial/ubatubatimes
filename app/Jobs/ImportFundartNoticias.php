@@ -13,6 +13,10 @@ class ImportFundartNoticias implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $timeout = 120;
+
+    public int $tries = 1;
+
     public function handle(CrawlerFundartService $service): void
     {
         $service->run();
