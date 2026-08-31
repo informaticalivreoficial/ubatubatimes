@@ -26,13 +26,26 @@ class CrawlerSaoSebastiaoService
 
     private const CATEGORY = 75;
 
+    private const HEADERS = [
+        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+        'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language' => 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Accept-Encoding' => 'gzip, deflate, br',
+        'Referer' => 'https://www.google.com.br/',
+        'Connection' => 'keep-alive',
+        'Cache-Control' => 'max-age=0',
+        'Sec-Fetch-Dest' => 'document',
+        'Sec-Fetch-Mode' => 'navigate',
+        'Sec-Fetch-Site' => 'cross-site',
+        'Sec-Fetch-User' => '?1',
+        'Upgrade-Insecure-Requests' => '1',
+    ];
+
     public function run(): void
     {
         try {
             $html = Http::timeout(15)
-                ->withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (compatible; UbatubaTimes/1.0)',
-                ])
+                ->withHeaders(self::HEADERS)
                 ->get(self::LISTING_URL)
                 ->body();
 
@@ -82,9 +95,7 @@ class CrawlerSaoSebastiaoService
             : self::BASE_URL . '/' . ltrim($href, '/');
 
         $contentHtml = Http::timeout(15)
-            ->withHeaders([
-                'User-Agent' => 'Mozilla/5.0 (compatible; UbatubaTimes/1.0)',
-            ])
+            ->withHeaders(self::HEADERS)
             ->get($link)
             ->body();
 
@@ -148,9 +159,7 @@ class CrawlerSaoSebastiaoService
             $manager = new ImageManager(new Driver());
 
             $imageContent = Http::timeout(15)
-                ->withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (compatible; UbatubaTimes/1.0)',
-                ])
+                ->withHeaders(self::HEADERS)
                 ->get($img)
                 ->body();
 
