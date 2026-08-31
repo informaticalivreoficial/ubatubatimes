@@ -103,7 +103,7 @@
             </ul>
 
             {{-- Search toggle --}}
-            <div class="flex items-center gap-3 flex-shrink-0" @click.outside="searchOpen = false">
+            <div class="flex items-center gap-3 flex-shrink-0">
                 <button @click="searchOpen = !searchOpen"
                         type="button"
                         aria-label="Abrir pesquisa"
@@ -115,9 +115,10 @@
         </div>
 
         {{-- Search bar (desktop/tablet) --}}
-        <div x-show="searchOpen" x-transition x-cloak class="hidden md:block py-3 border-t">
-            <form action="{{ route('web.pesquisa') }}" method="post">
-                @csrf
+        <div x-show="searchOpen" x-transition x-cloak
+             class="hidden md:block py-3 border-t"
+             @click.outside="searchOpen = false">
+            <form action="{{ route('web.pesquisa') }}" method="get">
                 <div class="flex gap-2 max-w-xl">
                     <input type="text" name="search" value="{{ $search ?? '' }}"
                         placeholder="Pesquisar..."
@@ -153,9 +154,10 @@
         </div>
 
         {{-- Search bar (mobile) --}}
-        <div x-show="searchOpen" x-transition x-cloak class="md:hidden py-3 border-t">
-            <form action="{{ route('web.pesquisa') }}" method="post">
-                @csrf
+        <div x-show="searchOpen" x-transition x-cloak
+             class="md:hidden py-3 border-t"
+             @click.outside="searchOpen = false">
+            <form action="{{ route('web.pesquisa') }}" method="get">
                 <div class="flex gap-2">
                     <input type="text" name="search" value="{{ $search ?? '' }}"
                         placeholder="Pesquisar..."

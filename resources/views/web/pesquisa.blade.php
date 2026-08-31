@@ -21,8 +21,7 @@
 <section class="py-6">
     <div class="mx-auto max-w-7xl px-4">
         <div class="mx-auto max-w-2xl">
-            <form action="{{ route('web.pesquisa') }}" method="post">
-                @csrf
+            <form action="{{ route('web.pesquisa') }}" method="get">
                 <div class="flex gap-2">
                     <input type="text" name="search" value="{{ $search ?? '' }}"
                            placeholder="Digite sua pesquisa..."
@@ -47,21 +46,37 @@
                 Resultados para: <strong class="text-slate-800">{{ $search }}</strong>
             </p>
 
-            <div class="flex flex-col gap-6">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 @foreach ($data as $item)
-                    <div class="border-b border-slate-200 pb-5">
-                        <div class="mb-1 flex flex-wrap items-center gap-2">
-                            <span class="rounded bg-red-600 px-2 py-1 text-xs font-bold uppercase text-white">
-                                {{ $item['type'] }}
-                            </span>
-                            <a href="{{ $item['link'] }}" class="font-semibold text-blue-700 hover:underline">
-                                {{ $item['title'] }}
-                            </a>
+                    <a href="{{ $item['link'] }}"
+                       class="flex gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
+
+                        {{-- Miniatura --}}
+                        <div class="flex-shrink-0">
+                            <img
+                                src="{{ $item['image'] }}"
+                                alt="{{ $item['title'] }}"
+                                class="h-20 w-20 rounded-lg object-cover"
+                                loading="lazy"
+                            >
                         </div>
-                        <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                            {!! \App\Helpers\Renato::Words($item['desc'], 30) !!}
-                        </p>
-                    </div>
+
+                        {{-- Conteúdo --}}
+                        <div class="min-w-0 flex-1">
+                            <div class="mb-1 flex flex-wrap items-center gap-2">
+                                <span class="rounded bg-red-600 px-2 py-0.5 text-xs font-bold uppercase text-white">
+                                    {{ $item['type'] }}
+                                </span>
+                            </div>
+                            <h2 class="text-sm font-semibold leading-snug text-slate-800 hover:text-red-700 transition">
+                                {{ $item['title'] }}
+                            </h2>
+                            <p class="mt-1 text-xs leading-relaxed text-slate-500">
+                                {!! \App\Helpers\Renato::Words($item['desc'], 20) !!}
+                            </p>
+                        </div>
+
+                    </a>
                 @endforeach
             </div>
 

@@ -1,4 +1,4 @@
-<section class="bg-slate-50 py-8" wire:ignore.self>
+<section class="bg-slate-50 py-8">
     <div class="mx-auto max-w-7xl px-4">
 
         {{-- Filtros --}}
@@ -7,22 +7,33 @@
 
                 {{-- Busca --}}
                 <div class="sm:col-span-1">
-                    <label class="mb-1 block text-xs font-medium text-slate-500">Buscar</label>
+                    <label for="guia-search" class="mb-1 block text-xs font-medium text-slate-500">
+                        Buscar empresa
+                    </label>
                     <div class="relative">
                         <input
+                            id="guia-search"
                             type="text"
-                            wire:model.live.debounce.300ms="search"
-                            placeholder="Nome da empresa..."
+                            wire:model.live.debounce.500ms="search"
+                            placeholder="Nome, bairro, cidade..."
                             class="w-full rounded-lg border border-slate-300 py-2 pl-9 pr-3 text-sm text-slate-700 placeholder-slate-400 transition focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
                         >
                         <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
                     </div>
+                    @if($search)
+                        <p class="mt-1 text-xs text-slate-500">
+                            Buscando em todas as categorias
+                        </p>
+                    @endif
                 </div>
 
                 {{-- Subcategoria --}}
                 <div class="sm:col-span-1">
-                    <label class="mb-1 block text-xs font-medium text-slate-500">Subcategoria</label>
+                    <label for="guia-subcat" class="mb-1 block text-xs font-medium text-slate-500">
+                        Subcategoria
+                    </label>
                     <select
+                        id="guia-subcat"
                         wire:model.live="subcategoryId"
                         class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm text-slate-700 transition focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
                     >
@@ -35,8 +46,11 @@
 
                 {{-- Ordenação --}}
                 <div class="sm:col-span-1">
-                    <label class="mb-1 block text-xs font-medium text-slate-500">Ordenar por</label>
+                    <label for="guia-sort" class="mb-1 block text-xs font-medium text-slate-500">
+                        Ordenar por
+                    </label>
                     <select
+                        id="guia-sort"
                         wire:model.live="sort"
                         class="w-full rounded-lg border border-slate-300 py-2 px-3 text-sm text-slate-700 transition focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
                     >
@@ -59,18 +73,16 @@
 
                     <div class="flex gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
 
-                        {{-- Logo --}}
                         <a href="{{ route('web.guiaEmpresa', $empresa->slug) }}" class="flex-shrink-0">
                             <img
                                 src="{{ $empresa->getlogo() }}"
                                 alt="{{ $empresa->alias_name }}"
                                 class="h-20 w-20 rounded border border-slate-200 object-contain"
+                                loading="lazy"
                             >
                         </a>
 
-                        {{-- Conteúdo --}}
                         <div class="min-w-0 flex-1">
-
                             <h2 class="text-sm font-semibold leading-tight text-red-700">
                                 <a href="{{ route('web.guiaEmpresa', $empresa->slug) }}" class="hover:text-red-800">
                                     {{ $empresa->alias_name }}
@@ -89,7 +101,6 @@
                                     {{ $empresa->subcategoriaObject->title }}
                                 </a>
                             @endif
-
                         </div>
 
                     </div>
@@ -98,7 +109,6 @@
 
             </div>
 
-            {{-- Paginação --}}
             <div class="mt-8">
                 {{ $empresas->links() }}
             </div>

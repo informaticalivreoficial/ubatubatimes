@@ -57,25 +57,36 @@ class GuiaCategoria extends Component
             ->orderByRaw('LOWER(title)')
             ->get();
 
+        $term = "%{$this->search}%";
+
         $empresas = Company::query()
             ->with([
                 'categoriaObject:id,slug,title',
                 'subcategoriaObject:id,slug,title',
-                'images:id,company,path,cover',
             ])
-            ->where('category_id', $this->categoria->id)
             ->available()
-            ->when($this->search, function ($q) {
-                $q->where(function ($sub) {
-                    $sub->where('alias_name', 'like', "%{$this->search}%")
-                        ->orWhere('content', 'like', "%{$this->search}%");
+            // Sem busca: filtra pela categoria atual
+            ->when(
+                empty($this->search),
+                fn ($q) => $q->where('category_id', $this->categoria->id)
+            )
+            // Com busca: pesquisa em TODAS as empresas
+            ->when($this->search, function ($q) use ($term) {
+                $q->where(function ($sub) use ($term) {
+                    $sub->where('alias_name', 'like', $term)
+                        ->orWhere('social_name', 'like', $term)
+                        ->orWhere('content', 'like', $term)
+                        ->orWhere('neighborhood', 'like', $term)
+                        ->orWhere('city', 'like', $term)
+                        ->orWhere('responsable_name', 'like', $term);
                 });
             })
+            // Subcategoria filtra em ambos os cenários
             ->when($this->subcategoryId, function ($q) {
                 $q->where('sub_category_id', $this->subcategoryId);
             })
             ->orderByRaw($this->sortSql())
-            ->paginate(18);
+            ->paginate(12);
 
         return view('web.livewire.guia-categoria', [
             'empresas'      => $empresas,
@@ -86,10 +97,10 @@ class GuiaCategoria extends Component
     private function sortSql(): string
     {
         return match ($this->sort) {
-            'name'      => 'LOWER(alias_name) ASC',
-            'views'     => 'views DESC',
-            'recent'    => 'created_at DESC',
-            default     => 'client DESC, views DESC',
+            'name'   => 'LOWER(alias_name) ASC',
+            'views'  => 'views DESC',
+            'recent' => 'created_at DESC',
+            default  => 'client DESC, views DESC',
         };
     }
 }

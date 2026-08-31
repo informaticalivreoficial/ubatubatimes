@@ -450,7 +450,8 @@ class SiteController extends Controller
         ];
 
         foreach ($tipos as $tipo => $config) {
-            Post::where('type', $tipo)
+            Post::with('images')
+                ->where('type', $tipo)
                 ->where(function ($q) use ($search) {
                     $q->where('title', 'LIKE', "%{$search}%")
                     ->orWhere('content', 'LIKE', "%{$search}%");
@@ -463,6 +464,7 @@ class SiteController extends Controller
                     'type'  => $config['type'],
                     'link'  => route($config['route'], ['slug' => $post->slug]),
                     'desc'  => $post->content,
+                    'image' => $post->cover(),
                 ]));
         }
 
@@ -481,6 +483,7 @@ class SiteController extends Controller
                 'type'  => 'Guia Comercial',
                 'link'  => route('web.guiaEmpresa', ['slug' => $empresa->slug]),
                 'desc'  => $empresa->content,
+                'image' => $empresa->getlogo(),
             ]));
 
         $head = $this->seo->render(
@@ -491,7 +494,8 @@ class SiteController extends Controller
         );
 
         $data = $this->paginate($resultado->all());
-        $data->withPath('');
+        $data->withPath(route('web.pesquisa'));
+        $data->appends(['search' => $search]);
 
         return view('web.pesquisa', [
             'head'   => $head,

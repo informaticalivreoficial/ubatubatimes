@@ -15,8 +15,7 @@
                 O conteúdo que você procura pode ter sido movido ou não existe mais.
             </p>
 
-            <form action="{{ route('web.pesquisa') }}" method="post" class="mt-6">
-                @csrf
+            <form action="{{ route('web.pesquisa') }}" method="get" class="mt-6">
                 <div class="flex gap-2">
                     <input type="text" name="search" id="s"
                            placeholder="Pesquisar no site..."
