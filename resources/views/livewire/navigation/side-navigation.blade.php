@@ -157,6 +157,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{route('posts.crawlers')}}" class="nav-link {{ Route::is('posts.crawlers') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Crawlers</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{route('posts.lixeira')}}" class="nav-link {{ Route::is('posts.lixeira') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Lixeira</p>
