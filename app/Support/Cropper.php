@@ -17,7 +17,7 @@ class Cropper
 
         // ✅ retorna cache se já existir
         if (file_exists($cachedFile)) {
-            return 'cache/' . $filename;
+            return self::cacheUrl($filename);
         }
 
         if (!file_exists($cachePath)) {
@@ -45,7 +45,15 @@ class Cropper
             return '';
         }
 
-        return 'cache/' . $filename;
+        return self::cacheUrl($filename);
+    }
+
+    /**
+     * URL pública do cache local de thumbnails (sempre local, nunca no R2).
+     */
+    private static function cacheUrl(string $filename): string
+    {
+        return rtrim(config('app.url'), '/') . '/storage/cache/' . $filename;
     }
 
     public static function flush(?string $path = null): void

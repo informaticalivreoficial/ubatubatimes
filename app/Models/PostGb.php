@@ -24,7 +24,7 @@ class PostGb extends Model
     */
     public function getUrlCroppedAttribute()
     {
-        return Storage::url(Cropper::thumb($this->path, 770, 578));
+        return Cropper::thumb($this->path, 770, 578);
     }
 
     public function getUrlImageAttribute()

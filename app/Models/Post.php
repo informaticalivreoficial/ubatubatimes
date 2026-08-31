@@ -138,7 +138,7 @@ class Post extends Model
             return asset('theme/images/image.jpg');
         }
 
-        return Storage::url(Cropper::thumb($cover['path'], 720, 480));
+        return Cropper::thumb($cover['path'], 720, 480);
     }    
 
     public function nocover()
