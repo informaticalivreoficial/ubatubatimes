@@ -67,7 +67,7 @@ class Post extends Model
         static::deleting(function ($post) {
             // Só deleta as imagens no forceDelete
             if ($post->isForceDeleting()) {
-                Storage::disk('public')->deleteDirectory("posts/{$post->type}/{$post->id}");
+                Storage::disk()->deleteDirectory("posts/{$post->type}/{$post->id}");
                 $post->images()->delete();
             }
         });

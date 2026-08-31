@@ -53,7 +53,7 @@
                         <td>{{ $ad->company->alias_name }}</td>
                         <td class="text-center">{{ $ad->plan->name }}</td>
                         <td class="text-center">
-                            <img src="{{ asset('storage/' . $ad->image) }}" class="h-12">
+                            <img src="{{ \Illuminate\Support\Facades\Storage::url($ad->image) }}" class="h-12">
                         </td>
                         <td class="text-center">
                             {{ $ad->start_date->format('d/m/Y') }}

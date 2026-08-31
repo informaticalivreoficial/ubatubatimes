@@ -2,15 +2,16 @@
 
 namespace App\Support;
 
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Throwable;
 
 class Cropper
 {
     public static function thumb(string $uri, int $width, ?int $height = null): string
     {
         $cachePath  = public_path('storage/cache');
-        $sourcePath = config('filesystems.disks.public.root') . '/' . $uri;
         $filename   = md5($uri . $width . $height) . '.webp';
         $cachedFile = $cachePath . '/' . $filename;
 
@@ -23,21 +24,26 @@ class Cropper
             mkdir($cachePath, 0755, true);
         }
 
-        if (!file_exists($sourcePath)) {
+        // lê o arquivo do disco padrão (local ou R2/S3)
+        if (!Storage::disk()->exists($uri)) {
             return '';
         }
 
-        $manager = new ImageManager(new Driver());
-        $image   = $manager->read($sourcePath);
+        try {
+            $manager = new ImageManager(new Driver());
+            $image   = $manager->read(Storage::disk()->get($uri));
 
-        // ✅ crop centralizado (igual ao Cropper) ou só redimensiona largura
-        if ($height) {
-            $image->cover($width, $height);
-        } else {
-            $image->scale(width: $width);
+            // ✅ crop centralizado (igual ao Cropper) ou só redimensiona largura
+            if ($height) {
+                $image->cover($width, $height);
+            } else {
+                $image->scale(width: $width);
+            }
+
+            $image->toWebp(80)->save($cachedFile);
+        } catch (Throwable) {
+            return '';
         }
-
-        $image->toWebp(80)->save($cachedFile);
 
         return 'cache/' . $filename;
     }

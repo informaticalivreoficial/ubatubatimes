@@ -2,7 +2,7 @@
     @if($ad)
         <a href="{{ $ad->link }}" target="_blank" rel="noopener noreferrer">
             <img
-                src="{{ asset('storage/' . $ad->image) }}"
+                src="{{ \Illuminate\Support\Facades\Storage::url($ad->image) }}"
                 alt="{{ $ad->title }}"
                 class="banner img-fluid"
             >

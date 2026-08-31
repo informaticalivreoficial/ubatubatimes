@@ -78,7 +78,7 @@ class Company extends Model
 
         static::deleting(function ($company) {
             // Deleta a pasta inteira com todas as imagens
-            Storage::disk('public')->deleteDirectory("company/{$company->id}");
+            Storage::disk()->deleteDirectory("company/{$company->id}");
 
             // Deleta os registros do banco
             $company->images()->delete();
@@ -167,8 +167,19 @@ class Company extends Model
 
     public function logoPathForPdf(): string
     {
-        if ($this->logo && file_exists(storage_path('app/public/' . $this->logo))) {
-            return storage_path('app/public/' . $this->logo);
+        if ($this->logo && Storage::disk()->exists($this->logo)) {
+            // PDF (DomPDF) precisa de um arquivo local: baixa do disco (local ou R2) para temp
+            $tmpPath = storage_path('app/tmp/' . md5($this->logo) . '-' . basename($this->logo));
+
+            if (!is_dir(dirname($tmpPath))) {
+                mkdir(dirname($tmpPath), 0755, true);
+            }
+
+            if (!file_exists($tmpPath)) {
+                file_put_contents($tmpPath, Storage::disk()->get($this->logo));
+            }
+
+            return $tmpPath;
         }
 
         return public_path('theme/images/image.jpg');

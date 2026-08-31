@@ -83,7 +83,7 @@ class Config extends Model
     
     public function getlogoadmin()
     {
-        if (empty($this->logo_admin) || !Storage::disk('public')->exists($this->logo_admin)) {
+        if (empty($this->logo_admin) || !Storage::disk()->exists($this->logo_admin)) {
             return asset('theme/images/image.jpg');
         }
 

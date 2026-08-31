@@ -45,15 +45,15 @@ class GerarBoletimCardService
 
         // 🔧 salva em storage/app/public (não mais em public/ direto),
         // acessível publicamente via o link simbólico storage:link
-        Storage::disk('public')->makeDirectory(self::STORAGE_DIR);
-        Storage::disk('public')->put(
+        Storage::disk()->makeDirectory(self::STORAGE_DIR);
+        Storage::disk()->put(
             $relativePath,
             (string) $img->toJpeg(90)
         );
 
         return [
-            'path' => Storage::disk('public')->path($relativePath),
-            'url'  => Storage::disk('public')->url($relativePath),
+            'path' => Storage::disk()->path($relativePath),
+            'url'  => Storage::disk()->url($relativePath),
         ];
     }
 

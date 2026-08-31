@@ -23,12 +23,12 @@ class CleanupController extends Controller
         $removed = 0;
 
         foreach ($folders as $folder) {
-            $files = Storage::disk('public')->allFiles($folder);
+            $files = Storage::disk()->allFiles($folder);
 
             $removed += count($files);
 
             if (!empty($files)) {
-                Storage::disk('public')->delete($files);
+                Storage::disk()->delete($files);
             }
         }
 

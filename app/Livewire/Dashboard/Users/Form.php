@@ -127,7 +127,7 @@ class Form extends Component
             $validated = $this->validate($this->rulesCreate());
 
             if ($this->foto) {
-                $validated['avatar'] = $this->foto->store('user', 'public');
+                $validated['avatar'] = $this->foto->store('user');
             }
 
             $validated['password'] = $this->roleSelected !== 'employee'
@@ -173,11 +173,11 @@ class Form extends Component
             //$this->authorize('update', $user);
 
             if ($this->foto) {
-                if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                    Storage::disk('public')->delete($user->avatar);
+                if ($user->avatar && Storage::disk()->exists($user->avatar)) {
+                    Storage::disk()->delete($user->avatar);
                 }
 
-                $validated['avatar'] = $this->foto->store('user', 'public');
+                $validated['avatar'] = $this->foto->store('user');
             }            
 
             $data = array_merge($validated, [

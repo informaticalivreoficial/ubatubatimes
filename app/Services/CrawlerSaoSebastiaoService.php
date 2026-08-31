@@ -172,7 +172,7 @@ class CrawlerSaoSebastiaoService
 
             $path = 'posts/noticia/' . $post->id . '/' . Str::slug($post->title) . '.webp';
 
-            Storage::disk('public')->put($path, (string) $image->toWebp(85));
+            Storage::disk()->put($path, (string) $image->toWebp(85));
 
             PostGb::create([
                 'post' => $post->id,

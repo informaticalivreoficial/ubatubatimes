@@ -222,10 +222,10 @@ class CompanyForm extends Component
         // 🔹 Upload logo
         if ($this->logo instanceof TemporaryUploadedFile) {
             if ($this->logoPath) {
-                Storage::disk('public')->delete($this->logoPath);
+                Storage::disk()->delete($this->logoPath);
             }
 
-            $this->logoPath = $this->logo->store($folder, 'public');
+            $this->logoPath = $this->logo->store($folder);
 
             $this->company->update([
                 'logo' => $this->logoPath
@@ -235,10 +235,10 @@ class CompanyForm extends Component
         // 🔹 Upload metaimg
         if ($this->metaimg instanceof TemporaryUploadedFile) {
             if ($this->metaimgPath) {
-                Storage::disk('public')->delete($this->metaimgPath);
+                Storage::disk()->delete($this->metaimgPath);
             }
 
-            $this->metaimgPath = $this->metaimg->store($folder, 'public');
+            $this->metaimgPath = $this->metaimg->store($folder);
 
             $this->company->update([
                 'metaimg' => $this->metaimgPath
@@ -277,7 +277,7 @@ class CompanyForm extends Component
                 ->scaleDown(width: 1920)
                 ->toWebp(85);
 
-            Storage::disk('public')->put($path, $img);
+            Storage::disk()->put($path, $img);
 
             $maxOrder = CompanyGb::where('company', $this->company->id)->max('order_img') ?? 0;
 
@@ -320,7 +320,7 @@ class CompanyForm extends Component
     {
         $image = CompanyGb::find($id);
         if ($image) {
-            Storage::disk('public')->delete($image->path);
+            Storage::disk()->delete($image->path);
             $image->delete();
             $this->savedImages = collect($this->savedImages)->filter(fn ($img) => $img->id !== $id);
             $this->company->refresh(); // Para garantir que os dados estejam atualizados
@@ -371,7 +371,7 @@ class CompanyForm extends Component
             return $this->logo->temporaryUrl();
         }
 
-        if ($this->logoPath && Storage::disk('public')->exists($this->logoPath)) {
+        if ($this->logoPath && Storage::disk()->exists($this->logoPath)) {
             return Storage::url($this->logoPath);
         }
 
@@ -384,7 +384,7 @@ class CompanyForm extends Component
             return $this->metaimg->temporaryUrl();
         }
 
-        if ($this->metaimgPath && Storage::disk('public')->exists($this->metaimgPath)) {
+        if ($this->metaimgPath && Storage::disk()->exists($this->metaimgPath)) {
             return Storage::url($this->metaimgPath);
         }
 
@@ -426,11 +426,12 @@ class CompanyForm extends Component
 
         $manager = new ImageManager(new Driver());
 
-        $img = $manager->read(storage_path('app/public/'.$image->path));
-        $watermark = $manager->read(storage_path('app/public/'.$config->watermark));
+        $img = $manager->read(Storage::disk()->get($image->path));
+        $watermark = $manager->read(Storage::disk()->get($config->watermark));
 
         $img->place($watermark, 'bottom-right', 30, 30);
-        $img->save();
+
+        Storage::disk()->put($image->path, (string) $img->encode());
 
         $image->update([
             'watermark' => true

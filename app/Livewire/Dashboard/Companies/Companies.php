@@ -80,16 +80,16 @@ class Companies extends Component
             $company = Company::findOrFail($id);
 
             //$folder = 'company/' . $company->id;
-            //Storage::disk('public')->deleteDirectory($folder);
+            //Storage::disk()->deleteDirectory($folder);
 
             // $logoPath = $company->logo;
-            // if ($logoPath && Storage::disk('public')->exists($logoPath)) {
-            //     Storage::disk('public')->delete($logoPath);
+            // if ($logoPath && Storage::disk()->exists($logoPath)) {
+            //     Storage::disk()->delete($logoPath);
             // }
 
             // $metaimgPath = $company->metaimg;
-            // if ($metaimgPath && Storage::disk('public')->exists($metaimgPath)) {
-            //     Storage::disk('public')->delete($metaimgPath);
+            // if ($metaimgPath && Storage::disk()->exists($metaimgPath)) {
+            //     Storage::disk()->delete($metaimgPath);
             // }
 
             $company->delete();
@@ -126,9 +126,7 @@ class Companies extends Component
             return;
         }
 
-        $watermarkPath = storage_path('app/public/' . $config->watermark);
-
-        if (!file_exists($watermarkPath)) {
+        if (!Storage::disk()->exists($config->watermark)) {
             $this->dispatch('swal:error', [
                 'title' => false,
                 'text' => 'Arquivo de marca d’água não encontrado!',
@@ -140,7 +138,7 @@ class Companies extends Component
 
         $manager = new ImageManager(new Driver());
 
-        $watermark = $manager->read($watermarkPath);
+        $watermark = $manager->read(Storage::disk()->get($config->watermark));
 
         foreach ($company->images as $image) {
 
@@ -148,19 +146,18 @@ class Companies extends Component
                 continue; // pula se já tiver marca
             }
 
-            $imagePath = storage_path('app/public/' . $image->path);
+            if (Storage::disk()->exists($image->path)) {
 
-            if (file_exists($imagePath)) {
-
-                $img = $manager->read($imagePath);
+                $img = $manager->read(Storage::disk()->get($image->path));
                 $img->place($watermark, 'bottom-right', 30, 30);
-                $img->save($imagePath);
+
+                Storage::disk()->put($image->path, (string) $img->encode());
 
                 $image->update([
                     'watermark' => true
                 ]);
             }
-        }        
+        }
 
         $this->dispatch('swal:success', [
             'title' => false,

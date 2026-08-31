@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Typography\FontFactory;
@@ -50,15 +51,10 @@ class CardBalneabilidadeGeneratorService
 
         $fileName = Str::uuid() . '.png';
         $relativePath = "cards/{$fileName}";
-        $fullPath = storage_path("app/public/{$relativePath}");
 
-        if (!is_dir(dirname($fullPath))) {
-            mkdir(dirname($fullPath), 0755, true);
-        }
+        Storage::disk()->put($relativePath, (string) $image->toPng());
 
-        $image->save($fullPath);
-
-        return asset("storage/{$relativePath}");
+        return Storage::disk()->url($relativePath);
     }
 
     /**

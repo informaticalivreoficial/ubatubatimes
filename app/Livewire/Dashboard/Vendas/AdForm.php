@@ -63,12 +63,12 @@ class AdForm extends Component
         if ($this->image instanceof TemporaryUploadedFile) {
             // Apaga imagem antiga se existir
             if ($this->imagePath) {
-                Storage::disk('public')->delete($this->imagePath);
+                Storage::disk()->delete($this->imagePath);
             }
 
             // Salva na pasta ads/{id} se edição, ou ads/temp se novo
             $folder = $this->ad?->id ? 'ads/' . $this->ad->id : 'ads';
-            $data['image'] = $this->image->store($folder, 'public');
+            $data['image'] = $this->image->store($folder);
         } else {
             unset($data['image']);
         }
@@ -81,7 +81,7 @@ class AdForm extends Component
         // Se era novo, move imagem para pasta correta com o ID gerado
         if ($isNew && isset($data['image'])) {
             $newPath = 'ads/' . $ad->id . '/' . basename($data['image']);
-            Storage::disk('public')->move($data['image'], $newPath);
+            Storage::disk()->move($data['image'], $newPath);
             $ad->update(['image' => $newPath]);
         }
 
@@ -101,7 +101,7 @@ class AdForm extends Component
             return $this->image->temporaryUrl();
         }
 
-        if ($this->imagePath && Storage::disk('public')->exists($this->imagePath)) {
+        if ($this->imagePath && Storage::disk()->exists($this->imagePath)) {
             return Storage::url($this->imagePath);
         }
 
