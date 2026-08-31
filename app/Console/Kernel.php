@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('posts:purge-deleted')->everyMinute()->withoutOverlapping();
         $schedule->command('app:clear-logs')->everyMinute()->withoutOverlapping();        
         $schedule->command('boletim:postar')->everyMinute()->withoutOverlapping();
+        $schedule->command('cache:clear-thumbs')->everyMinute()->withoutOverlapping();
     }
 
     protected function commands()
