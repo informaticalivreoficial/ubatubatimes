@@ -115,10 +115,8 @@ class PostForm extends Component
     public function mount(Post $post)
     {
         $this->autores = User::query()
-        ->when(!auth()->user()->isSuperAdmin(), function ($query) {
-            $query->whereDoesntHave('roles', function ($q) {
-                $q->where('name', 'super-admin');
-            });
+        ->whereHas('roles', function ($q) {
+            $q->whereIn('name', ['super-admin', 'admin', 'manager']);
         })
         ->orderBy('name')
         ->get();        
