@@ -8,11 +8,14 @@ use Illuminate\Http\Request;
 class TrustProxies extends Middleware
 {
     /**
-     * The trusted proxies for this application.
+     * The trusted proxies for the application.
+     *
+     * O proxy (Traefik/Coolify) tem IP dinâmico; "*" confia apenas no IP que
+     * originou a conexão, permitindo honrar X-Forwarded-Proto e gerar URLs https.
      *
      * @var array|string|null
      */
-    protected $proxies;
+    protected $proxies = '*';
 
     /**
      * The headers that should be used to detect proxies.

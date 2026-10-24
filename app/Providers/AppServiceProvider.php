@@ -28,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ImageManager::class, function () {
             return new ImageManager(new Driver());
         });
+
+        $this->app->singleton('site.view.data', fn (): array => $this->buildSharedViewData());
     }
 
     /**
@@ -51,37 +53,46 @@ class AppServiceProvider extends ServiceProvider
         // Schema::defaultStringLength(191);
         // Blade::aliasComponent('admin.components.message', 'message');
 
-        try {
-            $config = Config::find(1);
-            View()->share('config', $config);
-        } catch (\Exception $e) {
-            View()->share('config', null);
-        }
-
-        //Região Categorias de Notícias
-        $catnoticias = CatPost::where('type', 'noticia')
-                        ->active()
-                        ->whereNotNull('id_pai')
-                        ->get();
-        View()->share('catnoticias', $catnoticias);
-
-        //Colunas Categorias
-        $catcolunas = CatPost::where('type', 'artigo')
-                        ->active()
-                        ->whereNotNull('id_pai')
-                        ->get();
-        View()->share('catcolunas', $catcolunas);
-
-        //Newsletter
-        // $newsletter = NewsletterCat::whereNotNull('sistema')
-        //                 ->available()
-        //                 ->first();
-        // View()->share('newsletterForm', $newsletter);
-
-        View::share('cotacao', app(CotacaoService::class)->getDolar());
+        // Os dados abaixo dependem do banco e só são necessários quando uma view é
+        // renderizada. Ficam em um composer para não consultarem o banco em comandos
+        // de console (config:cache, route:cache, etc. rodam no build).
+        View::composer('*', function ($view) {
+            $view->with(app('site.view.data'));
+        });
 
         //Paginator::useBootstrap();
 
         Paginator::defaultView('vendor.pagination.tailwind');
+    }
+
+    /**
+     * Dados compartilhados com todas as views (carregados uma única vez por request).
+     *
+     * @return array<string, mixed>
+     */
+    private function buildSharedViewData(): array
+    {
+        try {
+            $config = Config::find(1);
+        } catch (\Throwable $e) {
+            $config = null;
+        }
+
+        return [
+            'config' => $config,
+            //Região Categorias de Notícias
+            'catnoticias' => CatPost::where('type', 'noticia')
+                ->active()
+                ->whereNotNull('id_pai')
+                ->get(),
+            //Colunas Categorias
+            'catcolunas' => CatPost::where('type', 'artigo')
+                ->active()
+                ->whereNotNull('id_pai')
+                ->get(),
+            //Newsletter
+            // 'newsletterForm' => NewsletterCat::whereNotNull('sistema')->available()->first(),
+            'cotacao' => app(CotacaoService::class)->getDolar(),
+        ];
     }
 }
