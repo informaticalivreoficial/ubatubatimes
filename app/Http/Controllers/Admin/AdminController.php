@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Analytics;
 use Spatie\Analytics\Period;
@@ -83,19 +84,28 @@ class AdminController extends Controller
         $artigosUnavailable = Post::postsoff()->where('tipo', 'artigo')->count();
         
         
-        //Analitcs
-        $visitasHoje = Analytics::fetchMostVisitedPages(Period::days(1));
-        
-        $visitas365 = Analytics::fetchTotalVisitorsAndPageViews(Period::months(5));
-        
-        $top_browser = Analytics::fetchTopBrowsers(Period::months(5), 10);
+        //Analytics - nunca deve derrubar o dashboard caso a API falhe
+        $visitasHoje = collect();
+        $visitas365 = collect();
+        $top_browser = collect();
+        $sortedData = collect();
 
-        $analyticsData = Analytics::get(
-                Period::months(6), 
-                metrics: ['totalUsers', 'sessions', 'screenPageViews'], 
-                dimensions: ['month'],
-        );   
-        $sortedData = $analyticsData->sortBy('month');     
+        try {
+            $visitasHoje = Analytics::fetchMostVisitedPages(Period::days(1));
+
+            $visitas365 = Analytics::fetchTotalVisitorsAndPageViews(Period::months(5));
+
+            $top_browser = Analytics::fetchTopBrowsers(Period::months(5), 10);
+
+            $analyticsData = Analytics::get(
+                    Period::months(6),
+                    metrics: ['totalUsers', 'sessions', 'screenPageViews'],
+                    dimensions: ['month'],
+            );
+            $sortedData = $analyticsData->sortBy('month');
+        } catch (\Throwable $e) {
+            Log::warning('Falha ao carregar dados do Google Analytics no dashboard: '.$e->getMessage());
+        }
          
         return view('admin.dashboard',[ 
             'time' => $time,

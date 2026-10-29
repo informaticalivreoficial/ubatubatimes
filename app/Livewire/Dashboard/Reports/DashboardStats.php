@@ -95,7 +95,7 @@ class DashboardStats extends Component
                 'growth' => round($growth, 1),
             ];
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
 
             $this->barChartData = ['labels' => [], 'users' => [], 'sessions' => []];
             $this->donutChartData = ['labels' => [], 'values' => []];

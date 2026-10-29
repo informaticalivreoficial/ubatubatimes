@@ -406,7 +406,7 @@ class SiteController extends Controller
                     ($item['screenPageViews'] ?? 0);
             }
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // 🔒 segurança total (nunca quebra a página)
             $labels = [];
             $visitasMensais = [];

@@ -7,12 +7,20 @@
  */
 $serviceAccountCredentials = null;
 
-if ($encodedCredentials = env('ANALYTICS_CREDENTIALS_BASE64')) {
-    $encodedCredentials = preg_replace('/\s+/', '', $encodedCredentials);
-    $decodedCredentials = base64_decode($encodedCredentials, true);
+if ($credentials = env('ANALYTICS_CREDENTIALS_BASE64')) {
+    // Aceita o valor com quebras de linha, aspas ou prefixo "base64:"
+    $credentials = trim($credentials, " \t\n\r\0\x0B\"'");
+    $credentials = preg_replace('/^base64:/i', '', $credentials);
 
-    if ($decodedCredentials !== false) {
-        $serviceAccountCredentials = json_decode($decodedCredentials, true);
+    // Aceita também o JSON puro (uma linha), além do base64
+    if (str_starts_with($credentials, '{')) {
+        $serviceAccountCredentials = json_decode($credentials, true);
+    } else {
+        $decodedCredentials = base64_decode(preg_replace('/\s+/', '', $credentials), true);
+
+        if ($decodedCredentials !== false) {
+            $serviceAccountCredentials = json_decode($decodedCredentials, true);
+        }
     }
 }
 
