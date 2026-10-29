@@ -1,5 +1,21 @@
 <?php
 
+/*
+ * As credenciais do service account podem ser informadas via .env em base64
+ * (recomendado para produção/Coolify) ou, na ausência delas, lidas do arquivo
+ * local em storage/app/analytics/service-account-credentials.json.
+ */
+$serviceAccountCredentials = null;
+
+if ($encodedCredentials = env('ANALYTICS_CREDENTIALS_BASE64')) {
+    $encodedCredentials = preg_replace('/\s+/', '', $encodedCredentials);
+    $decodedCredentials = base64_decode($encodedCredentials, true);
+
+    if ($decodedCredentials !== false) {
+        $serviceAccountCredentials = json_decode($decodedCredentials, true);
+    }
+}
+
 return [
 
     /*
@@ -9,11 +25,17 @@ return [
     'property_id' => env('ANALYTICS_PROPERTY_ID'),
 
     /*
+     * Measurement ID (G-XXXXXXX) usado pela tag gtag.js no site.
+     */
+    'measurement_id' => env('ANALYTICS_MEASUREMENT_ID'),
+
+    /*
      * Path to the client secret json file. Take a look at the README of this package
      * to learn how to get this file. You can also pass the credentials as an array
      * instead of a file path.
      */
-    'service_account_credentials_json' =>  storage_path('app/analytics/service-account-credentials.json'),
+    'service_account_credentials_json' => $serviceAccountCredentials
+        ?: storage_path('app/analytics/service-account-credentials.json'),
 
     /*
      * The amount of minutes the Google API responses will be cached.
