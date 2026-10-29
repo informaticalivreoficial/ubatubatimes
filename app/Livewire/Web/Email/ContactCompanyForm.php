@@ -4,6 +4,7 @@ namespace App\Livewire\Web\Email;
 
 use App\Mail\Web\ParceiroSend;
 use App\Models\Company;
+use App\Services\TelegramService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
@@ -61,6 +62,13 @@ class ContactCompanyForm extends Component
             ];
 
             Mail::send(new ParceiroSend($payload));
+
+            app(TelegramService::class)->notify('📨 Contato enviado pelo Guia', [
+                'Empresa' => $payload['empresaname'],
+                'Nome' => $payload['reply_name'],
+                'E-mail' => $payload['reply_email'],
+                'Mensagem' => $payload['mensagem'],
+            ]);
 
             $this->reset(['nome', 'email', 'mensagem']);
 

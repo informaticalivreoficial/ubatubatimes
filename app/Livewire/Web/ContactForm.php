@@ -4,6 +4,7 @@ namespace App\Livewire\Web;
 
 use App\Mail\Web\OrcamentoRetorno;
 use App\Mail\Web\SendOrcamento;
+use App\Services\TelegramService;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
@@ -47,6 +48,15 @@ class ContactForm extends Component
 
         Mail::send(new SendOrcamento($data));
         Mail::send(new OrcamentoRetorno($data));
+
+        app(TelegramService::class)->notify('🔔 Novo pedido de anúncio pelo site', [
+            'Nome' => $validated['name'],
+            'E-mail' => $validated['email'],
+            'WhatsApp' => $this->whatsapp,
+            'Mensagem' => $validated['message'],
+            'Página' => route('web.anunciar'),
+        ]);
+
         $this->reset(['name', 'email', 'whatsapp', 'message']);
         $this->enviado = true;
         session()->flash('success', 'Mensagem enviada com sucesso!');        

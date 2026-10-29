@@ -3,6 +3,7 @@
 namespace App\Livewire\Components;
 
 use App\Mail\SupportRequestMail;
+use App\Services\TelegramService;
 use App\Traits\WithToastr;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
@@ -29,6 +30,12 @@ class SupportModal extends Component
 
         Mail::to(config('app.desenvolvedor_email'))
             ->send(new SupportRequestMail($this->message));
+
+        app(TelegramService::class)->notify('🆘 Nova solicitação de suporte', [
+            'Usuário' => auth()->user()?->name,
+            'E-mail' => auth()->user()?->email,
+            'Mensagem' => $this->message,
+        ]);
 
         $this->reset('message', 'showSupport');
 
