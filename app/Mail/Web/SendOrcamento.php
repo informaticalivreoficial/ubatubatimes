@@ -31,9 +31,13 @@ class SendOrcamento extends Mailable
      */
     public function build()
     {
+        // Remetente autenticado no provedor (domínio verificado);
+        // destinatário interno é a caixa de contato do site.
+        $to = $this->data['contact_to'] ?? $this->data['siteemail'];
+
         return $this
             ->from($this->data['siteemail'], $this->data['sitename'])
-            ->to($this->data['siteemail'], $this->data['sitename'])
+            ->to($to, $this->data['sitename'])
             ->replyTo($this->data['reply_email'], $this->data['reply_name'])
             ->subject('⚓️ Anúncio: ' . $this->data['reply_name'])
             ->markdown('emails.orcamento', [

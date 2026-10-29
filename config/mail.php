@@ -18,6 +18,13 @@ return [
     'copy_to_admin' => env('MAIL_COPY_TO_ADMIN', false),
 
     /*
+     * Caixa que recebe as notificações internas dos formulários do site
+     * (ex.: anúncios, contato). Diferente de MAIL_FROM_ADDRESS, que é o
+     * remetente autenticado no provedor de envio (domínio verificado).
+     */
+    'contact_to' => env('MAIL_CONTACT_TO', env('MAIL_FROM_ADDRESS')),
+
+    /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
     |--------------------------------------------------------------------------
@@ -44,6 +51,22 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
+            'auth_mode' => null,
+        ],
+
+        /*
+         * Mailtrap (envio real). Usa SMTP autenticado com usuário "api" e o
+         * API Token como senha (o token pode ser informado em MAILTRAP_PASSWORD
+         * ou, como fallback, em MAILTRAP_API_KEY).
+         */
+        'mailtrap' => [
+            'transport' => 'smtp',
+            'host' => env('MAILTRAP_HOST', 'live.smtp.mailtrap.io'),
+            'port' => env('MAILTRAP_PORT', 587),
+            'encryption' => env('MAILTRAP_ENCRYPTION', 'tls'),
+            'username' => env('MAILTRAP_USERNAME', 'api'),
+            'password' => env('MAILTRAP_PASSWORD') ?: env('MAILTRAP_API_KEY'),
+            'timeout' => env('MAIL_TIMEOUT'),
             'auth_mode' => null,
         ],
 

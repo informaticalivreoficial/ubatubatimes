@@ -37,6 +37,7 @@ class ContactForm extends Component
         $data = [
             'sitename' => config('app.name'),
             'siteemail' => config('mail.from.address'),
+            'contact_to' => config('mail.contact_to'),
             'reply_name' => $validated['name'],
             'reply_email' => $validated['email'],
             'reply_whatsapp' => $this->whatsapp,
